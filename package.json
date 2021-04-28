@@ -8,13 +8,18 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "echarts": "^5.0.2",
     "element-plus": "^1.0.2-beta.28",
+    "swiper": "^6.5.7",
     "vue": "^3.0.0",
+    "vue-echarts": "*",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@types/mockjs": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -28,6 +33,7 @@
     "babel-plugin-component": "^1.1.1",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
+    "mockjs": "^1.1.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
