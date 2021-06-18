@@ -1,7 +1,8 @@
 <template>
   <nav class="nav-container">
-    <!-- hidder-scrollbar -->
-    <!-- <span class="indicate-btn"> <i class="el-icon-d-arrow-left"></i> </span> -->
+    <span class="indicate-btn" @click="handleSollPage('left')">
+      <i class="el-icon-d-arrow-left"></i>
+    </span>
     <el-tag
       key="首页"
       :effect="'/home' === $route.path ? 'dark' : 'plain'"
@@ -11,76 +12,139 @@
       首页
     </el-tag>
     <div class="sliding-window">
-      <el-tag
-        v-for="(tag, i) in tabsList"
-        :key="`${tag.name}-${tag.path}`"
-        closable
-        :effect="tag.path === $route.path ? 'dark' : 'plain'"
-        @close="handleClose(tag, i)"
-        @click="handleTo(tag)"
+      <div
+        class="sliding-container"
+        :style="{ transform: `translateX(${offsetX}px)` }"
       >
-        <i :data-index="i" :class="tag.icon" /> {{ tag.name }}
-      </el-tag>
+        <el-tag
+          v-for="(tag, i) in tabsList"
+          :key="`${tag.name}-${tag.path}`"
+          closable
+          :effect="tag.path === $route.path ? 'dark' : 'plain'"
+          @close="handleClose(tag, i)"
+          @click="handleTo(tag)"
+        >
+          <i :data-index="i" :class="tag.icon" /> {{ tag.name }}
+        </el-tag>
+      </div>
     </div>
-    <!-- <span class="indicate-btn"> <i class="el-icon-d-arrow-right"></i> </span> -->
+    <span class="indicate-btn" @click="handleSollPage('right')">
+      <i class="el-icon-d-arrow-right"></i>
+    </span>
   </nav>
 </template>
 <script lang="ts">
 import { useStore } from 'vuex'
-import { defineComponent, reactive, ref, toRefs } from 'vue'
-import { RouteLocationRaw } from 'vue-router'
+import { defineComponent, ref, toRefs, unref } from 'vue'
+import { RouteLocationRaw, useRouter } from 'vue-router'
 import { Menu } from '@/custom'
 import { key } from '@/store'
 
-import 'swiper/swiper.scss'
 export default defineComponent({
   name: 'Crumbs',
-
+  props:['isAuthenticated'],
   setup() {
     const store = useStore(key)
     const { currentMenu, tabsList } = toRefs(store.state.crumbs)
+    const router = useRouter()
+    const firstSubscript = ref(0)
+    const offsetX = ref(0)
+    const handSwitchTab = (route: Menu) =>
+      store.commit('crumbs/switchTab', route)
+    const handRemoveTab = (route: Menu) =>
+      store.commit('crumbs/removeTab', route)
 
-    const swiperEl = ref(null)
-    const options = reactive({})
-    return {
-      currentMenu,
-      tabsList,
-      swiperEl,
-      options,
-      switchTab: (route: Menu) => store.commit('crumbs/switchTab', route),
-      removeTab: (route: Menu) => store.commit('crumbs/removeTab', route),
+    const handleTo = (route: Menu) => {
+      handSwitchTab(route)
+      router.push(route.path as RouteLocationRaw)
     }
-  },
-  methods: {
-    handleTo(route: Menu) {
-      this.switchTab(route)
-      this.$router.push(route.path as RouteLocationRaw)
-    },
-    handleClose(route: Menu, index: number) {
-      console.log(
-        index,
-        this.currentMenu.path,
-        route.path,
-        index !== this.tabsList.length - 1
-      )
-
-      if (this.currentMenu.path === route.path) {
-        if (index === 0 && this.tabsList && this.tabsList.length === 1) {
-          this.$router.push('/home')
+    const handleClose = (route: Menu, index: number) => {
+      if (unref(currentMenu).path === route.path) {
+        if (index === 0 && tabsList && unref(tabsList).length === 1) {
+          router.push('/home')
         } else {
-          if (index !== this.tabsList.length - 1) {
-            console.log('A')
-
-            this.$router.push(this.tabsList[index + 1].path as RouteLocationRaw)
+          if (index !== unref(tabsList).length - 1) {
+            router.push(unref(tabsList)[index + 1].path as RouteLocationRaw)
           } else {
-            console.log('B')
-
-            this.$router.push(this.tabsList[index - 1].path as RouteLocationRaw)
+            router.push(unref(tabsList)[index - 1].path as RouteLocationRaw)
           }
         }
       }
-      this.removeTab(route)
-    },
+      handRemoveTab(route)
+    }
+
+    const handleSollPage = (direction: string) => {
+      const tagsNode: Element[] = Array.from(
+        document.querySelectorAll('.sliding-container>span.el-tag')
+      )
+      const windowNode = document.querySelector('.sliding-container')
+      const marginBorder = 6
+
+      const getTagsNodeWidht = (start: number, end: number): number => {
+        let l = 0
+        for (
+          let i = start;
+          i <= end && start < tagsNode.length && end < tagsNode.length;
+          i++
+        ) {
+          const el = tagsNode[i]
+          l = l + el.clientWidth + marginBorder
+        }
+        return l
+      }
+      const totaLength = getTagsNodeWidht(0, tagsNode.length - 1)
+      if ('left' === direction) {
+        for (let i = firstSubscript.value; i < tagsNode.length; i++) {
+          if (
+            windowNode &&
+            getTagsNodeWidht(firstSubscript.value, i) > windowNode.clientWidth
+          ) {
+            const _offsetX =
+              offsetX.value - getTagsNodeWidht(firstSubscript.value, i - 1)
+
+            if (Math.abs(totaLength) > Math.abs(_offsetX)) {
+              firstSubscript.value = i
+              offsetX.value = -1 * getTagsNodeWidht(0, i - 1)
+            }
+            return false
+          }
+        }
+      }
+      if ('right' === direction) {
+        for (let i = -1 + firstSubscript.value; i >= 0; i--) {
+          if (
+            windowNode &&
+            getTagsNodeWidht(i, firstSubscript.value - 1) >
+              windowNode.clientWidth
+          ) {
+            const _offsetX =
+              offsetX.value + getTagsNodeWidht(i, firstSubscript.value - 1)
+            if (Math.abs(totaLength) > Math.abs(_offsetX) && _offsetX <= 0) {
+              firstSubscript.value = i
+              offsetX.value = -1 * getTagsNodeWidht(0, i)
+            }
+            return false
+          } else if (
+            windowNode &&
+            getTagsNodeWidht(0, firstSubscript.value - 1) <=
+              windowNode.clientWidth
+          ) {
+            firstSubscript.value = 0
+            offsetX.value = 0
+            return false
+          }
+        }
+      }
+    }
+
+    return {
+      currentMenu,
+      tabsList,
+      offsetX,
+      handleTo,
+      handleClose,
+      handleSollPage,
+    }
   },
 })
 </script>
@@ -92,6 +156,7 @@ export default defineComponent({
   .indicate-btn {
     display: inline-block;
     width: 0.5rem;
+    min-width: 0.3rem;
     line-height: 30px;
     text-align: center;
     cursor: pointer;
@@ -102,13 +167,13 @@ export default defineComponent({
     }
   }
   .sliding-window {
-    display: flex;
+    position: relative;
     flex-grow: 1;
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    &::-webkit-scrollbar {
-      width: 3px;
+    overflow: hidden;
+    .sliding-container {
+      position: relative;
+      display: flex;
+      transition: transform 0.3s;
     }
   }
 }

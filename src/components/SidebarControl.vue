@@ -10,7 +10,7 @@
     :router="true"
   >
     <router-link to="/home" custom v-slot="{ navigate }">
-      <li class="logo" @click="navigate">LOGO</li>
+      <li class="logo" @click="navigate">管理系统</li>
     </router-link>
 
     <template v-for="(menu_item, i) in menu" :key="i">
@@ -91,12 +91,13 @@ import { defineComponent, toRefs } from 'vue'
 import { useStore } from 'vuex'
 import { Menu } from '@/custom'
 import { key } from '@/store'
+import { Sidebar } from '@/store/modules/sidebar'
 
 export default defineComponent({
   name: 'SidebarControl',
   setup() {
     const store = useStore(key)
-    const { isCollapse, menu } = toRefs(store.state.sidebar)
+    const { isCollapse, menu } = toRefs<Sidebar>(store.state.sidebar)
     return {
       menu,
       isCollapse,
@@ -112,6 +113,11 @@ export default defineComponent({
   cursor: pointer;
   background-color: #fff;
   z-index: 9999;
+  overflow: hidden;
+
+  text-align: center;
+  line-height: 60px;
+  font-size: 25px;
 }
 .side-navigation {
   overflow-y: auto;
@@ -126,6 +132,7 @@ export default defineComponent({
     background-color: var(--sidebar-active-background-color) !important;
   }
 }
+
 .side-navigation:not(.el-menu--collapse) {
   width: 200px;
   min-height: 100vh;

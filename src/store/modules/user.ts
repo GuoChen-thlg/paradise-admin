@@ -1,43 +1,62 @@
+import { user } from '@/types/user'
 import { verifyLogin } from '@/api'
-import { RootState } from '@/store/index.d'
+import { RootState } from '@/store/index'
 import { ActionTree, Module, MutationTree } from 'vuex'
-export interface User {
-	login_status: boolean
+
+import { AUTHORITY } from '@/enum'
+/* 用户 */
+export interface User extends user {
+	/**
+	 * 登录状态
+	 */
+	login_statu: boolean
+	authority: AUTHORITY[]
 }
 
 const state: User = {
-	login_status: false,
+	id: 0,
+	login_statu: false,
+	name: '',
+	authority: [
+		AUTHORITY.PERSONNEL_C,
+		AUTHORITY.PERSONNEL_D,
+		AUTHORITY.PERSONNEL_R,
+		AUTHORITY.PERSONNEL_U,
+		AUTHORITY.PEUDUCT_C,
+		AUTHORITY.PEUDUCT_D,
+		AUTHORITY.PEUDUCT_R,
+		AUTHORITY.PEUDUCT_U,
+	],
+	backpack: [],
 }
 const mutations: MutationTree<User> = {
 	logIn(state) {
-		state.login_status = true
+		state.login_statu = true
 	},
 	signOut(state) {
-		state.login_status = false
+		state.login_statu = false
 	},
 }
 const actions: ActionTree<User, RootState> = {
-	verifyLogin({ commit }) {
-		if (localStorage.getItem('token')) {
-			verifyLogin('')
-				.then(data => {
-					console.log(data)
+	asyncVerifyLogin({ commit }) {
+		verifyLogin()
+			.then(data => {
+				if (data && data.code === 2000) {
 					commit('logIn')
-					localStorage.setItem('token', '******sd*as*d****.*.**.*')
-				})
-				.catch(error => {
-					console.log(error)
+				} else {
 					commit('signOut')
-					localStorage.removeItem('token')
-				})
-		}
+				}
+			})
+			.catch(error => {
+				commit('signOut')
+			})
 	},
 }
-
 const module: Module<User, RootState> = {
 	namespaced: true,
 	state,
 	mutations,
 	actions,
 }
+
 export default module

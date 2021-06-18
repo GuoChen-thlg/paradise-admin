@@ -1,10 +1,11 @@
-import { ResponseData } from '@/custom'
 import axios, {
 	AxiosInstance,
 	AxiosRequestConfig,
 	AxiosResponse,
 	Canceler,
 } from 'axios'
+import { ResponseData } from '@/custom'
+import Cookie from 'js-cookie'
 
 const config: AxiosRequestConfig = {
 	baseURL:
@@ -13,7 +14,8 @@ const config: AxiosRequestConfig = {
 			: process.env.VUE_APP_DEV_API,
 
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded',
+		// x-www-form-urlencoded
+		'Content-Type': 'application/json',
 	},
 }
 
@@ -23,13 +25,17 @@ const station: Map<string, Canceler> = new Map()
 const registReq = (reqConfig: AxiosRequestConfig): AxiosRequestConfig => {
 	const key = `${reqConfig.method}-${reqConfig.url}`
 	reqConfig.cancelToken = new axios.CancelToken(cancel => {
-		if (station.has(key)) {
-			const oldCancel = station.get(key)
-			if (oldCancel) {
-				oldCancel()
+		if (reqConfig.data && station.has(key)) {
+			reqConfig?.data.priority === true && cancel()
+		} else {
+			if (station.has(key)) {
+				const oldCancel = station.get(key)
+				if (oldCancel) {
+					oldCancel()
+				}
 			}
+			station.set(key, cancel)
 		}
-		station.set(key, cancel)
 	})
 	return reqConfig
 }
@@ -43,20 +49,19 @@ const removeReq = (
 	return res
 }
 
-const handlingError = (error: any) => {
-	
-	return Promise.reject(error)
+const handlingError = (err: any) => {
+	return Promise.reject(err)
 }
 
 _axios.interceptors.request.use(
 	(reqConfig: AxiosRequestConfig) => {
 		/* 权限控制 token */
-		// reqConfig.headers.Authorization = `${token}`
+		// reqConfig.headers.Authorization = Cookie.get('Authorization')
 
 		return registReq(reqConfig)
 	},
-	error => {
-		console.log('请求拦截', error)
+	err => {
+		console.log('请求拦截', err)
 	}
 )
 _axios.interceptors.response.use(
@@ -65,9 +70,9 @@ _axios.interceptors.response.use(
 
 		return removeReq(res)
 	},
-	error => {
-		console.log('响应拦截', error)
-		return handlingError(error)
+	err => {
+		console.log('响应拦截', err)
+		return handlingError(err)
 	}
 )
 export default _axios

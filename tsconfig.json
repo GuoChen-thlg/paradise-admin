@@ -11,9 +11,6 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "webpack-env"
-    ],
     "paths": {
       "@/*": [
         "src/*"
@@ -23,14 +20,15 @@
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost"
+      "scripthost",
     ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "src/*.vue",
     "src/**/*.vue",
-    "tests/**/*.ts",
+    "tests/**/*.spec.ts",
     "tests/**/*.tsx"
   ],
   "exclude": [

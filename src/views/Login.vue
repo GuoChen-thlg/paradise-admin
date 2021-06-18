@@ -1,22 +1,16 @@
-/* eslint-disable vue/attributes-order */
 <template>
   <el-main class="login-main">
     <section class="form-container">
-      <div
-        v-show="is_show_form_sign_in"
-        class="sign-in"
-      >
+      <div v-show="is_show_form_sign_in" class="sign-in">
         <el-form
-          ref="form-sign-in"
+          ref="formSignIn"
           :model="form_sign_in"
           :hide-required-asterisk="true"
           :status-icon="true"
           :rules="sign_in_rules"
         >
           <el-form-item>
-            <h1 class="form-title">
-              管理系统
-            </h1>
+            <h1 class="form-title">管理系统</h1>
           </el-form-item>
           <el-form-item prop="user_name">
             <el-input
@@ -44,16 +38,11 @@
             ></el-avatar> -->
           </el-form-item>
           <el-form-item>
-            <el-button @click="handleFormSignIn">
-              登录
-            </el-button>
+            <el-button @click="handleFormSignIn"> 登录 </el-button>
           </el-form-item>
           <el-form-item>
-            <el-row
-              type="flex"
-              justify="space-between"
-            >
-              <el-col :span="4">
+            <el-row type="flex" justify="space-between">
+              <el-col :xs="5" :sm="4">
                 <el-link
                   type="primary"
                   :underline="false"
@@ -62,34 +51,24 @@
                   立即注册
                 </el-link>
               </el-col>
-              <el-col :span="4">
+              <el-col :xs="5" :sm="4">
                 <!-- TODO 未实现找回密码 -->
-                <el-link
-                  type="primary"
-                  :underline="false"
-                >
-                  忘记密码
-                </el-link>
+                <el-link type="primary" :underline="false"> 忘记密码 </el-link>
               </el-col>
             </el-row>
           </el-form-item>
         </el-form>
       </div>
-      <div
-        v-show="!is_show_form_sign_in"
-        class="registered"
-      >
+      <div v-show="!is_show_form_sign_in" class="registered">
         <el-form
-          ref="form-registered"
+          ref="formRegistered"
           :model="form_registered"
           :hide-required-asterisk="true"
           :status-icon="true"
           :rules="registered_rules"
         >
           <el-form-item>
-            <h1 class="form-title">
-              登记处
-            </h1>
+            <h1 class="form-title">登记处</h1>
           </el-form-item>
           <el-form-item prop="regist_name">
             <el-input
@@ -118,11 +97,8 @@
             />
           </el-form-item>
           <el-form-item prop="regist_email">
-            <el-row
-              type="flex"
-              justify="space-between"
-            >
-              <el-col :span="16">
+            <el-row type="flex" justify="space-between">
+              <el-col :xs="14" :sm="16">
                 <el-input
                   v-model="form_registered.regist_email"
                   name="regist_email"
@@ -130,12 +106,9 @@
                   clearable
                 />
               </el-col>
-              <el-col :span="7">
+              <el-col :xs="9" :sm="7">
                 <!-- TODO 邮箱发送验证码 -->
-                <el-button
-                  @click="handleSendCode"
-                  v-text="code_text"
-                />
+                <el-button @click="handleSendCode" v-text="code_text" />
               </el-col>
             </el-row>
           </el-form-item>
@@ -152,19 +125,13 @@
               v-model="form_registered.agree_terms"
               name="agree_terms"
             >
-              <router-link
-                v-slot="{ navigate }"
-                to="/"
-                custom
-              >
+              <router-link v-slot="{ navigate }" to="/" custom>
                 <span @click="navigate"> 同意《用户服务条款》 </span>
               </router-link>
             </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button @click="handleFormRegist">
-              注册
-            </el-button>
+            <el-button @click="handleFormRegist"> 注册 </el-button>
           </el-form-item>
           <el-form-item>
             <el-link
@@ -182,22 +149,25 @@
 </template>
 <script lang="ts">
 import { useStore } from 'vuex'
-import { defineComponent, onMounted, reactive, ref } from 'vue'
-import ElForm from 'element-plus/lib/el-form'
+import { defineComponent, reactive, ref, unref } from 'vue'
 
 import { login } from '@/api'
 import { key } from '@/store'
 import { Menu } from '@/custom'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Login',
   setup() {
     /* 数据 */
     const store = useStore(key)
+    const router = useRouter()
     const form_sign_in = reactive({
-      user_name: 'admin',
+      user_name: 'rootadmin',
       user_password: '123456',
     })
+    const formRegistered = ref<any>(null)
+    const formSignIn = ref<any>(null)
     const is_show_form_sign_in = ref(true)
     const form_registered = reactive({
       regist_name: '',
@@ -208,11 +178,51 @@ export default defineComponent({
       agree_terms: false,
     })
     const code_text = ref('发送验证码')
+    const setMenu = (menu: Menu) => store.commit('sidebar/setMenu', menu)
 
-    /* 生命周期 */
-    onMounted(() => {
-      // console.log(form_sign_in)
-    })
+    const handleFormRegist = () => {
+      unref(formRegistered).validate((valid: boolean) => {
+        if (valid) {
+          alert('注册成功！')
+        } else {
+          return false
+        }
+      })
+    }
+    const handleFormSignIn = () => {
+      console.log(unref(formSignIn))
+
+      unref(formSignIn).validate(async (valid: boolean) => {
+        if (valid) {
+          // TODO 向服务器发送数据 jwt 认证 密码加密
+          const result = await login(
+            JSON.stringify({
+              username: form_sign_in.user_name,
+              password: form_sign_in.user_password,
+            })
+          )
+          if (result && result.code === 2000) {
+            setMenu(result.data.routeList)
+            store.commit('user/logIn')
+            router.push('/home')
+          }
+        } else {
+          return false
+        }
+      })
+    }
+    // TODO 通过邮箱发送验证码
+    const handleSendCode = () => {
+      let ss = 60
+      const times = setInterval(() => {
+        ss--
+        code_text.value = `已发送 ${ss} s`
+        if (ss === 0) {
+          code_text.value = '发送验证码'
+          clearInterval(times)
+        }
+      }, 1e3)
+    }
     /* 验证规则 */
     const sign_in_rules = {
       user_name: [
@@ -234,13 +244,13 @@ export default defineComponent({
           trigger: 'blur',
         },
         {
-          pattern: /^\w{6,18}$/,
-          message: '密码最少6位',
+          pattern: /^\S{6,18}$/,
+          message: '只能包含字母数字及符号（6-18）',
           trigger: 'blur',
         },
       ],
     }
-    
+
     const registered_rules = {
       regist_name: [
         {
@@ -327,60 +337,19 @@ export default defineComponent({
       ],
     }
     return {
+      formSignIn,
       form_sign_in,
       is_show_form_sign_in,
+      formRegistered,
       sign_in_rules,
       form_registered,
       registered_rules,
       code_text,
-      handleLogIn: () => store.commit('user/logIn'),
-      login_status: store.state.user.login_status,
-      setMenu: (menu: Menu) => store.commit('sidebar/setMenu', menu),
+      login_status: store.state.user.login_statu,
+      handleSendCode,
+      handleFormRegist,
+      handleFormSignIn,
     }
-  },
-  methods: {
-    handleFormSignIn() {
-      const form_sign_in = this.$refs['form-sign-in'] as typeof ElForm
-      form_sign_in.validate((valid: boolean) => {
-        if (valid) {
-          // TODO 向服务器发送数据 jwt 认证
-          login({
-            user: this.form_sign_in.user_name,
-            password: this.form_sign_in.user_password,
-          }).then((data) => {
-            if (data && data.code === 2000) {
-              this.setMenu(data.user.routeList)
-              this.handleLogIn()
-              this.$router.push('/home')
-            }
-          })
-        } else {
-          return false
-        }
-      })
-    },
-    handleFormRegist() {
-      const form_sign_in = this.$refs['form-registered'] as typeof ElForm
-      form_sign_in.validate((valid: boolean) => {
-        if (valid) {
-          alert('注册成功！')
-        } else {
-          return false
-        }
-      })
-    },
-    // TODO 通过邮箱发送验证码
-    handleSendCode() {
-      let ss = 60
-      const times = setInterval(() => {
-        ss--
-        this.code_text = `已发送 ${ss} s`
-        if (ss === 0) {
-          this.code_text = '发送验证码'
-          clearInterval(times)
-        }
-      }, 1e3)
-    },
   },
 })
 </script>
@@ -392,6 +361,7 @@ export default defineComponent({
 }
 .form-container {
   width: 4rem;
+  max-width: 100%;
   margin: 0.7rem auto 0.2rem;
   border: 0.01rem solid transparent;
   .form-title {

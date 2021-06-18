@@ -8,10 +8,11 @@
 	/* 头部高度 */
 	--header-height: 0.6rem;
 
+	/* 主题 */
 
-
-
-	/*  */
+	--theme-background-color: #fff;
+	--theme-font-color: pink;
+	--theme-link-font-color: pink;
 }
 .iconfont {
 	display: inline-block;
@@ -19,4 +20,11 @@
 	margin-right: 5px;
 	vertical-align: middle;
 	text-align: center;
+}
+.swiper-media-item {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
 }

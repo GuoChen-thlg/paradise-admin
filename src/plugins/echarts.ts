@@ -2,8 +2,9 @@ import { App } from 'vue'
 import Echarts from 'vue-echarts'
 
 import { use } from 'echarts/core'
+import { GlobeComponent } from 'echarts-gl/components'
 import { CanvasRenderer } from 'echarts/renderers'
-import { MapChart, BarChart, LineChart, PieChart } from 'echarts/charts'
+import { MapChart, BarChart, LineChart, PieChart,CandlestickChart } from 'echarts/charts'
 import {
 	TitleComponent,
 	ToolboxComponent,
@@ -13,6 +14,8 @@ import {
 	GridComponent,
 	LegendComponent,
 	DataZoomComponent,
+	MarkLineComponent,
+	MarkPointComponent,
 } from 'echarts/components'
 
 use([
@@ -29,6 +32,10 @@ use([
 	GridComponent,
 	LegendComponent,
 	DataZoomComponent,
+	MarkLineComponent,
+	MarkPointComponent,
+	CandlestickChart,
+	GlobeComponent,
 ])
 
 export default {

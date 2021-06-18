@@ -1,32 +1,6 @@
 # paradise-admin
 
-## Project setup
-
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 功能模块
 
 -   [] 👍vue 脚手架 👍（脚手架助你安装/卸载组件更方便）<br/>
 -   [] 工业化 UI 组件（上手即用，无需自己造轮子）<br/>
@@ -46,6 +20,30 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 -   [] mock 数据<br/>
 -   [x] 炫酷 hover 特效
 
+天宫管理系统
+|-兜率宫
+| |- 丹药销售
+| |- 丹药编辑
+|-人间
+|
+|
+|-地府
+| |-
+| |-
+| |-
+| |-
+| |-
+| |-
+| |-
+| |-
+| |-
+
+权限
+|-用户组
+|-成员
+| |-所属用户组
+| |-权限
+
 ## 状态码
 
 2000 ok
@@ -64,12 +62,27 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 登录页
 404
 人员统计
+五雷院
+驱邪院
+水火
 
-    五雷院
-    驱邪院
-    水火
+| 媒体 属性     | type   | 示例                                            |
+| ------------- | ------ | ----------------------------------------------- |
+| type          | string | image video                                     |
+| src           | string | https://xxx.com/xxx.png https://xxx.com/xxx.mp4 |
+| alt           | string |                                                 |
+| product_id    | string |                                                 |
+| variant_ids   | Array  | []                                              |
+| width         | number | 100                                             |
+| height        | number | 100                                             |
+| index         | number | 1                                               |
+| created_at    | string | 2020-02-02 01:00:00                             |
+| aspect_ratio  | number | 1.0                                             |
+| id            | string |                                                 |
+| preview_image | string | https://xxx.com/xxx.png 只有视频有此属性        |
 
 ui
+
 <!-- https://www.zcool.com.cn/work/ZMjUwNjgyMjQ=.html -->
 
 股票接口
@@ -82,3 +95,5 @@ ui
 
 地图
 http://www.360doc.com/content/20/0320/17/982189_900571448.shtml
+
+JSEncrypt 加密密码

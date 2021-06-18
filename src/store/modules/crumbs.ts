@@ -1,11 +1,20 @@
-import { RootState } from '@/store/index.d'
+import { RootState } from '@/store/index'
 import { Module, MutationTree } from 'vuex'
 import { Menu } from '@/custom'
-
+/* TAB 切换  */
 export interface Crumbs {
+	/**
+	 * 当前 激活菜单
+	 */
 	currentMenu: Menu
+	/**
+	 * tab 列表
+	 */
 	tabsList: Menu[]
-	cacheList: String[]
+	/**
+	 * 需要缓存的组件名称 列表
+	 */
+	cacheList: string[]
 }
 
 const state: Crumbs = {
@@ -23,14 +32,12 @@ const mutations: MutationTree<Crumbs> = {
 			const has = state.tabsList.some(tab => {
 				return tab.path === menu.path
 			})
-			// if (!has) {
-			state.tabsList.push(menu)
-			console.log(menu.componentName)
-
-			if (menu.componentName) {
-				state.cacheList.push(`${menu.componentName}`)
+			if (!has) {
+				state.tabsList.push(menu)
+				if (menu.componentName) {
+					state.cacheList.push(`${menu.componentName}`)
+				}
 			}
-			// }
 		}
 	},
 	switchTab(state, menu: Menu) {

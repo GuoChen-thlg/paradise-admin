@@ -3,12 +3,18 @@ Write your variables here. All available variables can be
 found in element-plus/packages/theme-chalk/src/common/var.scss.
 For example, to overwrite the theme color:
 */
-
+// @import url('~element-plus/packages/theme-chalk/src/common/var.scss');
 $--color-primary: #0e83c1;
 $--color-success: #108646;
 $--color-warning: #d18e06;
 $--color-danger: #fe0202;
+
+
+
+
+
+
 /* icon font path, required */
 $--font-path: '~element-plus/lib/theme-chalk/fonts';
-@import url('//at.alicdn.com/t/font_2493604_h3ul0v78a95.css');
+@import url('//at.alicdn.com/t/font_2493604_0l8tx25rtn9.css');
 @import '~element-plus/packages/theme-chalk/src/index';
