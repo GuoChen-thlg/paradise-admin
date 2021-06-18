@@ -6,7 +6,9 @@
     "url": "https://www.thlg.ml"
   },
   "contributors": [],
-  "bugs": {},
+  "bugs": {
+    "url": "https://github.com/GuoChen-thlg/paradise-admin/issues"
+  },
   "version": "0.1.0",
   "keywords": [
     "vue3",
@@ -17,7 +19,7 @@
   "description": "一个后台管理系统",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/GuoChen-thlg/paradise-admin"
   },
   "main": "",
   "private": true,
