@@ -9,7 +9,7 @@ export interface Sidebar {
 import { getAuthInfo } from '@/api'
 
 const state: Sidebar = {
-	isCollapse: false,
+	isCollapse: true,
 	menu: [],
 }
 

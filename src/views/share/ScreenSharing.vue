@@ -1,5 +1,15 @@
 <template>
-    <el-main></el-main>
+    <el-main  class="screen-sharing">
+        <div>
+            
+        </div>
+
+
+
+
+
+
+    </el-main>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'

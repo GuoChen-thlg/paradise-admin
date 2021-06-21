@@ -1,5 +1,5 @@
 <template>
-    <el-main></el-main>
+    <el-main class="printscreen"></el-main>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
