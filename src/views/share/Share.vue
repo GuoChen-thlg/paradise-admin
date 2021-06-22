@@ -193,7 +193,7 @@
           </el-tooltip>
         </div>
 
-        <div class="tool-item">
+        <!-- <div class="tool-item">
           <el-popover trigger="click" placement="bottom-end" width="210px">
             <template #reference>
               <el-button
@@ -234,7 +234,7 @@
               ></el-button>
             </div>
           </el-popover>
-        </div>
+        </div> -->
 
         <div class="tool-item">
           <el-tooltip effect="dark" placement="bottom-start" content="文字">
@@ -372,6 +372,8 @@ import { Shape } from 'konva/lib/Shape'
 import { Rect } from 'konva/lib/shapes/Rect'
 import { Circle } from 'konva/lib/shapes/Circle'
 import { Ellipse } from 'konva/lib/shapes/Ellipse'
+import { Text } from 'konva/lib/shapes/Text'
+import { pen } from '@/utils/style/cursor'
 export default defineComponent({
   name: 'Share',
   setup() {
@@ -397,6 +399,8 @@ export default defineComponent({
     let tool_rect: Rect | null = null
     let tool_circle: Circle | null = null
     let tool_ellipse: Ellipse | null = null
+    let tool_text: Text | null = null
+    let tool_image: Image | null = null
     let temStorage: any = null
     /** */
     const tools = reactive({
@@ -428,8 +432,6 @@ export default defineComponent({
       size: 4,
     })
 
-    /**视频宽高比 */
-    let video_aspect_ratio = 0
     /**canvas 媒体录制 */
     const canvas_media_recorder = ref<any>(null)
     /**录制数据 */
@@ -476,48 +478,68 @@ export default defineComponent({
             tools.color = `${
               (
                 tools.color.match(
-                  /[rgba]{3,4}\((\d{1,3},){3}/
+                  /[rgba]{3,4}\((\d+,\s*){3}/
                 ) as RegExpMatchArray
               )[0]
             }1)`
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = pen
+            console.log('pen')
           }
         },
         rect: (b) => {
           tools.shapes.rect = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         circle: (b) => {
           tools.shapes.circle = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         ellipse: (b) => {
           tools.shapes.ellipse = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         line: (b) => {
           tools.line = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         line_arrow: (b) => {
           tools.arrow.line_arrow = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         bezier_arrow: (b) => {
           tools.arrow.bezier_arrow = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         big_head_arrow: (b) => {
           tools.arrow.big_head_arrow = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         text: (b) => {
           tools.text = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            tools.size = 16
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         rect_blur: (b) => {
           tools.rect_blur = b
-          ;(stage as Stage).container().style.cursor = ''
+          if (b) {
+            ;(stage as Stage).container().style.cursor = ''
+          }
         },
         highlight: (b) => {
           tools.highlight = b
@@ -526,7 +548,7 @@ export default defineComponent({
             tools.color = `${
               (
                 tools.color.match(
-                  /[rgba]{3,4}\((\d{1,3},){3}/
+                  /[rgba]{3,4}\((\d+,\s*){3}/
                 ) as RegExpMatchArray
               )[0]
             }0.6)`
@@ -590,13 +612,14 @@ export default defineComponent({
               tool_line = new Konva.Line({
                 stroke: tools.color,
                 strokeWidth: tools.size,
-                globalCompositeOperation: 'source-over',
                 points: [pos.x, pos.y],
               })
-              tool_line.on('mouseenter', function () {
-                console.log(this)
-                ;(stage as Stage).container().style.cursor = 'move'
-              })
+              if (tools.pen) {
+                tool_line.globalCompositeOperation('source-over')
+              } else if (tools.highlight) {
+                tool_line.globalCompositeOperation('lighten')
+              }
+              // destination-out 橡皮
               layer?.add(tool_line)
             }
             break
@@ -611,6 +634,7 @@ export default defineComponent({
                 stroke: tools.color,
                 strokeWidth: tools.size,
               })
+
               layer?.add(tool_rect)
             }
             break
@@ -664,14 +688,45 @@ export default defineComponent({
               })
               layer?.add(tool_line)
             }
-
             break
           case tools.text:
+            isPaint = true
+            if (pos) {
+              tool_text = new Konva.Text({
+                text: 'text',
+                x: pos.x,
+                y: pos.y,
+                draggable: true,
+                fill: tools.color,
+                fontSize: tools.size,
+              })
+              layer?.add(tool_text)
+            }
+            break
+          case tools.rect_blur:
+            isPaint = true
+            if (pos && preview_player_canvas.value) {
+              tool_image = new Konva.Image({
+                image: preview_player_canvas.value,
+                x: pos.x,
+                y: pos.y,
+                width: 0,
+                height: 0,
+                crop: {
+                  x: pos.x,
+                  y: pos.y,
+                  width: 0,
+                  height: 0,
+                },
+              })
+              layer?.add(tool_image)
+            }
             break
 
           default:
             break
         }
+        console.log('mousedown', isPaint)
       })
       stage.on('mouseup touchend', function () {
         switch (true) {
@@ -681,6 +736,8 @@ export default defineComponent({
           case tools.shapes.circle:
           case tools.shapes.ellipse:
           case tools.line:
+          case tools.text:
+          case tools.rect_blur:
             isPaint = false
             temStorage = null
             break
@@ -689,7 +746,10 @@ export default defineComponent({
             break
         }
       })
-
+      stage.on('mouseleave', function () {
+        isPaint = false
+        console.log('mouseleave')
+      })
       stage.on('mousemove', function () {
         let pos = (stage as Stage).getPointerPosition()
         let new_points: any
@@ -762,10 +822,26 @@ export default defineComponent({
               layer?.batchDraw()
             }
             break
+          case tools.rect_blur:
+            if (!isPaint) return
+            if (tool_image && pos) {
+              const [start_x, start_y] = [tool_image.x(), tool_image.y()]
+              tool_image.width(pos.x - start_x)
+              tool_image.height(pos.y - start_y)
+              tool_image.cropWidth(pos.x - start_x)
+              tool_image.cropHeight(pos.y - start_y)
+              tool_image.blurRadius(20)
+              tool_image.cache()
+              tool_image.filters([Konva.Filters.Blur])
+
+              layer?.batchDraw()
+            }
+            break
 
           default:
             break
         }
+        console.log('mousemove', isPaint)
       })
     }
 
@@ -835,7 +911,6 @@ export default defineComponent({
       let _offsetWidth = _crude_player_video.offsetWidth
       let _offsetHeight = _crude_player_video.offsetHeight
 
-      video_aspect_ratio = _offsetWidth / _offsetHeight
       const [width, height] = [layer.width(), layer.height()]
 
       video_shape = new Konva.Image({
@@ -926,6 +1001,8 @@ export default defineComponent({
         stage.width(roEntry.borderBoxSize[0].inlineSize)
         stage.height(roEntry.borderBoxSize[0].blockSize)
         const [width, height] = [stage.width(), stage.height()]
+        ;(preview_player_canvas.value as HTMLCanvasElement).width = width
+        ;(preview_player_canvas.value as HTMLCanvasElement).height = height
         tools.video.width = width
         tools.video.height = height
         const _crude_player_video = crude_player_video.value
