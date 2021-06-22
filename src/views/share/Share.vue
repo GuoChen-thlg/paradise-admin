@@ -1,5 +1,6 @@
 <template>
   <el-main class="share">
+    <img src="" height="300" id="img" />
     <div class="toolbar">
       <div class="tools">
         <div class="tool-item">
@@ -319,7 +320,7 @@
         </div>
       </div>
     </div>
-    <h1>录制视频</h1>
+    <h1>视频</h1>
     <div class="preview-container">
       <!-- 视频流比例适配 -->
       <div class="black-hole">
@@ -348,8 +349,8 @@
         :style="{
           width: tools.video.width + 'px',
           height: tools.video.height + 'px',
-          resize: tools.video.lock_canvas_size ? 'none' : 'both',
-          zIndex: tools.video.lock_canvas_size ? -99999 : 3,
+          resize: !tools.video.lock_canvas_size ? 'both' : 'none',
+          zIndex: !tools.video.lock_canvas_size ? 3 : -99999,
         }"
         ref="coodoo_doll"
         disabled
@@ -359,21 +360,32 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { download } from '@/utils/util'
 import { onBeforeRouteLeave } from 'vue-router'
 import Konva from 'konva'
 import { Stage } from 'konva/lib/Stage'
 import { Layer } from 'konva/lib/Layer'
 import { Image } from 'konva/lib/shapes/Image'
 import { Animation } from 'konva/lib/Animation'
-import { AnimationFn, IFrame, Vector2d } from 'konva/lib/types'
+import { AnimationFn, IFrame } from 'konva/lib/types'
 import { Line } from 'konva/lib/shapes/Line'
 import { Shape } from 'konva/lib/Shape'
 import { Rect } from 'konva/lib/shapes/Rect'
+import { Transformer } from 'konva/lib/shapes/Transformer'
 import { Circle } from 'konva/lib/shapes/Circle'
 import { Ellipse } from 'konva/lib/shapes/Ellipse'
 import { Text } from 'konva/lib/shapes/Text'
-import { pen } from '@/utils/style/cursor'
+import { download } from '@/utils/util'
+import {
+  cert_blur,
+  ellipse,
+  highlight,
+  line,
+  line_arrow,
+  move,
+  pen,
+  rect,
+  text as cursor_text,
+} from '@/utils/style/cursor'
 export default defineComponent({
   name: 'Share',
   setup() {
@@ -388,11 +400,12 @@ export default defineComponent({
     /**preview_player_canvas 的伴生 TextAreaElement */
     const coodoo_doll = ref<HTMLTextAreaElement | null>(null)
     /** */
+    let tr: Transformer | null = null
     let stage: Stage | null = null
     let layer: Layer | null = null
     let video_shape: Image | null = null
     let anim: Animation | null = null
-    let global_index = 0
+    let global_index = -1
     /**  */
     let isPaint = false
     let tool_line: Line | null = null
@@ -401,7 +414,8 @@ export default defineComponent({
     let tool_ellipse: Ellipse | null = null
     let tool_text: Text | null = null
     let tool_image: Image | null = null
-    let temStorage: any = null
+    let temStorage: { [k: string]: any } | null = null
+    let temCursor = ''
     /** */
     const tools = reactive({
       video: {
@@ -443,25 +457,68 @@ export default defineComponent({
       pause_disabled: true,
       resume_disabled: true,
     })
-    /**视频信息 */
-    const video_info = reactive({
-      width: 1778,
-      height: 1000,
-    })
     /** 定时器 */
     let time: any = null
 
     /*****************************************函数声明*****************************************/
-    /**动画回调 */
+
+    /**
+     * @description 更新底片 更新 rect_blur 功能中  image 图像
+     */
+    const handleUpdateFilm = (shape?: Image) => {
+      if (layer) {
+        const _layer = layer.clone()
+        _layer.getChildren().forEach((c) => {
+          if (c.hasName('rect_blur')) {
+            c.destroy()
+          }
+        })
+        const _canvas = _layer.toCanvas()
+        if (shape) {
+          shape.image(_canvas)
+          shape.crop({
+            x: shape.x(),
+            y: shape.y(),
+            width: shape.getWidth(),
+            height: shape.getHeight(),
+          })
+          if (shape.width() !== 0 && shape.height() != 0) shape.cache()
+          shape.filters([Konva.Filters.Blur])
+        } else {
+          layer.find<Image>('.rect_blur').forEach((c) => {
+            c.image(_canvas)
+            c.crop({
+              x: c.x(),
+              y: c.y(),
+              width: c.getWidth(),
+              height: c.getHeight(),
+            })
+            if (c.width() !== 0 && c.height() != 0) c.cache()
+            c.filters([Konva.Filters.Blur])
+          })
+        }
+      }
+    }
+
+    /**
+     * @description
+     * 动画回调
+     *
+     */
     let handleAnimBack: AnimationFn = (frame?: IFrame | undefined) => {
-      //
+      if (layer) {
+        handleUpdateFilm()
+      }
+
       if (crude_media?.active === false) {
+        layer?.destroyChildren()
         anim?.stop()
+        canvas_media_recorder.value?.stop()
         button_usable.start_disabled = false
         button_usable.stop_disabled = true
-        canvas_media_recorder.value?.stop()
         button_usable.pause_disabled = true
         button_usable.resume_disabled = true
+        handleResetVideoSize()
       }
     }
     /**
@@ -483,13 +540,12 @@ export default defineComponent({
               )[0]
             }1)`
             ;(stage as Stage).container().style.cursor = pen
-            console.log('pen')
           }
         },
         rect: (b) => {
           tools.shapes.rect = b
           if (b) {
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = rect
           }
         },
         circle: (b) => {
@@ -501,19 +557,19 @@ export default defineComponent({
         ellipse: (b) => {
           tools.shapes.ellipse = b
           if (b) {
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = ellipse
           }
         },
         line: (b) => {
           tools.line = b
           if (b) {
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = line
           }
         },
         line_arrow: (b) => {
           tools.arrow.line_arrow = b
           if (b) {
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = line_arrow
           }
         },
         bezier_arrow: (b) => {
@@ -532,13 +588,13 @@ export default defineComponent({
           tools.text = b
           if (b) {
             tools.size = 16
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = cursor_text
           }
         },
         rect_blur: (b) => {
           tools.rect_blur = b
           if (b) {
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = cert_blur
           }
         },
         highlight: (b) => {
@@ -552,7 +608,7 @@ export default defineComponent({
                 ) as RegExpMatchArray
               )[0]
             }0.6)`
-            ;(stage as Stage).container().style.cursor = ''
+            ;(stage as Stage).container().style.cursor = highlight
           }
         },
       }
@@ -578,157 +634,40 @@ export default defineComponent({
         height: 300,
       })
       layer = new Konva.Layer()
+      tr = new Konva.Transformer()
       anim = new Konva.Animation((frame) => handleAnimBack(frame), layer)
       preview_player_canvas.value = layer.canvas._canvas
       stage.add(layer)
       stage.draw()
     }
-
-    const handleRequestPIP = async () => {
-      if (!('pictureInPictureEnabled' in document)) {
-        // TODO 提示不支持画中画
-        return false
-      }
-      if (preview_player_video.value) {
-        const ppv = preview_player_video.value
-        try {
-          // 获取画中画窗体
-          const pIP = await (ppv as any).requestPictureInPicture()
-        } catch (err) {
-          // TODO 错误处理
-          console.log(err)
-        }
-      }
-    }
-
-    const handleInitTool = () => {
-      if (!stage) return false
-      stage.on('mousedown', function () {
-        const pos = (stage as Stage).getPointerPosition()
-        switch (true) {
-          case tools.pen || tools.highlight:
-            isPaint = true
-            if (pos) {
-              tool_line = new Konva.Line({
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                points: [pos.x, pos.y],
-              })
-              if (tools.pen) {
-                tool_line.globalCompositeOperation('source-over')
-              } else if (tools.highlight) {
-                tool_line.globalCompositeOperation('lighten')
-              }
-              // destination-out 橡皮
-              layer?.add(tool_line)
-            }
-            break
-          case tools.shapes.rect:
-            isPaint = true
-            if (pos) {
-              tool_rect = new Konva.Rect({
-                x: pos.x,
-                y: pos.y,
-                width: 0,
-                height: 0,
-                stroke: tools.color,
-                strokeWidth: tools.size,
-              })
-
-              layer?.add(tool_rect)
-            }
-            break
-          case tools.shapes.circle:
-            isPaint = true
-            if (pos) {
-              temStorage = {
-                x: pos.x,
-                y: pos.y,
-                circle: true,
-              }
-              tool_circle = new Konva.Circle({
-                x: pos.x,
-                y: pos.y,
-                radius: 0,
-                stroke: tools.color,
-                strokeWidth: tools.size,
-              })
-              layer?.add(tool_circle)
-            }
-            break
-          case tools.shapes.ellipse:
-            isPaint = true
-            if (pos) {
-              temStorage = {
-                x: pos.x,
-                y: pos.y,
-                ellipse: true,
-              }
-              tool_ellipse = new Konva.Ellipse({
-                x: pos.x,
-                y: pos.y,
-                radiusX: 0,
-                radiusY: 0,
-                stroke: tools.color,
-                strokeWidth: tools.size,
-              })
-              layer?.add(tool_ellipse)
-            }
-
-            break
-          case tools.line:
-            isPaint = true
-            if (pos) {
-              tool_line = new Konva.Line({
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                lineCap: 'round',
-                lineJoin: 'round',
-                points: [pos.x, pos.y],
-              })
-              layer?.add(tool_line)
-            }
-            break
-          case tools.text:
-            isPaint = true
-            if (pos) {
-              tool_text = new Konva.Text({
-                text: 'text',
-                x: pos.x,
-                y: pos.y,
-                draggable: true,
-                fill: tools.color,
-                fontSize: tools.size,
-              })
-              layer?.add(tool_text)
-            }
-            break
-          case tools.rect_blur:
-            isPaint = true
-            if (pos && preview_player_canvas.value) {
-              tool_image = new Konva.Image({
-                image: preview_player_canvas.value,
-                x: pos.x,
-                y: pos.y,
-                width: 0,
-                height: 0,
-                crop: {
-                  x: pos.x,
-                  y: pos.y,
-                  width: 0,
-                  height: 0,
-                },
-              })
-              layer?.add(tool_image)
-            }
-            break
-
-          default:
-            break
-        }
-        console.log('mousedown', isPaint)
+    /**
+     *@description Shape 移入事件
+     */
+    const handleShapeOnMouseenter = (shape: Shape) => {
+      shape.on('mouseenter', function () {
+        if (isPaint) return
+        this.draggable(true)
+        handleStageOffMousedown()
+        temCursor = (stage as Stage).container().style.cursor
+        ;(stage as Stage).container().style.cursor = move
       })
-      stage.on('mouseup touchend', function () {
+    }
+    /**
+     *@description Shape 移出事件
+     */
+    const handleShapeOnMouseleave = (shape: Shape) => {
+      shape.on('mouseleave', function () {
+        if (isPaint) return
+        this.draggable(false)
+        handleStageOnMousedown()
+        ;(stage as Stage).container().style.cursor = temCursor
+      })
+    }
+    /**
+     * @description  Stage 绑定鼠标抬起
+     */
+    const handleStageOnMouseup = () => {
+      stage?.on('mouseup', function () {
         switch (true) {
           case tools.pen:
           case tools.highlight:
@@ -741,16 +680,19 @@ export default defineComponent({
             isPaint = false
             temStorage = null
             break
-
           default:
             break
         }
       })
-      stage.on('mouseleave', function () {
-        isPaint = false
-        console.log('mouseleave')
-      })
-      stage.on('mousemove', function () {
+    }
+    /**
+     * @description  Stage 移除鼠标抬起
+     */
+    const handleStageOffMouseup = () => {
+      stage?.off('mouseup')
+    }
+    const handleStageOnMousemove = () => {
+      stage?.on('mousemove', function () {
         let pos = (stage as Stage).getPointerPosition()
         let new_points: any
         switch (true) {
@@ -831,9 +773,9 @@ export default defineComponent({
               tool_image.cropWidth(pos.x - start_x)
               tool_image.cropHeight(pos.y - start_y)
               tool_image.blurRadius(20)
-              tool_image.cache()
+              if (tool_image.width() !== 0 && tool_image.height() != 0)
+                tool_image.cache()
               tool_image.filters([Konva.Filters.Blur])
-
               layer?.batchDraw()
             }
             break
@@ -841,8 +783,187 @@ export default defineComponent({
           default:
             break
         }
-        console.log('mousemove', isPaint)
       })
+    }
+    const handleStageOffMousemove = () => {
+      stage?.off('mousemove')
+    }
+
+    function handleStageOnMousedown() {
+      stage?.on('mousedown', function () {
+        const pos = this.getPointerPosition()
+        switch (true) {
+          case tools.pen || tools.highlight:
+            isPaint = true
+            if (pos) {
+              tool_line = new Konva.Line({
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                points: [pos.x, pos.y],
+              })
+              handleShapeOnMouseenter(tool_line)
+              handleShapeOnMouseleave(tool_line)
+              if (tools.pen) {
+                tool_line.globalCompositeOperation('source-over')
+              } else if (tools.highlight) {
+                tool_line.globalCompositeOperation('lighten')
+              }
+              // destination-out 橡皮
+              layer?.add(tool_line)
+            }
+            break
+          case tools.shapes.rect:
+            isPaint = true
+            if (pos) {
+              tool_rect = new Konva.Rect({
+                x: pos.x,
+                y: pos.y,
+                width: 0,
+                height: 0,
+                stroke: tools.color,
+                strokeWidth: tools.size,
+              })
+              handleShapeOnMouseenter(tool_rect)
+              handleShapeOnMouseleave(tool_rect)
+              layer?.add(tool_rect)
+            }
+            break
+          case tools.shapes.circle:
+            isPaint = true
+            if (pos) {
+              temStorage = {
+                x: pos.x,
+                y: pos.y,
+                circle: true,
+              }
+              tool_circle = new Konva.Circle({
+                x: pos.x,
+                y: pos.y,
+                radius: 0,
+                stroke: tools.color,
+                strokeWidth: tools.size,
+              })
+              handleShapeOnMouseenter(tool_circle)
+              handleShapeOnMouseleave(tool_circle)
+              layer?.add(tool_circle)
+            }
+            break
+          case tools.shapes.ellipse:
+            isPaint = true
+            if (pos) {
+              temStorage = {
+                x: pos.x,
+                y: pos.y,
+                ellipse: true,
+              }
+              tool_ellipse = new Konva.Ellipse({
+                x: pos.x,
+                y: pos.y,
+                radiusX: 0,
+                radiusY: 0,
+                stroke: tools.color,
+                strokeWidth: tools.size,
+              })
+              handleShapeOnMouseenter(tool_ellipse)
+              handleShapeOnMouseleave(tool_ellipse)
+              layer?.add(tool_ellipse)
+            }
+
+            break
+          case tools.line:
+            isPaint = true
+            if (pos) {
+              tool_line = new Konva.Line({
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                lineCap: 'round',
+                lineJoin: 'round',
+                points: [pos.x, pos.y],
+              })
+              handleShapeOnMouseenter(tool_line)
+              handleShapeOnMouseleave(tool_line)
+              layer?.add(tool_line)
+            }
+            break
+          case tools.text:
+            isPaint = true
+            if (pos) {
+              tool_text = new Konva.Text({
+                text: 'text',
+                x: pos.x,
+                y: pos.y,
+                draggable: true,
+                fill: tools.color,
+                fontSize: tools.size,
+              })
+              handleShapeOnMouseenter(tool_text)
+              handleShapeOnMouseleave(tool_text)
+              layer?.add(tool_text)
+            }
+            break
+          case tools.rect_blur:
+            isPaint = true
+            if (pos && preview_player_video.value) {
+              tool_image = new Konva.Image({
+                image: preview_player_video.value,
+                x: pos.x,
+                y: pos.y,
+                width: 0,
+                height: 0,
+                name: 'rect_blur',
+                crop: {
+                  x: pos.x,
+                  y: pos.y,
+                  width: 0,
+                  height: 0,
+                },
+              })
+              tool_image.on('dragmove', function () {
+                handleUpdateFilm(this)
+                layer?.batchDraw()
+              })
+              handleShapeOnMouseenter(tool_image)
+              handleShapeOnMouseleave(tool_image)
+              layer?.add(tool_image)
+            }
+            break
+
+          default:
+            break
+        }
+      })
+    }
+    function handleStageOffMousedown() {
+      stage?.off('mousedown')
+    }
+    function handleInitTool() {
+      if (!stage) return
+      handleStageOnMousedown()
+      handleStageOnMousemove()
+      handleStageOnMouseup()
+      stage.on('mouseleave', function () {
+        isPaint = false
+      })
+    }
+    /********************************************************************************************** */
+    /**
+     * @description 开启画中画
+     */
+    const handleRequestPIP = async () => {
+      if (!('pictureInPictureEnabled' in document)) {
+        // TODO 提示不支持画中画
+        return false
+      }
+      if (preview_player_video.value) {
+        const ppv = preview_player_video.value
+        try {
+          // 获取画中画窗体
+          const pIP = await (ppv as any).requestPictureInPicture()
+        } catch (err) {
+          // TODO 错误处理
+          console.log(err)
+        }
+      }
     }
 
     /**
@@ -851,7 +972,7 @@ export default defineComponent({
     const handleStartRecorderCanvas = () => {
       const canvasMediaStream = (
         preview_player_canvas.value as any
-      )?.captureStream(60) as MediaStream | null //  FPS 部分浏览器尚未实现
+      )?.captureStream(60) as MediaStream | null //  FPS
 
       if (canvasMediaStream) {
         canvas_media_recorder.value = new (window as any).MediaRecorder(
@@ -872,7 +993,7 @@ export default defineComponent({
         }
         canvas_media_recorder.value.start(100)
       } else {
-        console.log('重新开始')
+        console.log('浏览器不支持 captureStream')
       }
       button_usable.pause_disabled = false
       button_usable.resume_disabled = true
@@ -926,7 +1047,10 @@ export default defineComponent({
       global_index++
       anim?.start()
     }
-    const handleResetVideoSize = () => {
+    /**
+     *@description 重置视频大小
+     */
+    function handleResetVideoSize() {
       if (crude_player_video.value) {
         crude_player_video.value.style.width = `auto`
         crude_player_video.value.style.height = `auto`
@@ -1024,16 +1148,17 @@ export default defineComponent({
         video_shape?.y((height - _crude_player_video.offsetHeight) / 2)
       }
     }
-
+    /**
+     * @description 下载
+     */
     const downloadVideo = () => {
       download(
-        window.URL.createObjectURL(new Blob(allChunks, { type: 'video/mp4' })),
-        'video.mp4'
+        window.URL.createObjectURL(new Blob(allChunks, { type: 'video/webm' })),
+        'video.webm'
       )
     }
     /*************调用*************/
-    //
-
+  
     const roTextarea = new window.ResizeObserver(handleResize)
     onMounted(() => {
       handleInitKonva()
@@ -1062,12 +1187,10 @@ export default defineComponent({
       button_usable,
       tools,
       allChunks,
-      video_info,
       downloadVideo,
       handleRequestPIP,
       handleStartCapture,
       handleStotCapture,
-      handlePlayCanvas,
       handlePauseRecorderCanvas,
       handleResumeRecorderCanvas,
       handleResetVideoSize,
