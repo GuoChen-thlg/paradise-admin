@@ -9,3 +9,12 @@ export function download(url: string, filename: string) {
 	a.href = url
 	a.click()
 }
+
+export const randomId = () => {
+	return (
+		'id_' +
+		Math.random()
+			.toString(36)
+			.substr(2)
+	)
+}

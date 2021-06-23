@@ -374,7 +374,7 @@ import { Transformer } from 'konva/lib/shapes/Transformer'
 import { Circle } from 'konva/lib/shapes/Circle'
 import { Ellipse } from 'konva/lib/shapes/Ellipse'
 import { Text } from 'konva/lib/shapes/Text'
-import { download } from '@/utils/util'
+import { download, randomId } from '@/utils/util'
 
 export default defineComponent({
   name: 'Share',
@@ -393,9 +393,10 @@ export default defineComponent({
     let tr: Transformer | null = null
     let stage: Stage | null = null
     let layer: Layer | null = null
+    let tr_layer: Layer | null = null
     let video_shape: Image | null = null
     let anim: Animation | null = null
-    let global_index = -1
+    let global_index = 0
     /**  */
     let isPaint = false
     let tool_line: Line | null = null
@@ -653,10 +654,20 @@ export default defineComponent({
         height: 300,
       })
       layer = new Konva.Layer()
-      tr = new Konva.Transformer()
       anim = new Konva.Animation((frame) => handleAnimBack(frame), layer)
       preview_player_canvas.value = layer.canvas._canvas
       stage.add(layer)
+      tr_layer = new Konva.Layer()
+      tr = new Konva.Transformer({
+        id: 'Transformer',
+        anchorStroke: '#fff',
+        anchorFill: '#0081ff',
+        anchorCornerRadius: 5,
+        anchorSize: 10,
+        keepRatio: false,
+      })
+      tr_layer.add(tr)
+      stage.add(tr_layer)
       stage.draw()
     }
     /**
@@ -681,6 +692,27 @@ export default defineComponent({
         handleStageClass('cursor_move', false)
       })
     }
+    /**
+     * @description Shape 点击事件
+     */
+    const handleShapeOnClick = (shape: Shape) => {
+      shape.on('click', function (e) {
+        e.cancelBubble = true
+
+        if (tr_layer && tr) {
+          const _selfCopy = this.clone()
+          this.hide()
+          tr_layer.add(_selfCopy)
+          tr_layer.add(tr)
+          tr.setNodes([_selfCopy])
+          tr.show()
+          tr.moveToTop()
+          tr_layer.draw()
+        }
+        console.log('shpae click')
+      })
+    }
+
     /**
      * @description  Stage 绑定鼠标抬起
      */
@@ -731,8 +763,10 @@ export default defineComponent({
               const [start_x, start_y] = [tool_rect.x(), tool_rect.y()]
               tool_rect.width(pos.x - start_x)
               tool_rect.height(pos.y - start_y)
-              tool_rect.cache()
-              tool_rect.drawHitFromCache()
+              // if (tool_rect.width() !== 0 && tool_rect.height() !== 0) {
+              //   tool_rect.cache()
+              //   tool_rect.drawHitFromCache()
+              // }
               layer?.batchDraw()
             }
             break
@@ -753,8 +787,10 @@ export default defineComponent({
               tool_circle.radius(
                 Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2))
               )
-              tool_circle.cache()
-              tool_circle.drawHitFromCache()
+              // if (tool_circle.radius() !== 0) {
+              //   tool_circle.cache()
+              //   tool_circle.drawHitFromCache()
+              // }
               layer?.batchDraw()
             }
             break
@@ -773,8 +809,13 @@ export default defineComponent({
               tool_ellipse.y((pos.y + start_y) / 2)
               tool_ellipse.radiusX(Math.abs((pos.x - start_x) / 2))
               tool_ellipse.radiusY(Math.abs((pos.y - start_y) / 2))
-              tool_ellipse.cache()
-              tool_ellipse.drawHitFromCache()
+              // if (
+              //   tool_ellipse.radiusX() !== 0 &&
+              //   tool_ellipse.radiusY() !== 0
+              // ) {
+              //   tool_ellipse.cache()
+              //   tool_ellipse.drawHitFromCache()
+              // }
               layer?.batchDraw()
             }
             break
@@ -823,15 +864,18 @@ export default defineComponent({
      */
     function handleStageOnMousedown() {
       stage?.on('mousedown', function () {
+        if (tr && tr.nodes().length === 1) return
         const pos = this.getPointerPosition()
         switch (true) {
           case tools.pen || tools.highlight:
             isPaint = true
             if (pos) {
               tool_line = new Konva.Line({
+                id: randomId(),
                 stroke: tools.color,
                 strokeWidth: tools.size,
                 points: [pos.x, pos.y],
+                strokeScaleEnabled: false,
               })
               handleShapeOnMouseenter(tool_line)
               handleShapeOnMouseleave(tool_line)
@@ -849,15 +893,18 @@ export default defineComponent({
             isPaint = true
             if (pos) {
               tool_rect = new Konva.Rect({
+                id: randomId(),
                 x: pos.x,
                 y: pos.y,
                 width: 0,
                 height: 0,
                 stroke: tools.color,
                 strokeWidth: tools.size,
+                strokeScaleEnabled: false,
               })
               handleShapeOnMouseenter(tool_rect)
               handleShapeOnMouseleave(tool_rect)
+              handleShapeOnClick(tool_rect)
               layer?.add(tool_rect)
               tool_rect.zIndex(global_index++)
             }
@@ -871,14 +918,17 @@ export default defineComponent({
                 circle: true,
               }
               tool_circle = new Konva.Circle({
+                id: randomId(),
                 x: pos.x,
                 y: pos.y,
                 radius: 0,
                 stroke: tools.color,
                 strokeWidth: tools.size,
+                strokeScaleEnabled: false,
               })
               handleShapeOnMouseenter(tool_circle)
               handleShapeOnMouseleave(tool_circle)
+              handleShapeOnClick(tool_circle)
               layer?.add(tool_circle)
               tool_circle.zIndex(global_index++)
             }
@@ -892,15 +942,18 @@ export default defineComponent({
                 ellipse: true,
               }
               tool_ellipse = new Konva.Ellipse({
+                id: randomId(),
                 x: pos.x,
                 y: pos.y,
                 radiusX: 0,
                 radiusY: 0,
                 stroke: tools.color,
                 strokeWidth: tools.size,
+                strokeScaleEnabled: false,
               })
               handleShapeOnMouseenter(tool_ellipse)
               handleShapeOnMouseleave(tool_ellipse)
+              handleShapeOnClick(tool_ellipse)
               layer?.add(tool_ellipse)
               tool_ellipse.zIndex(global_index++)
             }
@@ -910,14 +963,17 @@ export default defineComponent({
             isPaint = true
             if (pos) {
               tool_line = new Konva.Line({
+                id: randomId(),
                 stroke: tools.color,
                 strokeWidth: tools.size,
                 lineCap: 'round',
                 lineJoin: 'round',
                 points: [pos.x, pos.y],
+                strokeScaleEnabled: false,
               })
               handleShapeOnMouseenter(tool_line)
               handleShapeOnMouseleave(tool_line)
+              handleShapeOnClick(tool_line)
               layer?.add(tool_line)
               tool_line.zIndex(global_index++)
             }
@@ -926,15 +982,18 @@ export default defineComponent({
             isPaint = true
             if (pos) {
               tool_text = new Konva.Text({
+                id: randomId(),
                 text: 'text',
                 x: pos.x,
                 y: pos.y,
                 draggable: true,
                 fill: tools.color,
                 fontSize: tools.size,
+                strokeScaleEnabled: false,
               })
               handleShapeOnMouseenter(tool_text)
               handleShapeOnMouseleave(tool_text)
+              handleShapeOnClick(tool_text)
               layer?.add(tool_text)
               tool_text.zIndex(global_index++)
             }
@@ -943,12 +1002,14 @@ export default defineComponent({
             isPaint = true
             if (pos && preview_player_video.value) {
               tool_image = new Konva.Image({
+                id: randomId(),
                 image: preview_player_video.value,
                 x: pos.x,
                 y: pos.y,
                 width: 0,
                 height: 0,
                 name: 'rect_blur',
+                strokeScaleEnabled: false,
                 crop: {
                   x: pos.x,
                   y: pos.y,
@@ -962,6 +1023,7 @@ export default defineComponent({
               })
               handleShapeOnMouseenter(tool_image)
               handleShapeOnMouseleave(tool_image)
+              handleShapeOnClick(tool_image)
               layer?.add(tool_image)
               tool_image.zIndex(global_index++)
             }
@@ -973,7 +1035,7 @@ export default defineComponent({
       })
     }
     /**
-     *@description  Stage 移除鼠标移动
+     *@description  Stage 移除鼠标按下
      */
     function handleStageOffMousedown() {
       stage?.off('mousedown')
@@ -988,6 +1050,37 @@ export default defineComponent({
       handleStageOnMouseup()
       stage.on('mouseleave', function () {
         isPaint = false
+      })
+      stage.on('click mouseleave', function () {
+        console.log('stage click')
+        handleStageOnMousedown()
+
+        if (
+          tr_layer &&
+          tr_layer.getChildren((c) => c.id() === 'Transformer').length === 1 &&
+          tr &&
+          tr.nodes().length > 0
+        ) {
+          const node = tr.nodes()[0]
+          layer?.getChildren().forEach((c) => {
+            if (c.id() === node.id()) {
+              c.width(node.width() * node.scaleX())
+              c.height(node.height() * node.scaleY())
+              c.x(node.x())
+              c.y(node.y())
+              c.rotation(node.rotation())
+              c.show()
+            }
+          })
+          tr_layer
+            .getChildren((c) => c.id() !== 'Transformer')
+            .forEach((c) => {
+              c.destroy()
+            })
+          tr.nodes([])
+          tr.hide()
+          tr_layer.draw()
+        }
       })
     }
     /********************************************************************************************** */
@@ -1169,8 +1262,10 @@ export default defineComponent({
         stage.width(roEntry.borderBoxSize[0].inlineSize)
         stage.height(roEntry.borderBoxSize[0].blockSize)
         const [width, height] = [stage.width(), stage.height()]
-        ;(preview_player_canvas.value as HTMLCanvasElement).width = width
-        ;(preview_player_canvas.value as HTMLCanvasElement).height = height
+        stage.getChildren().forEach((c) => {
+          c.canvas._canvas.width = width
+          c.canvas._canvas.height = height
+        })
         tools.video.width = width
         tools.video.height = height
         const _crude_player_video = crude_player_video.value
