@@ -1,5 +1,5 @@
 <template>
-  <ul :class="['cube', { 'turn-on': spread }, { rotate: rotate }]">
+  <ul :class="['cube', { 'turn-on': spread }, { 'rotate': rotate }]">
     <template v-for="i in [1, 2, 3, 4, 5, 6]" :key="i">
       <li class="surface">
         <slot :name="`surface${i}`">
