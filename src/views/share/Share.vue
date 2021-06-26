@@ -1,6 +1,5 @@
 <template>
   <el-main class="share">
-    <img src="" height="300" id="img" />
     <div class="toolbar">
       <div class="tools">
         <div class="tool-item">
@@ -314,7 +313,12 @@
           ></el-color-picker>
         </div>
         <div class="tool-item">
-          <el-input size="small" type="number" v-model.number="tools.size">
+          <el-input
+            size="small"
+            min="1"
+            type="number"
+            v-model.number="tools.size"
+          >
             <template #append>px</template>
           </el-input>
         </div>
@@ -356,10 +360,27 @@
         disabled
       ></textarea>
     </div>
+    <teleport to="body">
+      <textarea
+        class="tool-textarea"
+        tabindex="1"
+        v-model="val"
+        :style="style"
+        ref="el"
+      />
+    </teleport>
   </el-main>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue'
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  toRefs,
+  watch,
+} from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import Konva from 'konva'
 import { Stage } from 'konva/lib/Stage'
@@ -389,6 +410,39 @@ export default defineComponent({
     const preview_player_video = ref<HTMLVideoElement | null>(null)
     /**preview_player_canvas 的伴生 TextAreaElement */
     const coodoo_doll = ref<HTMLTextAreaElement | null>(null)
+    const tool_ta = reactive<{
+      el: HTMLTextAreaElement | null
+      val: string
+      isPaint: boolean
+      style: {
+        top: string
+        left: string
+        width: string
+        height: string
+        display: string
+        color: string
+        fontSize: string
+        fontFamily: string
+        transform: string
+        lineHeight: string
+      }
+    }>({
+      el: null,
+      val: '',
+      isPaint: false,
+      style: {
+        top: '0',
+        left: '0',
+        color: '#000',
+        width: '0px',
+        height: '0px',
+        display: 'none',
+        fontSize: '32px',
+        fontFamily: 'Arial',
+        transform: 'rotate(0deg)',
+        lineHeight: '1',
+      },
+    })
     /** */
     let tr: Transformer | null = null
     let stage: Stage | null = null
@@ -396,7 +450,6 @@ export default defineComponent({
     let tr_layer: Layer | null = null
     let video_shape: Image | null = null
     let anim: Animation | null = null
-    let global_index = 0
     /**  */
     let isPaint = false
     let tool_line: Line | null = null
@@ -409,8 +462,8 @@ export default defineComponent({
     /** */
     const tools = reactive({
       video: {
-        width: 305,
-        height: 150,
+        width: 700,
+        height: 400,
         // lock_aspect_ratio: false,
         lock_canvas_size: true,
         visible: false,
@@ -449,6 +502,135 @@ export default defineComponent({
     })
     /** 定时器 */
     let time: any = null
+    const handles: {
+      [k: string]: (b: boolean) => void
+    } = {
+      pen: (b) => {
+        tools.pen = b
+        if (b) {
+          tools.size = 4
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+
+          handleStageReplaceClass('cursor_pen')
+        }
+      },
+      rect: (b) => {
+        tools.shapes.rect = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_rect')
+        }
+      },
+      circle: (b) => {
+        tools.shapes.circle = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_circle')
+        }
+      },
+      ellipse: (b) => {
+        tools.shapes.ellipse = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_ellipse')
+        }
+      },
+      line: (b) => {
+        tools.line = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_line')
+        }
+      },
+      line_arrow: (b) => {
+        tools.arrow.line_arrow = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_line_arrow')
+        }
+      },
+      bezier_arrow: (b) => {
+        tools.arrow.bezier_arrow = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          // handleStageReplaceClass('')
+        }
+      },
+      big_head_arrow: (b) => {
+        tools.arrow.big_head_arrow = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          // handleStageReplaceClass('')
+        }
+      },
+      text: (b) => {
+        tools.text = b
+        if (b) {
+          tools.size = 32
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_text')
+        }
+      },
+      rect_blur: (b) => {
+        tools.rect_blur = b
+        if (b) {
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }1)`
+          handleStageReplaceClass('cursor_cert_blur')
+        }
+      },
+      highlight: (b) => {
+        tools.highlight = b
+        if (b) {
+          tools.size = 16
+          tools.color = `${
+            (
+              tools.color.match(/[rgba]{3,4}\((\d+,\s*){3}/) as RegExpMatchArray
+            )[0]
+          }0.6)`
+          handleStageReplaceClass('cursor_highlight')
+        }
+      },
+    }
 
     /*****************************************函数声明*****************************************/
 
@@ -492,6 +674,83 @@ export default defineComponent({
 
     /**
      * @description
+     * @param reverse
+     * true
+     * 当前选中的文字对象 （tool_text）的位置同步到 tr_layer 上显示的图形上
+     *
+     * fasle
+     * 将选中编辑的位置状态 同步到当前选中的文字对象 （tool_text）上
+     */
+    function handleSynchronizeLordToAuxiliary(id: string, reverse = true) {
+      const Lord: Text | null = layer?.getChildren(
+        (c) => c.id() === `${id}`
+      )[0] as Text | null
+      const Auxiliary: Text | null = tr_layer?.getChildren(
+        (c) => c.id() === `${id}`
+      )[0] as Text | null
+      if (!Lord || !Auxiliary) return
+      console.log(Lord, Auxiliary)
+
+      if (reverse) {
+        const {
+          x,
+          y,
+          width,
+          height,
+          fill,
+          text,
+          fontSize,
+          fontFamily,
+          lineHeight,
+          rotation,
+        } = Lord.getAttrs()
+        Lord.visible(false)
+        Auxiliary.setAttrs({
+          x,
+          y,
+          width,
+          height,
+          fill,
+          text,
+          fontSize,
+          fontFamily,
+          lineHeight,
+          rotation,
+          visible: true,
+        })
+      } else {
+        const {
+          x,
+          y,
+          width,
+          height,
+          fill,
+          fontSize,
+          fontFamily,
+          lineHeight,
+          rotation,
+          text,
+        } = Auxiliary.getAttrs()
+        Auxiliary.visible(false)
+        Lord.setAttrs({
+          x,
+          y,
+          text,
+          width,
+          height,
+          fill,
+          fontSize,
+          fontFamily,
+          lineHeight,
+          rotation,
+          visible: true,
+        })
+      }
+      console.log(Lord, Auxiliary)
+    }
+
+    /**
+     * @description
      * 动画回调
      *
      */
@@ -501,6 +760,7 @@ export default defineComponent({
       if (crude_media?.active === false) {
         layer?.destroyChildren()
         anim?.stop()
+        ;(document as any)?.exitPictureInPicture()
         canvas_media_recorder.value?.stop()
         button_usable.start_disabled = false
         button_usable.stop_disabled = true
@@ -543,95 +803,7 @@ export default defineComponent({
      * @description 选择工具
      */
     const handleSelectTool = (handle: string) => {
-      const handles: {
-        [k: string]: (b: boolean) => void
-      } = {
-        pen: (b) => {
-          tools.pen = b
-          if (b) {
-            tools.size = 4
-            tools.color = `${
-              (
-                tools.color.match(
-                  /[rgba]{3,4}\((\d+,\s*){3}/
-                ) as RegExpMatchArray
-              )[0]
-            }1)`
-
-            handleStageReplaceClass('cursor_pen')
-          }
-        },
-        rect: (b) => {
-          tools.shapes.rect = b
-          if (b) {
-            handleStageReplaceClass('cursor_rect')
-          }
-        },
-        circle: (b) => {
-          tools.shapes.circle = b
-          if (b) {
-            handleStageReplaceClass('cursor_circle')
-          }
-        },
-        ellipse: (b) => {
-          tools.shapes.ellipse = b
-          if (b) {
-            handleStageReplaceClass('cursor_ellipse')
-          }
-        },
-        line: (b) => {
-          tools.line = b
-          if (b) {
-            handleStageReplaceClass('cursor_line')
-          }
-        },
-        line_arrow: (b) => {
-          tools.arrow.line_arrow = b
-          if (b) {
-            handleStageReplaceClass('cursor_line_arrow')
-          }
-        },
-        bezier_arrow: (b) => {
-          tools.arrow.bezier_arrow = b
-          if (b) {
-            // handleStageReplaceClass('')
-          }
-        },
-        big_head_arrow: (b) => {
-          tools.arrow.big_head_arrow = b
-          if (b) {
-            // handleStageReplaceClass('')
-          }
-        },
-        text: (b) => {
-          tools.text = b
-          if (b) {
-            tools.size = 16
-
-            handleStageReplaceClass('cursor_text')
-          }
-        },
-        rect_blur: (b) => {
-          tools.rect_blur = b
-          if (b) {
-            handleStageReplaceClass('cursor_cert_blur')
-          }
-        },
-        highlight: (b) => {
-          tools.highlight = b
-          if (b) {
-            tools.size = 16
-            tools.color = `${
-              (
-                tools.color.match(
-                  /[rgba]{3,4}\((\d+,\s*){3}/
-                ) as RegExpMatchArray
-              )[0]
-            }0.6)`
-            handleStageReplaceClass('cursor_highlight')
-          }
-        },
-      }
+      isPaint = false
       for (const key in handles) {
         if (Object.prototype.hasOwnProperty.call(handles, key)) {
           if (key !== handle) {
@@ -677,7 +849,7 @@ export default defineComponent({
       shape.on('mouseenter', function () {
         if (isPaint) return
         this.draggable(true)
-        handleStageOffMousedown()
+        handleStageMousedown(false)
         handleStageClass('cursor_move', true)
       })
     }
@@ -688,7 +860,7 @@ export default defineComponent({
       shape.on('mouseleave', function () {
         if (isPaint) return
         this.draggable(false)
-        handleStageOnMousedown()
+        handleStageMousedown(true)
         handleStageClass('cursor_move', false)
       })
     }
@@ -698,7 +870,6 @@ export default defineComponent({
     const handleShapeOnClick = (shape: Shape) => {
       shape.on('click', function (e) {
         e.cancelBubble = true
-
         if (tr_layer && tr) {
           const _selfCopy = this.clone()
           this.hide()
@@ -712,39 +883,295 @@ export default defineComponent({
         console.log('shpae click')
       })
     }
+    /**
+     * @description
+     * 打扫 tr_layer
+     */
+    function handleCleanTrLayer() {
+      tr_layer
+        ?.getChildren((c) => c.id() !== 'Transformer')
+        .forEach((c) => {
+          c.destroy()
+        })
+      tr?.nodes([])
+      tr?.hide()
+      tr_layer?.draw()
+    }
 
     /**
-     * @description  Stage 绑定鼠标抬起
+     * @description
+     * 处理 textarea 处境
      */
-    const handleStageOnMouseup = () => {
-      stage?.on('mouseup', function () {
+    function handleTextareaFollowUp() {
+      const id = tool_ta.el?.dataset['targetId']
+      if (!/text_/.test(`${id}`) || !tool_ta.isPaint) return
+
+      if (tool_ta.style.display !== 'none') {
+        console.log('文本框可见')
+        tool_ta.style.display = 'none'
+        if (tool_ta.val.trim().length === 0) {
+          console.log('无内容 清除')
+          handleCleanTrLayer()
+          layer
+            ?.getChildren((c) => c.id() === `${id}`)
+            .forEach((c) => {
+              c.destroy()
+            })
+          if (tr?.isVisible() === false) {
+            setTimeout(() => {
+              tool_ta.isPaint = false
+              console.log('关闭绘制')
+            })
+          }
+          return
+        }
+        console.log('有文本 隐藏文本框 显示副本')
+
+        tr_layer
+          ?.getChildren((c) => c.id() === `${id}`)
+          .forEach((c) => {
+            c.x(c.x() + 6)
+            c.width(c.width() - 12)
+            ;(c as Text).text(tool_ta.val)
+            c.show()
+            tr?.show()
+            tr_layer?.draw()
+          })
+        return false
+      }
+      console.log('文本框不可见 清空副本 显示主体')
+
+      handleSynchronizeLordToAuxiliary(`${id}`, false)
+      handleCleanTrLayer()
+
+      if (tr?.isVisible() === false) {
+        tool_ta.isPaint = false
+        console.log('关闭绘制')
+      }
+      //
+    }
+
+    /**
+     * @description text 事件
+     */
+    const handleShapeTextOnClick = (shape_text: Text) => {
+      shape_text.on('click', async function (e) {
+        e.cancelBubble = true
+
+        if (tr_layer && tr && stage) {
+          const _selfCopy = this.clone() as Text
+          this.hide()
+          _selfCopy.on('dblclick', function () {
+            this.hide()
+            tr?.hide()
+            const tta = tool_ta.el
+            if (!stage || !tta) return
+            tta.setAttribute('data-target-id', this.id())
+            tool_ta.val = this.text()
+            this.width(this.width() + 12)
+            this.x(this.x() - 6)
+            tool_ta.style = {
+              top:
+                document.documentElement.scrollTop +
+                stage.container().getBoundingClientRect().y +
+                this.y() +
+                'px',
+              left:
+                stage.container().getBoundingClientRect().x + this.x() + 'px',
+              width: this.width() + 'px',
+              height: this.height() + 'px',
+              display: 'block',
+              color: this.fill(),
+              fontSize: this.fontSize() + 'px',
+              fontFamily: this.fontFamily(),
+              transform: `rotateZ(${this.rotation()}deg)`,
+              lineHeight: `${this.lineHeight()}`,
+            }
+            setTimeout(() => {
+              tta.focus()
+            }, 500)
+          })
+          tr_layer.add(_selfCopy)
+          tr_layer.add(tr)
+          tr.setNodes([_selfCopy])
+          tr.show()
+          tr.moveToTop()
+          tr_layer.draw()
+        }
+        console.log('shpae click')
+      })
+    }
+
+    /**
+     * @description  Stage 鼠标按下
+     * @param flage
+     * true 绑定
+     * false 解除
+     */
+    function handleStageMousedown(flage = true) {
+      if (!flage) {
+        stage?.off('mousedown')
+        return
+      }
+      stage?.on('mousedown', function () {
+        console.log('down ****', tr && tr.nodes().length === 1)
+
+        if (tr && tr.nodes().length === 1) return
+        const pos = this.getPointerPosition()
         switch (true) {
-          case tools.pen:
-          case tools.highlight:
-          case tools.shapes.rect:
-          case tools.shapes.circle:
-          case tools.shapes.ellipse:
-          case tools.line:
-          case tools.text:
-          case tools.rect_blur:
-            isPaint = false
-            temStorage = null
+          case tools.pen || tools.highlight:
+            isPaint = true
+            if (pos) {
+              tool_line = new Konva.Line({
+                id: randomId(),
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                points: [pos.x, pos.y],
+                strokeScaleEnabled: false,
+              })
+              handleShapeOnMouseenter(tool_line)
+              handleShapeOnMouseleave(tool_line)
+              if (tools.pen) {
+                tool_line.globalCompositeOperation('source-over')
+              } else if (tools.highlight) {
+                tool_line.globalCompositeOperation('lighten')
+              }
+              // destination-out 橡皮
+              layer?.add(tool_line)
+            }
             break
+          case tools.shapes.rect:
+            isPaint = true
+            if (pos) {
+              tool_rect = new Konva.Rect({
+                id: randomId(),
+                x: pos.x,
+                y: pos.y,
+                width: 0,
+                height: 0,
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                strokeScaleEnabled: false,
+              })
+              handleShapeOnMouseenter(tool_rect)
+              handleShapeOnMouseleave(tool_rect)
+              handleShapeOnClick(tool_rect)
+              layer?.add(tool_rect)
+            }
+            break
+          case tools.shapes.circle:
+            isPaint = true
+            if (pos) {
+              temStorage = {
+                x: pos.x,
+                y: pos.y,
+                circle: true,
+              }
+              tool_circle = new Konva.Circle({
+                id: randomId(),
+                x: pos.x,
+                y: pos.y,
+                radius: 0,
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                strokeScaleEnabled: false,
+              })
+              handleShapeOnMouseenter(tool_circle)
+              handleShapeOnMouseleave(tool_circle)
+              handleShapeOnClick(tool_circle)
+              layer?.add(tool_circle)
+            }
+            break
+          case tools.shapes.ellipse:
+            isPaint = true
+            if (pos) {
+              temStorage = {
+                x: pos.x,
+                y: pos.y,
+                ellipse: true,
+              }
+              tool_ellipse = new Konva.Ellipse({
+                id: randomId(),
+                x: pos.x,
+                y: pos.y,
+                radiusX: 0,
+                radiusY: 0,
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                strokeScaleEnabled: false,
+              })
+              handleShapeOnMouseenter(tool_ellipse)
+              handleShapeOnMouseleave(tool_ellipse)
+              handleShapeOnClick(tool_ellipse)
+              layer?.add(tool_ellipse)
+            }
+
+            break
+          case tools.line:
+            isPaint = true
+            if (pos) {
+              tool_line = new Konva.Line({
+                id: randomId(),
+                stroke: tools.color,
+                strokeWidth: tools.size,
+                lineCap: 'round',
+                lineJoin: 'round',
+                points: [pos.x, pos.y],
+                strokeScaleEnabled: false,
+              })
+              handleShapeOnMouseenter(tool_line)
+              handleShapeOnMouseleave(tool_line)
+              handleShapeOnClick(tool_line)
+              layer?.add(tool_line)
+            }
+            break
+          case tools.rect_blur:
+            isPaint = true
+            if (pos && preview_player_video.value) {
+              tool_image = new Konva.Image({
+                id: randomId(),
+                image: preview_player_video.value,
+                x: pos.x,
+                y: pos.y,
+                width: 0,
+                height: 0,
+                name: 'rect_blur',
+                strokeScaleEnabled: false,
+                crop: {
+                  x: pos.x,
+                  y: pos.y,
+                  width: 0,
+                  height: 0,
+                },
+              })
+              tool_image.on('dragmove', function () {
+                handleUpdateFilm(this)
+                layer?.batchDraw()
+              })
+              handleShapeOnMouseenter(tool_image)
+              handleShapeOnMouseleave(tool_image)
+              handleShapeOnClick(tool_image)
+              layer?.add(tool_image)
+            }
+            break
+
           default:
             break
         }
       })
     }
+
     /**
-     * @description  Stage 移除鼠标抬起
+     *@description  Stage 鼠标移动
+     * @param flage
+     * true 绑定
+     * false 解除
      */
-    const handleStageOffMouseup = () => {
-      stage?.off('mouseup')
-    }
-    /**
-     *@description  Stage 绑定鼠标移动
-     */
-    const handleStageOnMousemove = () => {
+    function handleStageMousemove(flage = true) {
+      if (!flage) {
+        stage?.off('mousemove')
+        return
+      }
       stage?.on('mousemove', function () {
         let pos = (stage as Stage).getPointerPosition()
         let new_points: any
@@ -853,237 +1280,192 @@ export default defineComponent({
         }
       })
     }
+
     /**
-     *@description  Stage 移除鼠标移动
+     * @description  Stage 鼠标抬起
+     * @param flage
+     * true 绑定
+     * false 解除
      */
-    const handleStageOffMousemove = () => {
-      stage?.off('mousemove')
-    }
-    /**
-     *@description  Stage 绑定鼠标按下
-     */
-    function handleStageOnMousedown() {
-      stage?.on('mousedown', function () {
-        if (tr && tr.nodes().length === 1) return
+    function handleStageMouseup(flage = true) {
+      if (!flage) {
+        stage?.off('mouseup')
+        return
+      }
+      stage?.on('mouseup', function (e) {
         const pos = this.getPointerPosition()
         switch (true) {
-          case tools.pen || tools.highlight:
-            isPaint = true
-            if (pos) {
-              tool_line = new Konva.Line({
-                id: randomId(),
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                points: [pos.x, pos.y],
-                strokeScaleEnabled: false,
-              })
-              handleShapeOnMouseenter(tool_line)
-              handleShapeOnMouseleave(tool_line)
-              if (tools.pen) {
-                tool_line.globalCompositeOperation('source-over')
-              } else if (tools.highlight) {
-                tool_line.globalCompositeOperation('lighten')
-              }
-              // destination-out 橡皮
-              layer?.add(tool_line)
-              tool_line.zIndex(global_index++)
-            }
-            break
+          case tools.pen:
+          case tools.highlight:
           case tools.shapes.rect:
-            isPaint = true
-            if (pos) {
-              tool_rect = new Konva.Rect({
-                id: randomId(),
-                x: pos.x,
-                y: pos.y,
-                width: 0,
-                height: 0,
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                strokeScaleEnabled: false,
-              })
-              handleShapeOnMouseenter(tool_rect)
-              handleShapeOnMouseleave(tool_rect)
-              handleShapeOnClick(tool_rect)
-              layer?.add(tool_rect)
-              tool_rect.zIndex(global_index++)
-            }
-            break
           case tools.shapes.circle:
-            isPaint = true
-            if (pos) {
-              temStorage = {
-                x: pos.x,
-                y: pos.y,
-                circle: true,
-              }
-              tool_circle = new Konva.Circle({
-                id: randomId(),
-                x: pos.x,
-                y: pos.y,
-                radius: 0,
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                strokeScaleEnabled: false,
-              })
-              handleShapeOnMouseenter(tool_circle)
-              handleShapeOnMouseleave(tool_circle)
-              handleShapeOnClick(tool_circle)
-              layer?.add(tool_circle)
-              tool_circle.zIndex(global_index++)
-            }
-            break
           case tools.shapes.ellipse:
-            isPaint = true
-            if (pos) {
-              temStorage = {
-                x: pos.x,
-                y: pos.y,
-                ellipse: true,
-              }
-              tool_ellipse = new Konva.Ellipse({
-                id: randomId(),
-                x: pos.x,
-                y: pos.y,
-                radiusX: 0,
-                radiusY: 0,
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                strokeScaleEnabled: false,
-              })
-              handleShapeOnMouseenter(tool_ellipse)
-              handleShapeOnMouseleave(tool_ellipse)
-              handleShapeOnClick(tool_ellipse)
-              layer?.add(tool_ellipse)
-              tool_ellipse.zIndex(global_index++)
-            }
-
-            break
           case tools.line:
-            isPaint = true
-            if (pos) {
-              tool_line = new Konva.Line({
-                id: randomId(),
-                stroke: tools.color,
-                strokeWidth: tools.size,
-                lineCap: 'round',
-                lineJoin: 'round',
-                points: [pos.x, pos.y],
-                strokeScaleEnabled: false,
-              })
-              handleShapeOnMouseenter(tool_line)
-              handleShapeOnMouseleave(tool_line)
-              handleShapeOnClick(tool_line)
-              layer?.add(tool_line)
-              tool_line.zIndex(global_index++)
-            }
+          case tools.rect_blur:
+            isPaint = false
+            temStorage = null
             break
           case tools.text:
-            isPaint = true
-            if (pos) {
+            handleTextareaFollowUp()
+
+            if (pos && !tool_ta.isPaint) {
+              console.log(`文本开启 绘制 `)
+              tool_ta.isPaint = true
               tool_text = new Konva.Text({
-                id: randomId(),
-                text: 'text',
+                id: `text_${randomId()}`,
+                text: '',
                 x: pos.x,
                 y: pos.y,
+                width: tools.size,
+                height: tools.size,
                 draggable: true,
                 fill: tools.color,
                 fontSize: tools.size,
                 strokeScaleEnabled: false,
+                visible: false,
               })
-              handleShapeOnMouseenter(tool_text)
-              handleShapeOnMouseleave(tool_text)
-              handleShapeOnClick(tool_text)
-              layer?.add(tool_text)
-              tool_text.zIndex(global_index++)
-            }
-            break
-          case tools.rect_blur:
-            isPaint = true
-            if (pos && preview_player_video.value) {
-              tool_image = new Konva.Image({
-                id: randomId(),
-                image: preview_player_video.value,
-                x: pos.x,
-                y: pos.y,
-                width: 0,
-                height: 0,
-                name: 'rect_blur',
-                strokeScaleEnabled: false,
-                crop: {
-                  x: pos.x,
-                  y: pos.y,
-                  width: 0,
-                  height: 0,
-                },
+              tool_text.on('mouseenter', function () {
+                handleStageMouseup(false)
+                handleStageMousedown(false)
+                handleStageClass('cursor_move', true)
               })
-              tool_image.on('dragmove', function () {
-                handleUpdateFilm(this)
-                layer?.batchDraw()
+              tool_text.on('mouseleave', function () {
+                handleStageMouseup(true)
+                handleStageMousedown(true)
+                handleStageClass('cursor_move', false)
               })
-              handleShapeOnMouseenter(tool_image)
-              handleShapeOnMouseleave(tool_image)
-              handleShapeOnClick(tool_image)
-              layer?.add(tool_image)
-              tool_image.zIndex(global_index++)
-            }
-            break
+              handleLordCloneEdit(tool_text)
+              tr?.hide()
+              // const _tool_text = tool_text.clone() as Text
+              tool_text.on('click', function (e) {
+                console.log('点击我了', e.target)
+                if (!tools.text) return
+                handleLordCloneEdit(this)
+                // handleSynchronizeLordToAuxiliary(true)
+              })
 
+              tr_layer
+                ?.getChildren((c) => c.id() === tool_text?.id())
+                .forEach((c) => {
+                  c.fire('dblclick')
+                })
+
+              layer?.add(tool_text)
+            }
+            break
           default:
             break
         }
       })
     }
-    /**
-     *@description  Stage 移除鼠标按下
-     */
-    function handleStageOffMousedown() {
-      stage?.off('mousedown')
+    function handleStageMouseleave(flage = true) {
+      if (!flage) {
+        stage?.off('mouseleave')
+        return
+      }
+      stage?.on('mouseleave', function () {
+        // do ...
+      })
     }
+    /**
+     * @description
+     * 在文本初建 或在点击时 在操作层绘制副本
+     */
+    function handleLordCloneEdit(target: Text) {
+      const _selfCopy = target.clone() as Text
+      _selfCopy.off('click')
+      _selfCopy.on('dblclick', function () {
+        this.hide()
+        tr?.hide()
+        this.width(this.width() + 12)
+        this.x(this.x() - 6)
+        handleTextareaReset(this)
+      })
+      console.log(_selfCopy)
+
+      tr_layer?.add(_selfCopy)
+      tr?.nodes([_selfCopy])
+      tr?.resizeEnabled(false)
+      tr?.show()
+      target.hide()
+      _selfCopy.show()
+      tr_layer?.draw()
+    }
+    /**
+     * @description 文本编辑器 定位到
+     */
+    function handleTextareaReset(shape: Text) {
+      if (!tool_ta.el || !stage) return
+      const tta = tool_ta.el
+      tta.setAttribute('data-target-id', shape.id())
+      tool_ta.val = shape.text()
+      tool_ta.style = {
+        top:
+          document.documentElement.scrollTop +
+          stage.container().getBoundingClientRect().y +
+          shape.y() +
+          'px',
+        left:
+          stage.container().getBoundingClientRect().x + shape.x() - 6 + 'px',
+        width: shape.width() + 'px',
+        height: shape.height() + 'px',
+        display: 'block',
+        color: shape.fill(),
+        fontSize: shape.fontSize() + 'px',
+        fontFamily: shape.fontFamily(),
+        transform: `rotateZ(${shape.rotation()}deg)`,
+        lineHeight: `${shape.lineHeight()}`,
+      }
+      setTimeout(() => {
+        tta.focus()
+      }, 500)
+    }
+
     /**
      *@description  初始化工具栏 绑定事件
      */
     function handleInitTool() {
-      if (!stage) return
-      handleStageOnMousedown()
-      handleStageOnMousemove()
-      handleStageOnMouseup()
-      stage.on('mouseleave', function () {
-        isPaint = false
-      })
-      stage.on('click mouseleave', function () {
-        console.log('stage click')
-        handleStageOnMousedown()
+      handleStageMousedown()
+      handleStageMousemove()
+      handleStageMouseup()
 
-        if (
-          tr_layer &&
-          tr_layer.getChildren((c) => c.id() === 'Transformer').length === 1 &&
-          tr &&
-          tr.nodes().length > 0
-        ) {
-          const node = tr.nodes()[0]
-          layer?.getChildren().forEach((c) => {
-            if (c.id() === node.id()) {
-              c.width(node.width() * node.scaleX())
-              c.height(node.height() * node.scaleY())
-              c.x(node.x())
-              c.y(node.y())
-              c.rotation(node.rotation())
-              c.show()
-            }
-          })
-          tr_layer
-            .getChildren((c) => c.id() !== 'Transformer')
-            .forEach((c) => {
-              c.destroy()
-            })
-          tr.nodes([])
-          tr.hide()
-          tr_layer.draw()
-        }
-      })
+      // stage.on('click mouseleave', function () {
+      //   console.log('stage click')
+      //   handleStageMousedown()
+      //   if (
+      //     tr_layer &&
+      //     tr_layer.getChildren((c) => c.id() === 'Transformer').length === 1 &&
+      //     tr &&
+      //     tr.nodes().length > 0
+      //   ) {
+      //     const node = tr.nodes()[0]
+      //     if (/^text_if_/.test(node.id())) {
+      //       //
+      //     } else {
+      //       layer?.getChildren().forEach((c) => {
+      //         if (c.id() === node.id()) {
+      //           c.width(node.width() * node.scaleX())
+      //           c.height(node.height() * node.scaleY())
+      //           c.x(node.x())
+      //           c.y(node.y())
+      //           c.rotation(node.rotation())
+      //           c.show()
+      //         }
+      //       })
+      //     }
+
+      //     tr_layer
+      //       .getChildren((c) => c.id() !== 'Transformer')
+      //       .forEach((c) => {
+      //         c.destroy()
+      //       })
+      //     tr.nodes([])
+      //     tr.hide()
+      //     tr_layer.draw()
+      //   }
+      // })
     }
-    /********************************************************************************************** */
+    /************************************************ konva 操作********************************************** */
     /**
      * @description 开启画中画
      */
@@ -1181,7 +1563,7 @@ export default defineComponent({
         name: 'video_shape',
       })
       layer.add(video_shape)
-      video_shape.zIndex(global_index++)
+
       anim?.start()
     }
     /**
@@ -1296,6 +1678,35 @@ export default defineComponent({
         'video.webm'
       )
     }
+
+    watch(
+      () => tool_ta.val,
+      (newVal: string) => {
+        console.log(newVal, tr_layer)
+
+        if (!tools.text || !tr) return false
+        const _tool_text = tr.nodes()[0] as Text | null
+        if (!_tool_text) return
+        _tool_text.text(tool_ta.val)
+        newVal.length !== 0
+          ? _tool_text.setSize({
+              width: 'auto',
+              height: 'auto',
+            })
+          : _tool_text.setSize({
+              width: _tool_text.fontSize() - 12,
+              height: _tool_text.fontSize(),
+            })
+        tool_ta.style.width = _tool_text.width() + 'px'
+        tool_ta.style.height = _tool_text.height() + 'px'
+        _tool_text.width(_tool_text.width() + 12)
+        tool_ta.style.top =
+          document.documentElement.scrollTop +
+          (stage as Stage).container().getBoundingClientRect().y +
+          _tool_text.y() +
+          'px'
+      }
+    )
     /*************调用*************/
 
     const roTextarea = new window.ResizeObserver(handleResize)
@@ -1323,6 +1734,7 @@ export default defineComponent({
       crude_player_video,
       preview_player_video,
       coodoo_doll,
+      ...toRefs(tool_ta),
       button_usable,
       tools,
       allChunks,
@@ -1408,7 +1820,18 @@ export default defineComponent({
 .el-input {
   width: 150px;
 }
-
+.tool-textarea {
+  position: absolute;
+  display: none;
+  outline: none;
+  resize: none;
+  background-color: transparent;
+  border: 1px solid;
+  overflow: clip;
+  padding: 0 6px;
+  box-sizing: content-box;
+  transform-origin: left top;
+}
 .cursor_pen {
   cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAeCAMAAAB3ypxcAAABblBMVEUAAAAAAAA5od0kaZFPsekBBAU4oN08pN8+peA4od03n9xUs+k1nttLrudIrOU1nts1nttFqeQ1nttDqOJPsekCAgJDqOM1nts6ot45ot45od41nts4od04od01nts3oN0AAABebHQOKDdPc4hOruY1nttFquQYNUVPsekAAAA1nttLqN1KreY1nttCqOI1ntsdQFRCp+I1nttPselBp+JPsekAAAA1nttApuEFBQU3n9wAAABBp+FPsek/peAAAAA1nts+peAAAAAAAAAhZIpFquQAAAA7ot45od01nttPsek1ntsAAABNsOhMr+g3n91EqeM+pOCg3P+e2/6b2v1guu1KrudIrOVBp+I6ot5mZmai3f+W1/yU1vuM0vp/yvZ5x/RvwvFqwPFkvO9ZtutXtetRs+qQ1PqJ0PiGzvdGq+VhYWEsLCyZ2P2CzPZ8yfV1xfNkuOgzj8QxibwiZIsgWn1HR0dFRUUeHh4VFRWV3dacAAAASnRSTlMAMwsD+/qET0Y5HP779vLw6eLe1svIraSQZls9LicVDwn8/Pn38+rp3t7Y0czMycnHw8C9ure0sZ+amZmWgXt7eHJXSzk0LSEGBlKiPSEAAAFdSURBVDjLlZFlVwJBGIVHQFJKBAEpu7u7a2Zkl11K6QbB7n/vrofYDzOuPp+fc9/z3guWJ3ZPgTx9EE5vBmS1VZVqvGE/6hL5NW4Bf35gke4tBV0L2DGu128EhnM2Hd1TbgtJX433wSe+YthT0sW1n5MvbKnC5xfPqdqxqL3FoxBmuZrRTT07ifFQKHYFISwk7yIOP8Xbx93PbBCKlGuJrFVL1s7wK8OKYSJ5PmVwXhC9k1mE4sGmV0zzOZuH6F2qEbqOtQKzXHXkEBAZ6EUM2wqMJMORFT3R8/cjFIo2vfJ94sGkAUTcZsTctj8Jp0ob5JH1S0Jg5xMuZ6WMfNAj+eSRq6rU5JE9U4iJSz4pzHmJnsIpVBNtBpYziYzJBYhoLaizSSGcKu6QPd+6pJpSOqMFFFyjkmpmABXvfHtkowLQUapb1Ui3oI/sADIoxJHHgDwas8UH/oBeB/7DNwa5abtU8pZqAAAAAElFTkSuQmCC')
       1 1,
@@ -1465,3 +1888,4 @@ export default defineComponent({
   cursor: move !important;
 }
 </style>
+

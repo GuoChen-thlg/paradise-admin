@@ -18,3 +18,12 @@ export const randomId = () => {
 			.substr(2)
 	)
 }
+
+export const isSafari = /^((?!chrome|android).)*safari/i.test(
+	navigator.userAgent
+)
+
+export const isFirefox = /.*firefox.*/i.test(navigator.userAgent)
+
+export const isEdge =
+	(document as any).documentMode || /edg/i.test(navigator.userAgent)
