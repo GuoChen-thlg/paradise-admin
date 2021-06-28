@@ -1,6 +1,10 @@
 <template>
   <el-main>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table
+      v-loading="tableData.length == 0"
+      :data="tableData"
+      style="width: 100%"
+    >
       <!-- v-infinite-scroll="handleLoadData" -->
       <el-table-column type="expand">
         <template #default="props">
