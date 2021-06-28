@@ -77,7 +77,7 @@ export const routes: Array<RouteRecordRaw> = [
 				path: '/home',
 				name: 'Home',
 				component: () =>
-					import(/* webpackChunkName: "about" */ '@/views/Home.vue'),
+					import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
 				meta: {
 					showAside: true,
 					showHeader: true,

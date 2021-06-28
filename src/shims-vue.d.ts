@@ -4,6 +4,4 @@ declare module '*.vue' {
   export default component
 }
 
-declare module 'swiper/vue'
-declare module 'swiper'
 declare module 'echarts-gl/components'

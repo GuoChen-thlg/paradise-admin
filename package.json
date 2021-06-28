@@ -41,7 +41,6 @@
     "element-plus": "^1.0.2-beta.28",
     "js-cookie": "^2.2.1",
     "konva": "^8.0.4",
-    "swiper": "^6.5.7",
     "vue": "^3.0.0",
     "vue-echarts": "*",
     "vue-router": "^4.0.0-0",
