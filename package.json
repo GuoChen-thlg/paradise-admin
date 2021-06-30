@@ -28,7 +28,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "deploy": "gh-page.sh"
+    "deploy": "npm run build && gh-page.sh"
   },
   "dependencies": {
     "@tiptap/extension-text-align": "*",
