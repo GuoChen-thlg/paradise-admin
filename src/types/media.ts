@@ -12,4 +12,6 @@ export interface media {
 	/**宽高比 */
 	aspect_ratio: number
 }
-export interface image extends media {}
+export interface image extends media {
+	type: 'image'
+}

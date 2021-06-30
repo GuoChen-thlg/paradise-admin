@@ -41,7 +41,7 @@ export interface variant {
 	available: boolean
 }
 export interface product extends material {
-	readonly id: string
+	readonly id: number
 	/**条形码 */
 	barcode: string
 	/**二维码 */

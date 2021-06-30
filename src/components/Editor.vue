@@ -66,7 +66,7 @@ export default defineComponent({
     const sourceShow = ref(false)
     const textareaEl = ref<HTMLTextAreaElement | null>(null)
     const editor = useEditor({
-      content: '<p>I’m running tiptap with Vue.js. 🎉</p>',
+      content: '',
       extensions: [
         ...defaultExtensions(),
         Document,

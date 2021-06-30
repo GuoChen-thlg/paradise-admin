@@ -152,6 +152,7 @@ export const routes: Array<RouteRecordRaw> = [
 				],
 			},
 			{
+				/* 设置页面 */
 				path: '/setting',
 				name: 'Setting',
 				component: () =>
@@ -178,7 +179,7 @@ export const routes: Array<RouteRecordRaw> = [
 				],
 			},
 			{
-				/*  */
+				/* 产品页面 */
 				path: '/product',
 				component: () =>
 					import(
@@ -242,7 +243,7 @@ export const routes: Array<RouteRecordRaw> = [
 				],
 			},
 			{
-				/*  */
+				/* 股价 */
 				path: '/stock',
 				name: 'Stock',
 				component: () =>
@@ -258,7 +259,7 @@ export const routes: Array<RouteRecordRaw> = [
 				},
 			},
 			{
-				/*  */
+				/* 地府 */
 				path: '/hell',
 				component: () =>
 					import(
@@ -331,6 +332,7 @@ export const routes: Array<RouteRecordRaw> = [
 				],
 			},
 			{
+				/* 视频 */
 				path: '/share',
 				component: () =>
 					import(
@@ -347,7 +349,7 @@ export const routes: Array<RouteRecordRaw> = [
 				},
 			},
 			{
-				/*  */
+				/* 人界 */
 				path: '/world',
 				component: () =>
 					import(
@@ -394,6 +396,59 @@ export const routes: Array<RouteRecordRaw> = [
 							showTabNav: true,
 							authority: [],
 							title: '幽冥地府',
+							verifyLogin: true,
+						},
+					},
+				],
+			},
+			{
+				path: '/user',
+				component: () =>
+					import(
+						/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+					),
+
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: [],
+					title: '我的',
+					verifyLogin: true,
+				},
+				children: [
+					{
+						path: '',
+						name: 'My',
+						component: () =>
+							import(
+								/* webpackChunkName: "my" */ '@/views/my/My.vue'
+							),
+						meta: {
+							showAside: true,
+							showHeader: true,
+							showFooter: true,
+							showTabNav: true,
+							authority: [],
+							title: '个人中心',
+							verifyLogin: true,
+						},
+					},
+					{
+						path: 'backpack',
+						name: 'Backpack',
+						component: () =>
+							import(
+								/* webpackChunkName: "backpack" */ '@/views/my/Backpack.vue'
+							),
+						meta: {
+							showAside: true,
+							showHeader: true,
+							showFooter: true,
+							showTabNav: true,
+							authority: [],
+							title: '背包',
 							verifyLogin: true,
 						},
 					},

@@ -241,7 +241,7 @@ export default defineComponent({
       ;(stage.getChildren()[0].getChildren()[0] as Group)
         .getChildren()
         .forEach((c, i) => {
-          ;((c as Group).getChildren()[1] as Text).text(six[i])
+          ((c as Group).getChildren()[1] as Text).text(six[i])
         })
       console.log(stage)
       anim?.start()

@@ -155,6 +155,7 @@ import { login } from '@/api'
 import { key } from '@/store'
 import { Menu } from '@/custom'
 import { useRouter } from 'vue-router'
+import { user_mutations } from '@/store/modules/user'
 
 export default defineComponent({
   name: 'Login',
@@ -203,7 +204,7 @@ export default defineComponent({
           )
           if (result && result.code === 2000) {
             setMenu(result.data.routeList)
-            store.commit('user/logIn')
+            store.commit(user_mutations.LOGIN)
             router.push('/home')
           }
         } else {

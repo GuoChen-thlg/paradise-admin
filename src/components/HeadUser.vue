@@ -9,7 +9,7 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item>
-            <router-link v-slot="{ navigate }" to="/" custom>
+            <router-link v-slot="{ navigate }" to="/user" custom>
               <span @click="navigate">个人中心</span>
             </router-link>
           </el-dropdown-item>
@@ -26,7 +26,6 @@ import { useStore } from 'vuex'
 import { defineComponent } from 'vue'
 import { key } from '@/store'
 import { useRouter } from 'vue-router'
-
 
 export default defineComponent({
   name: 'HeadUser',
@@ -47,10 +46,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .head-user {
   display: inline-block;
-  width: 80px;
   padding-right: 20px;
   vertical-align: middle;
-
+  :deep(.el-dropdown) {
+    width: 60px;
+  }
   .el-avatar,
   .el-icon-arrow-down {
     vertical-align: middle;
