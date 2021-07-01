@@ -5,3 +5,7 @@ declare module '*.vue' {
 }
 
 declare module 'echarts-gl/components'
+declare module '*.json' {
+    const value: any;
+    export default value;
+}

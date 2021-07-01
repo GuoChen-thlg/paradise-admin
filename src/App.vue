@@ -38,9 +38,7 @@
           </div>
 
           <div class="slogan-box">
-            <p class="slogan">
-              此项目正在开发中，所有数据均为 mock 数据 !!!
-            </p>
+            <p class="slogan">此项目正在开发中，所有数据均为 mock 数据 !!!</p>
           </div>
 
           <head-user />
@@ -196,9 +194,10 @@ body {
   font : {
     size: 0.16rem;
   }
+  color: var(--theme-font-color);
 }
 #app {
-  background-color: var(--theme-background-color);
+  // background-color: var(--theme-background-color);
 }
 .hidder-scrollbar {
   -ms-overflow-style: none;
@@ -226,7 +225,7 @@ x-vue-echarts {
   padding: 0.1rem;
 }
 .el-main {
-  background-color: var(--theme-background-color);
+  // background-color: var(--theme-background-color);
 }
 .el-popper {
   & > .el-menu--vertical {
@@ -253,13 +252,15 @@ x-vue-echarts {
   display: flex;
   padding: 0 !important;
   background-color: var(--theme-background-color);
-  border-bottom: 1px solid #e6e6e6;
+  // border-bottom: 3px solid var(--theme-border-color);
   &.fixed {
     position: fixed;
     right: 0;
     top: 0;
     z-index: 900;
     transition: left 0.3s cubic-bezier(0.4, 0, 1, 1);
+    box-shadow: rgb(0 0 0 / 40%) 0px 10px 8px;
+    border: none;
     @media only screen and (max-width: 768px) {
       left: 0 !important;
     }
@@ -290,6 +291,10 @@ x-vue-echarts {
     font-size: 0.24rem;
     cursor: pointer;
   }
+}
+
+.el-footer {
+  background-color: var(--theme-background-color);
 }
 .slogan-box {
   overflow: hidden;

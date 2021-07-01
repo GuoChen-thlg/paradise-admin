@@ -111,7 +111,7 @@ export default defineComponent({
   position: relative;
   height: var(--header-height);
   cursor: pointer;
-  background-color: #fff;
+  background-color: var(--theme-background-color);
   z-index: 9999;
   overflow: hidden;
 

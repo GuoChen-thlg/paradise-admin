@@ -1,10 +1,16 @@
 import { App } from 'vue'
 import Echarts from 'vue-echarts'
 
-import { use } from 'echarts/core'
+import { registerTheme, use } from 'echarts/core'
 import { GlobeComponent } from 'echarts-gl/components'
 import { CanvasRenderer } from 'echarts/renderers'
-import { MapChart, BarChart, LineChart, PieChart,CandlestickChart } from 'echarts/charts'
+import {
+	MapChart,
+	BarChart,
+	LineChart,
+	PieChart,
+	CandlestickChart,
+} from 'echarts/charts'
 import {
 	TitleComponent,
 	ToolboxComponent,
@@ -37,6 +43,13 @@ use([
 	CandlestickChart,
 	GlobeComponent,
 ])
+
+
+import customize1 from '@/theme/echarts.theme-customize1.json'
+
+
+
+registerTheme('customize1', customize1)
 
 export default {
 	install: (app: App): void => {

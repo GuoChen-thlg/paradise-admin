@@ -42,7 +42,7 @@ import { key } from '@/store'
 
 export default defineComponent({
   name: 'Crumbs',
-  props:['isAuthenticated'],
+  props: ['isAuthenticated'],
   setup() {
     const store = useStore(key)
     const { currentMenu, tabsList } = toRefs(store.state.crumbs)
@@ -152,7 +152,8 @@ export default defineComponent({
 .nav-container {
   display: flex;
   padding: 0.03rem 0.05rem;
-  border-bottom: 1px solid #999;
+  background-color: var(--theme-background-color);
+  border-bottom: 3px solid var(--theme-border-color);
   .indicate-btn {
     display: inline-block;
     width: 0.5rem;
@@ -161,9 +162,9 @@ export default defineComponent({
     text-align: center;
     cursor: pointer;
     border-radius: 2px;
-    border: 1px solid rgb(211, 211, 211);
+    border: 1px solid var(--theme-button-border-color);
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      filter: opacity(.7);
     }
   }
   .sliding-window {
