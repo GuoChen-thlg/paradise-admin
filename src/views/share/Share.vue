@@ -1816,6 +1816,7 @@ export default defineComponent({
 .black-hole {
   position: fixed;
   z-index: -999999;
+  visibility:hidden;
 }
 .el-input {
   width: 150px;

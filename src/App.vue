@@ -257,7 +257,7 @@ x-vue-echarts {
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 900;
+    z-index: 9e6;
     transition: left 0.3s cubic-bezier(0.4, 0, 1, 1);
     box-shadow: rgb(0 0 0 / 40%) 0px 10px 8px;
     border: none;

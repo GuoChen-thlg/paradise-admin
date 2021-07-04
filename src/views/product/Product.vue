@@ -1,7 +1,29 @@
 <template>
   <el-main>
     <div class="search-container">
-      <div>搜索</div>
+      <div>
+        <el-input
+          placeholder="请输入内容"
+          v-model="query.keyWord"
+          class="input-with-select"
+        >
+          <template #prepend>
+            <el-select
+              v-model="query.category"
+              class="selct-category"
+              placeholder="请选择"
+            >
+              <el-option label="全部" value="0"></el-option>
+              <el-option label="武器" value="1"></el-option>
+              <el-option label="丹药" value="2"></el-option>
+              <el-option label="功法" value="3"></el-option>
+            </el-select>
+          </template>
+          <template #append>
+            <el-button icon="el-icon-search"></el-button>
+          </template>
+        </el-input>
+      </div>
     </div>
     <el-table
       v-loading="tableData.length == 0"
@@ -198,6 +220,7 @@ export default defineComponent({
       limit: 50,
       pageIndex: 0,
       keyWord: '',
+      category: '0',
     })
     const table_style = reactive({
       width: '100%',
@@ -291,7 +314,6 @@ export default defineComponent({
         // 计算出可视范围内可最大展示的数据量 加缓冲
         count = Math.ceil(clientHeight / lineheight) + buffer * 3
         const start = Math.ceil((scrollTop - buffer * lineheight) / lineheight)
-        tableData.splice(0, 100, ...productsList.slice(start, start + count))
 
         table_style.paddingTop = `${lineheight * start}px`
 
@@ -300,6 +322,12 @@ export default defineComponent({
           scrollTop -
           (count - buffer) * lineheight
         }px`
+
+        tableData.splice(
+          0,
+          tableData.length - 1,
+          ...productsList.slice(start, start + count)
+        )
       } else {
         table_style.paddingTop = '0px'
         table_style.paddingBottom = `${
@@ -318,6 +346,7 @@ export default defineComponent({
     return {
       buy_dialog,
       user,
+      query,
       activeProduct,
       tableData,
       quantity,
@@ -332,6 +361,9 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
+.selct-category {
+  width: 9adise0px;
+}
 .product-table-expand {
   font-size: 0;
 }

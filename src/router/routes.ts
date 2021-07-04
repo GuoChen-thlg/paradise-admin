@@ -329,6 +329,24 @@ export const routes: Array<RouteRecordRaw> = [
 							verifyLogin: true,
 						},
 					},
+					{
+						/*  */
+						path: 'township',
+						name: 'Township',
+						component: () =>
+							import(
+								/* webpackChunkName: "reincarnation" */ '@/views/hell/Township.vue'
+							),
+						meta: {
+							showAside: true,
+							showHeader: true,
+							showFooter: true,
+							showTabNav: true,
+							authority: [],
+							title: '望乡台',
+							verifyLogin: true,
+						},
+					},
 				],
 			},
 			{
