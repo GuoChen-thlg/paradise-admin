@@ -347,6 +347,24 @@ export const routes: Array<RouteRecordRaw> = [
 			},
 			{
 				/*  */
+				path: 'meng-po-pavilion',
+				name: 'MengPoPavilion',
+				component: () =>
+					import(
+						/* webpackChunkName: "meng-po-pavilion" */ '@/views/hell/MengPoPavilion.vue'
+					),
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: [],
+					title: '孟婆亭',
+					verifyLogin: true,
+				},
+			},
+			{
+				/*  */
 				path: 'obituary',
 				name: 'Obituary',
 				component: () =>

@@ -20,7 +20,7 @@ module.exports = {
         test: /\.js$|\.css$/,
         filename: '[file].gz[query]',
         minRatio: 1,
-        tiaojie: 1024 * 10,
+        threshold: 1024 * 10,
         deleteOriginalAssets: false
       })
     ]
