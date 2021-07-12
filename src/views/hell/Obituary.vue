@@ -35,11 +35,13 @@
         width="600"
       ></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
-        <template #default="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">
+        <template #default="{ row }">
+          <el-button type="text" size="small" @click="handleCheck(row)">
             查看
           </el-button>
-          <el-button type="text" size="small"> 编辑 </el-button>
+          <el-button type="text" size="small" @click="handleEdit(row)">
+            编辑
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,8 +63,15 @@ export default defineComponent({
         tableData.value = req.data
       }
     })
-
-    return { tableData, format }
+    const handleCheck = (data: DangerSpotType) => {
+      // TODO 查看详细信息
+      console.log(data)
+    }
+    const handleEdit = (data: DangerSpotType) => {
+      // TODO 跳转页面 编辑
+      console.log(data)
+    }
+    return { tableData, format, handleCheck, handleEdit }
   },
 })
 </script>
