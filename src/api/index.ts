@@ -54,6 +54,13 @@ export async function personnelList() {
 	})
 	return f(response)
 }
+export async function obituary() {
+	const response = await axios({
+		url: '/obituary',
+		method: 'GET',
+	})
+	return f(response)
+}
 
 export async function randomQuotation() {
 	const response = await axios({
