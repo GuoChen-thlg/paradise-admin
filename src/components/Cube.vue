@@ -1,5 +1,8 @@
 <template>
-  <ul :class="['cube', { 'turn-on': spread }, { 'rotate': rotate }]">
+  <ul
+    :class="['cube', { 'turn-on': spread }, { rotate: rotate }]"
+    :style="style"
+  >
     <template v-for="i in [1, 2, 3, 4, 5, 6]" :key="i">
       <li class="surface">
         <slot :name="`surface${i}`">
@@ -13,7 +16,7 @@
   </ul>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, reactive } from 'vue'
 import { createImage } from '@/utils/default/image'
 export default defineComponent({
   name: 'Cube',
@@ -44,9 +47,15 @@ export default defineComponent({
       default: '45deg',
     },
   },
-  setup() {
+  setup(props) {
+    const style = reactive({
+      '--theLen': props.theLen,
+      '--offset': props.offset,
+      '--angle': props.angle,
+    })
     return {
       createImage,
+      style,
     }
   },
 })
@@ -55,9 +64,9 @@ export default defineComponent({
 .cube {
   position: relative;
   list-style-type: none;
-  width: v-bind(theLen);
-  height: v-bind(theLen);
-  transform: rotate3d(0.7, 0.5, 0.5, v-bind(angle));
+  width: var(--theLen);
+  height: var(--theLen);
+  transform: rotate3d(0.7, 0.5, 0.5, var(--angle));
   transform-style: preserve-3d;
   &.rotate {
     animation: rotate 10s infinite linear both;
@@ -66,8 +75,8 @@ export default defineComponent({
     position: absolute;
     top: 0;
     left: 0;
-    width: v-bind(theLen);
-    height: v-bind(theLen);
+    width: var(--theLen);
+    height: var(--theLen);
     &.surface {
       border: 1px solid #000;
       overflow: hidden;
@@ -79,24 +88,24 @@ export default defineComponent({
     }
   }
   & > .surface:nth-of-type(1) {
-    transform: translateZ(calc(v-bind(theLen) / 2));
+    transform: translateZ(calc(var(--theLen) / 2));
   }
   & > .surface:nth-of-type(2) {
-    transform: rotateY(90deg) translateZ(calc(v-bind(theLen) / 2));
+    transform: rotateY(90deg) translateZ(calc(var(--theLen) / 2));
   }
   & > .surface:nth-of-type(3) {
-    transform: rotateY(180deg) translateZ(calc(v-bind(theLen) / 2));
+    transform: rotateY(180deg) translateZ(calc(var(--theLen) / 2));
   }
   & > .surface:nth-of-type(4) {
-    transform: rotateY(-90deg) translateZ(calc(v-bind(theLen) / 2));
+    transform: rotateY(-90deg) translateZ(calc(var(--theLen) / 2));
   }
   & > .surface:nth-of-type(5) {
-    height: v-bind(theLen);
-    transform: rotateX(-90deg) translateZ(calc(v-bind(theLen) / 2));
+    height: var(--theLen);
+    transform: rotateX(-90deg) translateZ(calc(var(--theLen) / 2));
   }
   & > .surface:nth-of-type(6) {
-    height: v-bind(theLen);
-    transform: rotateX(90deg) translateZ(calc(v-bind(theLen) / 2));
+    height: var(--theLen);
+    transform: rotateX(90deg) translateZ(calc(var(--theLen) / 2));
   }
   & > li:nth-of-type(7) {
     display: flex;
@@ -106,29 +115,29 @@ export default defineComponent({
   }
   &.turn-on:hover {
     & > .surface:nth-of-type(1) {
-      transform: translateZ(calc(v-bind(offset) + v-bind(theLen) / 2));
+      transform: translateZ(calc(var(--offset) + var(--theLen) / 2));
     }
     & > .surface:nth-of-type(2) {
       transform: rotateY(90deg)
-        translateZ(calc(v-bind(offset) + v-bind(theLen) / 2));
+        translateZ(calc(var(--offset) + var(--theLen) / 2));
     }
     & > .surface:nth-of-type(3) {
       transform: rotateY(180deg)
-        translateZ(calc(v-bind(offset) + v-bind(theLen) / 2));
+        translateZ(calc(var(--offset) + var(--theLen) / 2));
     }
     & > .surface:nth-of-type(4) {
       transform: rotateY(-90deg)
-        translateZ(calc(v-bind(offset) + v-bind(theLen) / 2));
+        translateZ(calc(var(--offset) + var(--theLen) / 2));
     }
     & > .surface:nth-of-type(5) {
-      height: v-bind(theLen);
+      height: var(--theLen);
       transform: rotateX(-90deg)
-        translateZ(calc(v-bind(offset) + v-bind(theLen) / 2));
+        translateZ(calc(var(--offset) + var(--theLen) / 2));
     }
     & > .surface:nth-of-type(6) {
-      height: v-bind(theLen);
+      height: var(--theLen);
       transform: rotateX(90deg)
-        translateZ(calc(v-bind(offset) + v-bind(theLen) / 2));
+        translateZ(calc(var(--offset) + var(--theLen) / 2));
     }
   }
 }
