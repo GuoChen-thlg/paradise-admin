@@ -43,7 +43,7 @@
     "js-cookie": "^2.2.1",
     "konva": "^8.0.4",
     "vue": "^3.0.0",
-    "vue-echarts": "*",
+    "vue-echarts": "^6.0.0-rc.6",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0"
   },
