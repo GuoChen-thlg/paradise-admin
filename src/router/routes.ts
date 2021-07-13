@@ -84,6 +84,7 @@ export const routes: Array<RouteRecordRaw> = [
 			title: '管理系统',
 			authority: [],
 			verifyLogin: true,
+			tabSwitch: true,
 		},
 	},
 	{
@@ -102,6 +103,8 @@ export const routes: Array<RouteRecordRaw> = [
 			authority: [AUTHORITY.PERSONNEL_R],
 			title: '人员信息',
 			verifyLogin: true,
+			tabSwitch: true,
+			cache: true,
 		},
 		children: [
 			{
@@ -126,6 +129,7 @@ export const routes: Array<RouteRecordRaw> = [
 					],
 					title: '编辑人员信息',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -145,6 +149,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [AUTHORITY.PERSONNEL_C],
 					title: '添加人员',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 		],
@@ -165,6 +170,16 @@ export const routes: Array<RouteRecordRaw> = [
 					import(
 						/* webpackChunkName: "authority" */ '@/views/setting/Authority.vue'
 					),
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: ['a'],
+					title: '权限控制',
+					verifyLogin: true,
+					tabSwitch: true,
+				},
 			},
 			{
 				path: 'edit-role/:role?',
@@ -173,6 +188,16 @@ export const routes: Array<RouteRecordRaw> = [
 					import(
 						/* webpackChunkName: "edit-role" */ '@/views/setting/EditRole.vue'
 					),
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: ['a'],
+					title: '角色编辑',
+					verifyLogin: true,
+					tabSwitch: true,
+				},
 			},
 		],
 	},
@@ -200,6 +225,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: ['a'],
 					title: '兜率宫',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -216,7 +242,7 @@ export const routes: Array<RouteRecordRaw> = [
 					showFooter: true,
 					showTabNav: true,
 					authority: [],
-					title: '产品编辑',
+					title: '产品详情',
 					verifyLogin: true,
 				},
 			},
@@ -254,6 +280,7 @@ export const routes: Array<RouteRecordRaw> = [
 			authority: [],
 			title: '股价',
 			verifyLogin: true,
+			tabSwitch: true,
 		},
 	},
 	{
@@ -263,15 +290,6 @@ export const routes: Array<RouteRecordRaw> = [
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
 			),
-		meta: {
-			showAside: true,
-			showHeader: true,
-			showFooter: true,
-			showTabNav: true,
-			authority: [],
-			title: '幽冥地府',
-			verifyLogin: true,
-		},
 		children: [
 			{
 				/*  */
@@ -289,6 +307,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '幽冥地府',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -307,6 +326,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '鬼门关',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -325,6 +345,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '六道轮回',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -343,6 +364,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '望乡台',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -361,6 +383,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '孟婆亭',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -379,6 +402,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '生死簿',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 		],
@@ -396,6 +420,7 @@ export const routes: Array<RouteRecordRaw> = [
 			authority: [],
 			title: '分享',
 			verifyLogin: true,
+			tabSwitch: true,
 		},
 	},
 	{
@@ -405,19 +430,11 @@ export const routes: Array<RouteRecordRaw> = [
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
 			),
-		meta: {
-			showAside: true,
-			showHeader: true,
-			showFooter: true,
-			showTabNav: true,
-			authority: [],
-			title: '人界',
-			verifyLogin: true,
-		},
 		children: [
 			{
 				/*  */
 				path: '',
+				name: 'Integrate',
 				component: () =>
 					import(
 						/* webpackChunkName: "integrate" */ '@/views/world/Integrate.vue'
@@ -428,8 +445,9 @@ export const routes: Array<RouteRecordRaw> = [
 					showFooter: true,
 					showTabNav: true,
 					authority: [],
-					title: '幽冥地府',
+					title: '人界',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -445,8 +463,9 @@ export const routes: Array<RouteRecordRaw> = [
 					showFooter: true,
 					showTabNav: true,
 					authority: [],
-					title: '幽冥地府',
+					title: '大陆',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 		],
@@ -458,15 +477,6 @@ export const routes: Array<RouteRecordRaw> = [
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
 			),
 
-		meta: {
-			showAside: true,
-			showHeader: true,
-			showFooter: true,
-			showTabNav: true,
-			authority: [],
-			title: '我的',
-			verifyLogin: true,
-		},
 		children: [
 			{
 				path: '',
@@ -481,6 +491,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '个人中心',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 			{
@@ -498,6 +509,7 @@ export const routes: Array<RouteRecordRaw> = [
 					authority: [],
 					title: '背包',
 					verifyLogin: true,
+					tabSwitch: true,
 				},
 			},
 		],

@@ -71,7 +71,7 @@
         </div>
       </el-header>
       <!-- TAB 标签 -->
-      <ceumbs v-if="showTabNav" />
+      <ceumbs v-if="showTabNav" ></ceumbs>
 
       <!--  -->
       <router-view v-slot="{ Component }">

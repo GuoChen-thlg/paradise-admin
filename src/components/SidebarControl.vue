@@ -30,7 +30,7 @@
               v-if="!submenu.child || submenu.child.length === 0"
               :key="`${i}-${j}-o`"
             >
-              <el-menu-item :index="submenu.path" @click="addTab(submenu)">
+              <el-menu-item :index="submenu.path">
                 <i :class="submenu.icon" v-if="submenu.icon" />
                 {{ submenu.name }}
               </el-menu-item>
@@ -45,7 +45,7 @@
                   v-for="(item, k) in submenu.child"
                   :key="`${i}-${j}-${k}`"
                 >
-                  <el-menu-item :index="item.path" @click="addTab(item)">
+                  <el-menu-item :index="item.path">
                     <i :class="item.icon" v-if="item.icon" />
                     {{ item.name }}
                   </el-menu-item>
@@ -62,7 +62,7 @@
                   v-for="(item, k) in submenu.child"
                   :key="`${i}-${j}-${k}`"
                 >
-                  <el-menu-item :index="item.path" @click="addTab(item)">
+                  <el-menu-item :index="item.path">
                     <i :class="item.icon" v-if="item.icon" />
                     {{ item.name }}
                   </el-menu-item>
@@ -72,12 +72,7 @@
           </template>
         </el-menu-item-group>
       </el-submenu>
-      <el-menu-item
-        v-else
-        @click="addTab(menu_item)"
-        :key="i"
-        :index="menu_item.path"
-      >
+      <el-menu-item v-else :key="i" :index="menu_item.path">
         <i :class="menu_item.icon" v-if="menu_item.icon" />
         <template #title>
           {{ menu_item.name }}
@@ -89,7 +84,6 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue'
 import { useStore } from 'vuex'
-import { Menu } from '@/custom'
 import { key } from '@/store'
 import { Sidebar } from '@/store/modules/sidebar'
 
@@ -101,7 +95,6 @@ export default defineComponent({
     return {
       menu,
       isCollapse,
-      addTab: (route: Menu) => store.commit('crumbs/addTab', route),
     }
   },
 })

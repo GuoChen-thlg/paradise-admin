@@ -6,7 +6,7 @@
     <el-tag
       key="首页"
       :effect="'/home' === $route.path ? 'dark' : 'plain'"
-      @click="handleTo({ path: '/home' })"
+      @click="$router.push({ path: '/home' })"
     >
       <i class="el-icon-s-home" />
       首页
@@ -22,9 +22,13 @@
           closable
           :effect="tag.path === $route.path ? 'dark' : 'plain'"
           @close="handleClose(tag, i)"
-          @click="handleTo(tag)"
+          @click="
+            $router.push({
+              path: tag.path,
+            })
+          "
         >
-          <i :data-index="i" :class="tag.icon" /> {{ tag.name }}
+          <i :data-index="i" :class="tag.icon" /> {{ tag.meta.title }}
         </el-tag>
       </div>
     </div>
@@ -36,30 +40,30 @@
 <script lang="ts">
 import { useStore } from 'vuex'
 import { defineComponent, ref, toRefs, unref } from 'vue'
-import { RouteLocationRaw, useRouter } from 'vue-router'
-import { Menu } from '@/custom'
+import {
+  RouteLocationNormalized,
+  RouteLocationRaw,
+  useRoute,
+  useRouter,
+} from 'vue-router'
 import { key } from '@/store'
+import { crumbs_mutations } from '@/store/modules/crumbs'
 
 export default defineComponent({
   name: 'Crumbs',
-  props: ['isAuthenticated'],
   setup() {
     const store = useStore(key)
-    const { currentMenu, tabsList } = toRefs(store.state.crumbs)
+    const { tabsList } = toRefs(store.state.crumbs)
     const router = useRouter()
+    const route = useRoute()
     const firstSubscript = ref(0)
     const offsetX = ref(0)
-    const handSwitchTab = (route: Menu) =>
-      store.commit('crumbs/switchTab', route)
-    const handRemoveTab = (route: Menu) =>
-      store.commit('crumbs/removeTab', route)
 
-    const handleTo = (route: Menu) => {
-      handSwitchTab(route)
-      router.push(route.path as RouteLocationRaw)
-    }
-    const handleClose = (route: Menu, index: number) => {
-      if (unref(currentMenu).path === route.path) {
+    const handleRemoveTab = (route: RouteLocationNormalized) =>
+      store.commit(crumbs_mutations.REMOVETAB, route)
+
+    const handleClose = (_route: RouteLocationNormalized, index: number) => {
+      if (route.path === _route.path) {
         if (index === 0 && tabsList && unref(tabsList).length === 1) {
           router.push('/home')
         } else {
@@ -70,7 +74,7 @@ export default defineComponent({
           }
         }
       }
-      handRemoveTab(route)
+      handleRemoveTab(_route)
     }
 
     const handleSollPage = (direction: string) => {
@@ -138,10 +142,8 @@ export default defineComponent({
     }
 
     return {
-      currentMenu,
       tabsList,
       offsetX,
-      handleTo,
       handleClose,
       handleSollPage,
     }
@@ -164,7 +166,7 @@ export default defineComponent({
     border-radius: 2px;
     border: 1px solid var(--theme-button-border-color);
     &:hover {
-      filter: opacity(.7);
+      filter: opacity(0.7);
     }
   }
   .sliding-window {

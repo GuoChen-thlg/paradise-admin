@@ -1,16 +1,12 @@
 import { RootState } from '@/store/index'
 import { Module, MutationTree } from 'vuex'
-import { Menu } from '@/custom'
+import { RouteLocationNormalized } from 'vue-router'
 /* TAB 切换  */
 export interface Crumbs {
 	/**
-	 * 当前 激活菜单
-	 */
-	currentMenu: Menu
-	/**
 	 * tab 列表
 	 */
-	tabsList: Menu[]
+	tabsList: RouteLocationNormalized[]
 	/**
 	 * 需要缓存的组件名称 列表
 	 */
@@ -18,35 +14,43 @@ export interface Crumbs {
 }
 
 const state: Crumbs = {
-	currentMenu: {
-		name: '首页',
-		path: '/home',
-	},
 	tabsList: [],
 	cacheList: [],
 }
+export const enum crumbs_mutations {
+	ADDTAB = 'crumbs/addTab',
+	REMOVETAB = 'crumbs/removeTab',
+}
+
 const mutations: MutationTree<Crumbs> = {
-	addTab(state, menu: Menu) {
-		state.currentMenu = menu
-		if ('/home' !== menu.path) {
+	addTab(state, route: RouteLocationNormalized) {
+		if ('/home' !== route.path) {
 			const has = state.tabsList.some(tab => {
-				return tab.path === menu.path
+				return tab.path === route.path
 			})
-			if (!has) {
-				state.tabsList.push(menu)
-				if (menu.componentName) {
-					state.cacheList.push(`${menu.componentName}`)
+			if (!has && route.meta.tabSwitch) {
+				state.tabsList.push(route)
+				if (route.name && route.meta.cache) {
+					state.cacheList.push(route.name.toString())
 				}
 			}
 		}
 	},
-	switchTab(state, menu: Menu) {
-		state.currentMenu = menu
-	},
-	removeTab(state, menu: Menu) {
-		const index = state.tabsList.findIndex(tab => tab.path === menu.path)
-		state.cacheList.splice(index, 1)
+	removeTab(state, route: RouteLocationNormalized) {
+		const index = state.tabsList.findIndex(tab => tab.path === route.path)
 		state.tabsList.splice(index, 1)
+		if (
+			state.cacheList.some(name => {
+				return name === route.name?.toString()
+			})
+		) {
+			state.cacheList.splice(
+				state.cacheList.findIndex(
+					name => name === route.name?.toString()
+				),
+				1
+			)
+		}
 	},
 }
 
