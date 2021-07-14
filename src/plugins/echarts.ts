@@ -1,6 +1,5 @@
 import { App } from 'vue'
 import Echarts from 'vue-echarts'
-
 import { registerTheme, use } from 'echarts/core'
 import { GlobeComponent } from 'echarts-gl/components'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -44,13 +43,9 @@ use([
 	GlobeComponent,
 ])
 
-
 import customize1 from '@/theme/echarts.theme-customize1.json'
 
-
-
 registerTheme('customize1', customize1)
-
 export default {
 	install: (app: App): void => {
 		app.component('v-chart', Echarts)

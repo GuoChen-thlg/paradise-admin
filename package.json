@@ -72,6 +72,7 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "^3.9.10",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-cli-plugin-element-plus": "~0.0.13",
     "vue-jest": "^5.0.0-0"
   },

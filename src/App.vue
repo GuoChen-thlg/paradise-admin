@@ -95,7 +95,7 @@ import {
   watch,
   toRefs,
   ref,
-} from '@vue/runtime-core'
+} from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { key } from '@/store'
