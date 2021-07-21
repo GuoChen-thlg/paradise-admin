@@ -24,11 +24,14 @@
   "main": "",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
-    "deploy": "npm run build && gh-page.sh"
+    "serve:web": "vue-cli-service serve",
+    "build:web": "vue-cli-service build",
+    "test:web:unit": "vue-cli-service test:unit",
+    "lint:web": "vue-cli-service lint",
+    "deploy:web": "npm run build && gh-page.sh",
+    "serve:dev": "npm run serve:web",
+    "compose-up-dev": "docker-compose -p paradise-admin-dev -f docker-compose.yml -f docker-compose.dev.yml up --force-recreate --build",
+    "compose-up": "docker-compose -p paradise-admin -f docker-compose.yml up --no-cache -d --build"
   },
   "dependencies": {
     "@tiptap/extension-text-align": "*",

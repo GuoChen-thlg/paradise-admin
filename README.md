@@ -41,29 +41,39 @@ npm imstall
 
 npm run serve
 ```
-## 部署到 github pages 
+
+## 部署到 github pages
 
 修改 [gh-page.sh](https://github.com/GuoChen-thlg/paradise-admin/blob/dev/gh-page.sh) 和 [CNAME](https://github.com/GuoChen-thlg/paradise-admin/blob/dev/CNAME) 文件
 
->   ```sh
->    # gh-page.sh
->    #......
->    git branch [gh-page]
->    git checkout [gh-page]
->    git remote add [paradise-admin] [github:GuoChen-thlg/paradise-admin.git]
->    git push -u [paradise-admin] [gh-page] -f
->   ```
-
+> ```sh
+>  # gh-page.sh
+>  #......
+>  git branch [gh-page]
+>  git checkout [gh-page]
+>  git remote add [paradise-admin] [github:GuoChen-thlg/paradise-admin.git]
+>  git push -u [paradise-admin] [gh-page] -f
+> ```
 
 ```sh
 npm run deploy
-````
+```
 
 ## 构建
 
 ```sh
 npm run build
 ```
+
+## docker
+
+开发
+
+```sh
+npm run compose-up-dev
+```
+
+访问 [http://localhost:8001](http://localhost:8001)
 
 ## 浏览器支持
 

@@ -5,6 +5,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 module.exports = {
 	devServer: {
 		host: '0.0.0.0',
+		port: 8080
 	},
 	lintOnSave: false,
 	css: {
