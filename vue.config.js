@@ -25,8 +25,8 @@ module.exports = {
 						"https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js",
 						"https://cdn.jsdelivr.net/npm/konva@8.0.4/konva.min.js",
 						"https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js",
-						"https://cdn.jsdelivr.net/npm/vue@3.1.4/dist/vue.global.prod.js",
-						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.55/lib/index.full.js",
+						"https://cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.runtime.global.prod.js",
+						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.28/lib/index.full.js",
 						"https://cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js",
 						"https://cdn.jsdelivr.net/npm/vue-router@4.0.10/dist/vue-router.global.min.js",
 					]
