@@ -362,7 +362,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .selct-category {
-  width: 9adise0px;
+  width: 90px;
 }
 .product-table-expand {
   font-size: 0;
