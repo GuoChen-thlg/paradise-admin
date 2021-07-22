@@ -73,7 +73,9 @@ export default defineComponent({
         Paragraph,
         Text,
         Underline,
-        TextAlign,
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        }),
       ],
     })
     const toolsList = reactive([

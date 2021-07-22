@@ -1,0 +1,17 @@
+{
+    "name": "Paradise Admin API Doc",
+    "version": "1.0.0",
+    "descriptiom": "接口文档",
+    "apidoc": {
+        "title": "API",
+        "url": ""
+    },
+    "header": {
+        "title": "header title"
+    },
+    "footer": {
+        "title": "footer title"
+    },
+    "forceLanguage": "zh_cn",
+    "order": []
+}

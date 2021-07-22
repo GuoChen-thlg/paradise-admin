@@ -1,0 +1,10 @@
+{
+    "verbose": true,
+    "exec": "ts-node server/src/app.ts",
+    "watch": [
+        "server/src/"
+    ],
+    "ext": "ts",
+    "ignore": [],
+    "inspect": true
+}

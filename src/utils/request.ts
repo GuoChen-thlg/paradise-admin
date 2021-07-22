@@ -8,11 +8,8 @@ import { ResponseData } from '@/custom'
 import Cookie from 'js-cookie'
 
 const config: AxiosRequestConfig = {
-	baseURL:
-		process.env.NODE_ENV === 'production'
-			? process.env.VUE_APP_API
-			: process.env.VUE_APP_DEV_API,
-
+	baseURL:process.env.VUE_APP_API,
+			
 	headers: {
 		// x-www-form-urlencoded
 		'Content-Type': 'application/json',
