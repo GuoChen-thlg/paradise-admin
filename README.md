@@ -2,7 +2,7 @@
 
 paradise-admin 适用于管理人员及产品的前端解决方案，将人员管理，产品交易数据分析与一体。
 
-基于 vue3 element-plus typescript 开发。
+前端基于 vue3 element-plus typescript 开发。后端采用 Koa typescript 开发。
 
 演示地址:[👉👉👉 戳这里](https://paradise-admin.thlg.ml/)
 
