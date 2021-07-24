@@ -1,17 +1,20 @@
 {
-    "name": "Paradise Admin API Doc",
+    "title": "Paradise Admin API Doc",
+    "name": "Paradise Admin API",
     "version": "1.0.0",
-    "descriptiom": "接口文档",
-    "apidoc": {
-        "title": "API",
-        "url": ""
-    },
+    "url": "/api/v1",
+    "useHostUrlAsSampleUrl": true,
     "header": {
-        "title": "header title"
+        "title": "Header",
+        "url": "header.md"
     },
     "footer": {
-        "title": "footer title"
+        "title": "Footer",
+        "url": "footer.md"
     },
-    "forceLanguage": "zh_cn",
+    "template": {
+        "forceLanguage": "zh_cn",
+        "aloneDisplay": true
+    },
     "order": []
 }

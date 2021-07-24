@@ -1,5 +1,6 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import Cube from '@/components/Cube.vue'
+import { h } from 'vue-demi'
 
 describe('Crumbs.vue', () => {
 	it('单个立方体 插槽显示字符', async () => {
@@ -23,12 +24,12 @@ describe('Crumbs.vue', () => {
 	it('单个立方体 插槽显示DOM', async () => {
 		const wrapper = mount(Cube, {
 			slots: {
-				surface1: '<div>1</div>',
-				surface2: '<div>2</div>',
-				surface3: '<div>3</div>',
-				surface4: '<div>4</div>',
-				surface5: '<div>5</div>',
-				surface6: '<div>6</div>',
+				surface1: h('div', 1),
+				surface2: h('div', 2),
+				surface3: h('div', 3),
+				surface4: h('div', 4),
+				surface5: h('div', 5),
+				surface6: h('div', 6),
 			},
 		})
 		expect(wrapper.find('.surface:nth-child(1)>div').html()).toBe(

@@ -5,7 +5,7 @@ import products from './models/products'
 const router = new Router()
 /**
  * @apiDefine v1
- * @apiHeader prosd
+ * @apiHeader Authentication
  * @apiError 404
  * @apiErrorExample Error-response:
  *      HTTP/1.1 404 Not Found

@@ -6,5 +6,8 @@
     ],
     "ext": "ts",
     "ignore": [],
-    "inspect": true
+    "inspect": true,
+    "env": {
+        "NODE_ENV": "development"
+    }
 }

@@ -7,7 +7,12 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "outDir": "dist",
-        "baseUrl": ".",
+        "baseUrl": "./",
+        "paths": {
+            "@/*": [
+                "server/src/*"
+            ]
+        },
         "types": [
             "node"
         ]

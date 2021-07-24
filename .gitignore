@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/dist
+**/dist
 
 
 # local env files
@@ -25,11 +25,3 @@ pnpm-debug.log*
 *.dio
 stylist.md
 /apidocs
-server/dist/app.js
-server/dist/app.js.map
-server/dist/routes/index.js
-server/dist/routes/index.js.map
-server/dist/routes/v1/index.js
-server/dist/routes/v1/index.js.map
-server/dist/routes/v1/models/products/index.js
-server/dist/routes/v1/models/products/index.js.map

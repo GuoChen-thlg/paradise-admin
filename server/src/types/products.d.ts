@@ -1,0 +1,6 @@
+
+
+
+declare interface product{
+
+}
