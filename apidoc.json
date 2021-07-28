@@ -2,7 +2,7 @@
     "title": "Paradise Admin API Doc",
     "name": "Paradise Admin API",
     "version": "1.0.0",
-    "url": "/api/v1",
+    "url": "",
     "useHostUrlAsSampleUrl": true,
     "header": {
         "title": "Header",

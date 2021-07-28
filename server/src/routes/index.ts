@@ -1,6 +1,4 @@
 import Router from 'koa-router'
-import fs from 'fs'
-import path from 'path'
 import apiv1 from './v1'
 const router = new Router()
 // 当前运行的版本

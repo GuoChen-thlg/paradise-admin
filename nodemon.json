@@ -1,6 +1,6 @@
 {
     "verbose": true,
-    "exec": "ts-node server/src/app.ts",
+    "exec": "npm run build:apidoc && ts-node server/src/app.ts",
     "watch": [
         "server/src/"
     ],
@@ -9,5 +9,6 @@
     "inspect": true,
     "env": {
         "NODE_ENV": "development"
-    }
+    },
+    "delay": 3e3
 }

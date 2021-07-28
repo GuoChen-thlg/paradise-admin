@@ -8,6 +8,15 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
+          <el-dropdown-item divided>
+            <a
+              href="https://github.com/GuoChen-thlg/paradise-admin"
+              target="_blank"
+              style="text-decoration: none;"
+            >
+              GitHub
+            </a>
+          </el-dropdown-item>
           <el-dropdown-item>
             <router-link v-slot="{ navigate }" to="/user" custom>
               <span @click="navigate">个人中心</span>

@@ -32,10 +32,10 @@
     "deploy:web": "npm run build:web && gh-page.sh",
     "serve:server:dev": "nodemon",
     "build:server": "tsc -b server/tsconfig.json",
-    "test:server": "jest --testMatch **/tests/controller/**/*.spec.[jt]s?(x) --verbose",
+    "test:server": "jest --testMatch **/tests/controller/**/*.spec.[jt]s --verbose",
     "serve:server": "set NODE_ENV=production&& node server/dist/app.js",
     "serve:dev": "npm run serve:web:dev | npm run serve:server:dev",
-    "compose-up-dev": "docker-compose -p paradise-admin-dev -f docker-compose.dev.yml up --force-recreate --build",
+    "compose-up-dev": "docker-compose --env-file .env.local -p paradise-admin-dev -f docker-compose.dev.yml up --force-recreate --build",
     "compose-up": "docker-compose -p paradise-admin -f docker-compose.yml up --no-cache -d --build",
     "build:apidoc": "apidoc -i server/src/routes/ -o apidocs/"
   },
@@ -43,7 +43,10 @@
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",
     "koa": "^2.13.1",
-    "koa-router": "^10.0.0"
+    "koa-body": "^4.2.0",
+    "koa-router": "^10.0.0",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.5"
   },
   "devDependencies": {
     "@tiptap/extension-text-align": "^2.0.0-beta.20",
@@ -56,8 +59,10 @@
     "@types/koa": "^2.13.4",
     "@types/koa-router": "^7.4.4",
     "@types/mockjs": "^1.0.3",
+    "@types/mysql": "^2.15.19",
     "@types/resize-observer-browser": "^0.1.5",
     "@types/supertest": "^2.0.11",
+    "@types/validator": "^13.6.3",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",

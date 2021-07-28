@@ -13,4 +13,4 @@ describe('测试当前版本 URL:/version', () => {
 	})
 })
 // 测试顺序
-productsAPI(app, API_URL_BASE)
+// productsAPI(app, API_URL_BASE)

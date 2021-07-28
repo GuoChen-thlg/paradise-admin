@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { routes } from '@/router/routes'
 import store from '@/store'
 import { verifyLogin, getAuthInfo } from '@/api'
@@ -6,7 +6,8 @@ import { verifyLogin, getAuthInfo } from '@/api'
 import hasAuthority from '@/utils/hasAuthority'
 import { crumbs_mutations } from '@/store/modules/crumbs'
 const router = createRouter({
-	history: createWebHashHistory(),
+	// history: createWebHashHistory(),
+	history: createWebHistory(),
 	routes,
 	scrollBehavior(to, from, savedPosition) {
 		// ...
