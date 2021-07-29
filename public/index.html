@@ -20,6 +20,11 @@
     <link href="<%= htmlWebpackPlugin.options.cdn.js[i] %>" rel="prefetch">
   <% } %>
   <!--  CDN end -->
+  <% if (htmlWebpackPlugin.options.VUE_APP_ENV_NO_PRODUCTION===true) { %>
+    <script>
+      window.VUE_APP_ENV_NO_PRODUCTION=true
+    </script>
+  <% } %>
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>

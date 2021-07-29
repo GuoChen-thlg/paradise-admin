@@ -34,7 +34,9 @@ module.exports = {
 				return args
 			})
 		} else {
+
 			config.plugin('html').tap(args => {
+				args[0].VUE_APP_ENV_NO_PRODUCTION = true
 				args[0].cdn = {
 					css: [
 						"https://at.alicdn.com/t/font_2493604_92b74ed8whl.css",
