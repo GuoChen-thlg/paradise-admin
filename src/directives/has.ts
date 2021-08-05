@@ -1,16 +1,22 @@
 import { App, Directive, DirectiveBinding } from 'vue'
 
 import store from '@/store'
-/**
- * 查看
- * 修改
- * 删除
- * 增加
- */
 
-const has = (el: Element, binding: DirectiveBinding) => {
-
-	// store.state.user
+const has = (el: Element, binding: DirectiveBinding<string>) => {
+	const permissionStr = binding.value
+	const permissionList = permissionStr
+		.replaceAll(/ /g, '')
+		.split(',')
+		.filter(per => per.trim() !== '')
+	const userAuthority = store.state.user.authority as string[]
+	if (
+		permissionList.length === 0 ||
+		userAuthority.length === 0 ||
+		permissionList.every(per => userAuthority.includes(per))
+	) {
+		el.parentNode?.removeChild(el)
+	}
+	console.log(el, binding)
 }
 
 export default {

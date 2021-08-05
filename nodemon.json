@@ -1,6 +1,6 @@
 {
     "verbose": true,
-    "exec": "npm run build:apidoc && ts-node server/src/app.ts",
+    "exec": "npm run build:apidoc | ts-node server/src/app.ts",
     "watch": [
         "server/src/"
     ],

@@ -11,6 +11,10 @@ const state: Device = {
 	clientWidth:
 		document.documentElement.clientWidth || document.body.offsetWidth,
 }
+export const device_mutations = {
+	/**更新数据 */
+	update: 'device/update',
+}
 const mutations: MutationTree<Device> = {
 	update(state) {
 		state.scrollTop =

@@ -27,6 +27,10 @@ interface authorityNode {
   label: string
   children?: authorityNode[]
   disabled?: boolean
+  url: string
+  icon: string
+  parent_id: number
+  permissions: string
 }
 
 export default defineComponent({
@@ -36,71 +40,7 @@ export default defineComponent({
       children: 'children',
       label: 'label',
     })
-    const data = reactive<authorityNode[]>([
-      {
-        id: 1,
-        label: 'ROOTADMIN',
-        children: [
-          {
-            id: 4,
-            label: '二级 1-1',
-            children: [
-              {
-                id: 9,
-                label: '三级 1-1-1',
-                disabled: true,
-              },
-              {
-                id: 10,
-                label: '三级 1-1-2',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: 2,
-        label: '一级 2',
-        children: [
-          {
-            id: 5,
-            label: '二级 2-1',
-          },
-          {
-            id: 6,
-            label: '二级 2-2',
-          },
-        ],
-      },
-      {
-        id: 3,
-        label: '一级 3',
-        children: [
-          {
-            id: 7,
-            label: '二级 3-1',
-          },
-          {
-            id: 8,
-            label: '二级 3-2',
-            children: [
-              {
-                id: 11,
-                label: '三级 3-2-1',
-              },
-              {
-                id: 13,
-                label: '三级 3-2-3',
-              },
-              {
-                id: 12,
-                label: '三级 3-2-2',
-              },
-            ],
-          },
-        ],
-      },
-    ])
+    const data = reactive<authorityNode[]>([])
 
     const handleDragStart = (node: authorityNode, ev: Event) => {
       //   console.log('drag start', node)
@@ -144,12 +84,6 @@ export default defineComponent({
     }
     const allowDrop = (draggingNode: Node, dropNode: Node, type: string) => {
       console.log(dropNode)
-
-      if (dropNode.data.label === '二级 3-1') {
-        return type !== 'inner'
-      } else {
-        return true
-      }
     }
     const allowDrag = (draggingNode: Node) => {
       return true
@@ -166,8 +100,7 @@ export default defineComponent({
       allowDrop,
       allowDrag,
     }
-
-  }
+  },
 })
 </script>
 

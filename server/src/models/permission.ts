@@ -1,15 +1,19 @@
 import { Optional, Model, DataTypes } from 'sequelize'
 import seque from '../controllers/mysql'
-import { PermissionAttributes } from '../types/permission'
 
+interface PermissionAttributes {
+	id: number
+	name: string
+	describe: string
+	flag_key: string
+}
 interface PermissionCreationAttributes
-	extends Optional<PermissionAttributes, 'id' | 'permission_id'> {}
+	extends Optional<PermissionAttributes, 'id'> {}
 
 class Permission
 	extends Model<PermissionAttributes, PermissionCreationAttributes>
 	implements PermissionAttributes {
 	id: number
-	permission_id: string
 	describe: string
 	flag_key: string
 	name: string
@@ -24,13 +28,7 @@ Permission.init(
 			allowNull: false,
 			comment: '自增id',
 		},
-		permission_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
-			unique: true,
-			allowNull: false,
-			comment: '权限id',
-		},
+
 		name: { type: DataTypes.STRING },
 		describe: {
 			type: DataTypes.STRING,

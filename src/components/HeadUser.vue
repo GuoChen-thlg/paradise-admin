@@ -12,7 +12,7 @@
             <a
               href="https://github.com/GuoChen-thlg/paradise-admin"
               target="_blank"
-              style="text-decoration: none;"
+              style="text-decoration: none"
             >
               GitHub
             </a>
@@ -33,8 +33,11 @@
 <script lang="ts">
 import { useStore } from 'vuex'
 import { defineComponent } from 'vue'
+import Cookies from 'js-cookie'
 import { key } from '@/store'
 import { useRouter } from 'vue-router'
+import { user_mutations } from '@/store/modules/user'
+import { sidebar_mutations } from '@/store/modules/sidebar'
 
 export default defineComponent({
   name: 'HeadUser',
@@ -42,8 +45,16 @@ export default defineComponent({
     const store = useStore(key)
     const router = useRouter()
     const handleSignOut = () => {
-      store.commit('user/signOut')
-      store.commit('sidebar/setMenu', [])
+      Cookies.set('authorization', '', {
+        path:'/',
+        expires: new Date(),
+      })
+      Cookies.set('authorization.sig', '', {
+        path:'/',
+        expires: new Date(),
+      })
+      store.commit(user_mutations.SIGNOUT)
+      store.commit(sidebar_mutations.SETMENU, [])
       router.push('/login')
     }
     return {

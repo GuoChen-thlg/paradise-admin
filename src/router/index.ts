@@ -5,7 +5,7 @@ import {
 } from 'vue-router'
 import { routes } from '@/router/routes'
 import store from '@/store'
-import { verifyLogin, getAuthInfo } from '@/api'
+import { verifyLogin, } from '@/api'
 
 import hasAuthority from '@/utils/hasAuthority'
 import { crumbs_mutations } from '@/store/modules/crumbs'

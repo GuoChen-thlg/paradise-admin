@@ -4,12 +4,12 @@ import axios, {
 	AxiosResponse,
 	Canceler,
 } from 'axios'
+import { ElMessage } from 'element-plus'
 import { ResponseData } from '@/custom'
 import Cookie from 'js-cookie'
 
 const config: AxiosRequestConfig = {
-	baseURL:process.env.VUE_APP_API,
-			
+	baseURL: process.env.VUE_APP_API,
 	headers: {
 		// x-www-form-urlencoded
 		'Content-Type': 'application/json',
@@ -47,13 +47,21 @@ const removeReq = (
 }
 
 const handlingError = (err: any) => {
+	ElMessage({
+		message: err?.response?.data?.msg || '发生了错误',
+		type: 'error',
+	})
 	return Promise.reject(err)
 }
 
 _axios.interceptors.request.use(
 	(reqConfig: AxiosRequestConfig) => {
 		/* 权限控制 token */
-		// reqConfig.headers.Authorization = Cookie.get('Authorization')
+		if (Cookie.get('authorization')) {
+			reqConfig.headers.Authorization = `Bearer ${Cookie.get(
+				'authorization'
+			)}`
+		}
 
 		return registReq(reqConfig)
 	},
@@ -64,11 +72,10 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
 	(res: AxiosResponse<ResponseData>) => {
 		console.log(res)
-
 		return removeReq(res)
 	},
 	err => {
-		console.log('响应拦截', err)
+		console.log('响应拦截', err, err.response)
 		return handlingError(err)
 	}
 )

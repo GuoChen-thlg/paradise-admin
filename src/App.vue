@@ -71,7 +71,7 @@
         </div>
       </el-header>
       <!-- TAB 标签 -->
-      <ceumbs v-if="showTabNav" ></ceumbs>
+      <ceumbs v-if="showTabNav"></ceumbs>
 
       <!--  -->
       <router-view v-slot="{ Component }">
@@ -89,13 +89,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  reactive,
-  watch,
-  toRefs,
-  ref,
-} from 'vue'
+import { defineComponent, reactive, watch, toRefs, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { key } from '@/store'
@@ -103,6 +97,7 @@ import SidebarControl from '@/components/SidebarControl.vue'
 import Ceumbs from '@/components/Crumbs.vue'
 import HeadUser from '@/components/HeadUser.vue'
 import { user_actions } from './store/modules/user'
+import { sidebar_actions, sidebar_mutations } from './store/modules/sidebar'
 
 export default defineComponent({
   name: 'App',
@@ -122,7 +117,7 @@ export default defineComponent({
     })
     const drawer = ref(false)
     store.dispatch(user_actions.ASYNCVERIFYLOGIN)
-    store.dispatch('sidebar/asyncRefreshMenu')
+    store.dispatch(sidebar_actions.ASYNCREFRESHMENU)
 
     const { isCollapse } = toRefs(store.state.sidebar)
     const { scrollTop } = toRefs(store.state.device)
@@ -162,7 +157,7 @@ export default defineComponent({
       scrollTop,
       isMobile: false,
       cacheList,
-      on_off: () => store.commit('sidebar/switch'),
+      on_off: () => store.commit(sidebar_mutations.SWITCH),
       drawer,
     }
   },

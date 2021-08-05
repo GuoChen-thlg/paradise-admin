@@ -13,7 +13,3 @@ export interface MediaAttributes {
 	/**变体 ID */
 	variant_ids: string
 }
-export interface ImageAttributes extends MediaAttributes {}
-export interface VideoAttributes extends MediaAttributes {
-	preview_image_id?: number
-}

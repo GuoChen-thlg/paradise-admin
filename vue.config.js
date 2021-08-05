@@ -22,6 +22,7 @@ module.exports = {
 						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.55/lib/theme-chalk/display.css"
 					],
 					js: [
+						"https://cdn.jsdelivr.net/npm/jsencrypt@3.2.1/bin/jsencrypt.min.js",
 						"https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js",
 						"https://cdn.jsdelivr.net/npm/konva@8.0.4/konva.min.js",
 						"https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js",
@@ -73,6 +74,7 @@ module.exports = {
 					deleteOriginalAssets: false,
 				}))
 			config.externals = {
+				"jsencrypt": "JSEncrypt",
 				"axios": "axios",
 				konva: 'Konva',
 				'js-cookie': 'Cookies',

@@ -1,15 +1,17 @@
+import { image } from './../../../src/types/media'
 import { DataTypes, Model, Optional } from 'sequelize'
 import seque from '../controllers/mysql'
 import { MediaAttributes } from './media'
 
+interface VideoAttributes extends MediaAttributes {
+	preview_image_id?: number
+}
 
-interface ImageAttributes extends MediaAttributes {}
+interface VideoCreationAttributes
+	extends Optional<VideoAttributes, 'id' | 'type'> {}
 
-interface ImageCreationAttributes
-	extends Optional<ImageAttributes, 'id' | 'type'> {}
-
-class Image extends Model<ImageAttributes, ImageCreationAttributes>
-	implements ImageAttributes {
+class Video extends Model<VideoAttributes, VideoCreationAttributes>
+	implements VideoAttributes {
 	id: number
 	type: string
 	src: string
@@ -18,7 +20,7 @@ class Image extends Model<ImageAttributes, ImageCreationAttributes>
 	height: number
 	variant_ids: string
 }
-Image.init(
+Video.init(
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -30,7 +32,7 @@ Image.init(
 			type: DataTypes.STRING,
 			allowNull: false,
 			set() {
-				this.setDataValue('type', 'image')
+				this.setDataValue('type', 'Video')
 			},
 		},
 		src: {
@@ -44,9 +46,9 @@ Image.init(
 	},
 	{
 		sequelize: seque,
-		tableName: 'images',
+		tableName: 'Videos',
 		timestamps: true,
 		underscored: true,
 	}
 )
-export default Image
+export default Video

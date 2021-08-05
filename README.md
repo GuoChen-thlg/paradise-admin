@@ -104,6 +104,25 @@ npm run compose-up-dev
 
 访问 [http://localhost:8001](http://localhost:8001)
 
+## 项目部署
+
+1.  构建前端
+    `npm run build:web`
+2.  构建后端
+    `npm run build:server`
+3.  构建 nginx 镜像
+    `docker build -f docker/nginx/Dockerfile -t paradise-admin-nginx:1.0.0 .`
+4.  构建 node 镜像
+    `docker build -f docker/node/Dockerfile -t paradise-admin-node:1.0.0 .`
+5.  打包镜像
+    `docker save -o paradise-admin.tar paradise-admin-nginx paradise-admin-node`
+
+6.  上传到服务器部署后 加载镜像
+    `docker load -i paradise-admin.tar`
+    配置 docker-compose.yml
+7.  运行
+    `docker-compose -p paradise-admin up -d --build`
+
 ## 浏览器支持
 
 最后两个版本的桌面浏览器 移动端不支持某些 API

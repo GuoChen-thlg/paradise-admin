@@ -12,12 +12,12 @@ export interface User extends user {
 	 * 登录状态
 	 */
 	login_statu: boolean
-	authority: AUTHORITY[]
+	authority: string[]
 }
 
 const state: User = {
 	id: 0,
-	login_statu: true,
+	login_statu: false,
 	name: '',
 	authority: [
 		AUTHORITY.PERSONNEL_C,
@@ -37,17 +37,17 @@ const state: User = {
 	}[],
 	purse: [],
 }
-export const enum user_mutations {
+export const user_mutations = {
 	/**改变登录状态 登录 */
-	LOGIN = 'user/logIn',
+	LOGIN: 'user/logIn',
 	/**改变登录状态 退出 */
-	SIGNOUT = 'user/signOut',
+	SIGNOUT: 'user/signOut',
 	/** @param product*/
-	ADDTOWISHLIST = 'user/addToWishlist',
+	ADDTOWISHLIST: 'user/addToWishlist',
 	/** @param product*/
-	REMOVEFROMWISHLIST = 'user/removeFromWishlist',
+	REMOVEFROMWISHLIST: 'user/removeFromWishlist',
 	/**添加到购物车 */
-	ADDTOCART = 'user/addToCart',
+	ADDTOCART: 'user/addToCart',
 }
 const mutations: MutationTree<User> = {
 	logIn(state) {
@@ -109,9 +109,9 @@ const mutations: MutationTree<User> = {
 		}
 	},
 }
-export const enum user_actions {
+export const user_actions = {
 	/**验证登录 */
-	ASYNCVERIFYLOGIN = 'user/asyncVerifyLogin',
+	ASYNCVERIFYLOGIN: 'user/asyncVerifyLogin',
 }
 const actions: ActionTree<User, RootState> = {
 	asyncVerifyLogin({ commit }) {

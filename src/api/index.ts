@@ -8,15 +8,43 @@ false 优先请求最后发出的请求（重复请求的接口）
 */
 const f = (response: AxiosResponse<ResponseData>): ResponseData | null => {
 	if (response) {
-		console.log(response.data)
-
 		return response.data
 	}
 	return null
 }
+export async function register({
+	account,
+	pass,
+	email,
+	code,
+}: {
+	[key: string]: string
+}) {
+	const response = await axios({
+		url: '/auth/register.json',
+		method: 'POST',
+		data: {
+			account,
+			pass,
+			email,
+			code,
+		},
+	})
+	return f(response)
+}
+
+export async function acceptCode({ email }: { email: string }) {
+	const response = await axios({
+		url: '/auth/emailer.json',
+		method: 'POST',
+		data: { email },
+	})
+	return f(response)
+}
 export async function verifyLogin() {
 	const response = await axios({
-		url: '/verifyLogin',
+		url:
+			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/verifyLogin',
 		method: 'POST',
 	})
 	return f(response)
@@ -27,36 +55,44 @@ export async function verifyLogin() {
  * { username , password }
  * @returns Promise<ResponseData | null>
  */
-export async function login(data: any) {
+export async function login({
+	account,
+	pass,
+}: {
+	account: string
+	pass: string
+}) {
 	const response = await axios({
-		url: '/auth/login',
+		url: '/auth/login.json',
 		method: 'POST',
-		data,
+		data: { account, pass },
 	})
 	return f(response)
 }
 /**
- * @description 获取用户权限信息 菜单 路由
+ * @description 获取用户  菜单 路由
  * @returns Promise<ResponseData | null>
  */
-export async function getAuthInfo() {
-	const response = await axios({
-		url: '/auth/authorityinfo',
-		method: 'GET',
-	})
-	return f(response)
-}
+export async function getMenus() {
+			const response = await axios({
+				url: '/user/menus.json',
+				method: 'GET',
+			})
+			return f(response)
+		}
 
 export async function personnelList() {
 	const response = await axios({
-		url: '/personnel/list',
+		url:
+			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/personnel/list',
 		method: 'GET',
 	})
 	return f(response)
 }
 export async function obituary() {
 	const response = await axios({
-		url: '/obituary',
+		url:
+			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/obituary',
 		method: 'GET',
 	})
 	return f(response)
@@ -79,7 +115,8 @@ export async function getProducts(
 	}
 ) {
 	const response = await axios({
-		url: '/dan-medicines',
+		url:
+			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/dan-medicines',
 		method: 'GET',
 		data: {
 			priority: true,

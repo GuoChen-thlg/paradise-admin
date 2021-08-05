@@ -16,7 +16,7 @@
     <template v-for="(menu_item, i) in menu" :key="i">
       <el-submenu
         :index="`${i}`"
-        v-if="menu_item.child && menu_item.child.length !== 0"
+        v-if="menu_item.children && menu_item.children.length !== 0"
       >
         <template #title>
           <i :class="menu_item.icon" v-if="menu_item.icon" />
@@ -25,9 +25,9 @@
           </span>
         </template>
         <el-menu-item-group>
-          <template v-for="(submenu, j) in menu_item.child">
+          <template v-for="(submenu, j) in menu_item.children">
             <template
-              v-if="!submenu.child || submenu.child.length === 0"
+              v-if="!submenu.children || submenu.children.length === 0"
               :key="`${i}-${j}-o`"
             >
               <el-menu-item :index="submenu.path">
@@ -35,14 +35,15 @@
                 {{ submenu.name }}
               </el-menu-item>
             </template>
-            <template v-else-if="submenu.isGroup" :key="`${i}-${j}-t`">
+            <!-- v-else-if="submenu.isGroup"菜单折叠时 三级菜单无法展示 -->
+            <template v-else-if="true" :key="`${i}-${j}-t`">
               <el-menu-item-group>
                 <template #title>
                   <i :class="submenu.icon" v-if="submenu.icon" />
                   <span>{{ submenu.name }}</span>
                 </template>
                 <template
-                  v-for="(item, k) in submenu.child"
+                  v-for="(item, k) in submenu.children"
                   :key="`${i}-${j}-${k}`"
                 >
                   <el-menu-item :index="item.path">
@@ -59,7 +60,7 @@
                   {{ submenu.name }}
                 </template>
                 <template
-                  v-for="(item, k) in submenu.child"
+                  v-for="(item, k) in submenu.children"
                   :key="`${i}-${j}-${k}`"
                 >
                   <el-menu-item :index="item.path">

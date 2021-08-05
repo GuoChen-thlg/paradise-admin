@@ -7,6 +7,7 @@ router.get(
 	/**
 	 * @api {POST} /api/v1/system/permission.json  获取权限列表
 	 * @apiDescription 获取权限列表
+	 * @apiHeader Authorization 认证 token
 	 * @apiGroup System
 	 * @apiUse v1
 	 * @apiVersion 1.0.0

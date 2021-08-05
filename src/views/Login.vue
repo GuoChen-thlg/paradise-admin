@@ -14,7 +14,7 @@
           </el-form-item>
           <el-form-item prop="user_name">
             <el-input
-              v-model="form_sign_in.user_name"
+              v-model.trim="form_sign_in.user_name"
               name="user_name"
               placeholder="账户"
               clearable
@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item prop="user_password">
             <el-input
-              v-model="form_sign_in.user_password"
+              v-model.trim="form_sign_in.user_password"
               name="user_password"
               placeholder="密码"
               show-password
@@ -72,7 +72,7 @@
           </el-form-item>
           <el-form-item prop="regist_name">
             <el-input
-              v-model="form_registered.regist_name"
+              v-model.trim="form_registered.regist_name"
               name="regist_name"
               placeholder="账户"
               clearable
@@ -80,7 +80,7 @@
           </el-form-item>
           <el-form-item prop="regist_password_first">
             <el-input
-              v-model="form_registered.regist_password_first"
+              v-model.trim="form_registered.regist_password_first"
               name="regist_password_first"
               placeholder="密码"
               show-password
@@ -89,7 +89,7 @@
           </el-form-item>
           <el-form-item prop="regist_password_again">
             <el-input
-              v-model="form_registered.regist_password_again"
+              v-model.trim="form_registered.regist_password_again"
               name="regist_password_first"
               placeholder="确认密码"
               show-password
@@ -100,21 +100,22 @@
             <el-row type="flex" justify="space-between">
               <el-col :xs="14" :sm="16">
                 <el-input
-                  v-model="form_registered.regist_email"
+                  v-model.trim="form_registered.regist_email"
+                  type="email"
+                  required="email"
                   name="regist_email"
                   placeholder="邮箱"
                   clearable
                 />
               </el-col>
               <el-col :xs="9" :sm="7">
-                <!-- TODO 邮箱发送验证码 -->
                 <el-button @click="handleSendCode" v-text="code_text" />
               </el-col>
             </el-row>
           </el-form-item>
           <el-form-item prop="regist_code">
             <el-input
-              v-model="form_registered.regist_code"
+              v-model.trim="form_registered.regist_code"
               name="regist_code"
               placeholder="验证码"
               clearable
@@ -151,11 +152,15 @@
 import { useStore } from 'vuex'
 import { defineComponent, reactive, ref, unref } from 'vue'
 
-import { login } from '@/api'
+import { acceptCode, register, login } from '@/api'
 import { key } from '@/store'
-import { Menu } from '@/custom'
+import { Menu, ResponseData } from '@/custom'
 import { useRouter } from 'vue-router'
 import { user_mutations } from '@/store/modules/user'
+import SidebarControlVue from '@/components/SidebarControl.vue'
+import encrypt from '@/utils/encrypt'
+import { ElMessage } from 'element-plus'
+import { sidebar_mutations } from '@/store/modules/sidebar'
 
 export default defineComponent({
   name: 'Login',
@@ -164,8 +169,8 @@ export default defineComponent({
     const store = useStore(key)
     const router = useRouter()
     const form_sign_in = reactive({
-      user_name: 'rootadmin',
-      user_password: '123456',
+      user_name: '',
+      user_password: '',
     })
     const formRegistered = ref<any>(null)
     const formSignIn = ref<any>(null)
@@ -179,33 +184,55 @@ export default defineComponent({
       agree_terms: false,
     })
     const code_text = ref('发送验证码')
-    const setMenu = (menu: Menu) => store.commit('sidebar/setMenu', menu)
-
     const handleFormRegist = () => {
-      unref(formRegistered).validate((valid: boolean) => {
-        if (valid) {
-          alert('注册成功！')
+      if (!window.navigator.cookieEnabled) {
+        ElMessage({
+          message: '请打开 Cookie ,我们将使用 Cookie 来识别您的身份',
+          type: 'error',
+        })
+        return false
+      }
+      unref(formRegistered).validate(async (valid: boolean) => {
+        const encrypt_pass = encrypt(form_registered.regist_password_first)
+        if (valid && encrypt_pass) {
+          try {
+            const res = await register({
+              account: form_registered.regist_name,
+              pass: encrypt_pass,
+              email: form_registered.regist_email,
+              code: form_registered.regist_code,
+            })
+            ElMessage.success(`${res?.account} 注册成功！`)
+          } catch (err) {
+            console.log(err)
+            return false
+          }
         } else {
           return false
         }
       })
     }
     const handleFormSignIn = () => {
-      console.log(unref(formSignIn))
-
+      if (!window.navigator.cookieEnabled) {
+        ElMessage({
+          message: '请打开 Cookie ,我们将使用 Cookie 来识别您的身份',
+          type: 'error',
+        })
+        return false
+      }
       unref(formSignIn).validate(async (valid: boolean) => {
-        if (valid) {
-          // TODO 向服务器发送数据 jwt 认证 密码加密
-          const result = await login(
-            JSON.stringify({
-              username: form_sign_in.user_name,
-              password: form_sign_in.user_password,
+        const encrypt_pass = encrypt(form_sign_in.user_password)
+        if (valid && encrypt_pass) {
+          try {
+            const result = await login({
+              account: form_sign_in.user_name,
+              pass: encrypt_pass,
             })
-          )
-          if (result && result.code === 2000) {
-            setMenu(result.data.routeList)
             store.commit(user_mutations.LOGIN)
             router.push('/home')
+            store.commit(sidebar_mutations.SETMENU, result?.menus || [])
+          } catch (err) {
+            console.log('失败', err.response)
           }
         } else {
           return false
@@ -213,16 +240,21 @@ export default defineComponent({
       })
     }
     // TODO 通过邮箱发送验证码
-    const handleSendCode = () => {
-      let ss = 60
-      const times = setInterval(() => {
-        ss--
-        code_text.value = `已发送 ${ss} s`
-        if (ss === 0) {
-          code_text.value = '发送验证码'
-          clearInterval(times)
-        }
-      }, 1e3)
+    const handleSendCode = async () => {
+      try {
+        await acceptCode({ email: form_registered.regist_email })
+        let ss = 180
+        const times = setInterval(() => {
+          ss--
+          code_text.value = `已发送 ${ss} s`
+          if (ss === 0) {
+            code_text.value = '发送验证码'
+            clearInterval(times)
+          }
+        }, 1e3)
+      } catch (err) {
+        console.log(err)
+      }
     }
     /* 验证规则 */
     const sign_in_rules = {

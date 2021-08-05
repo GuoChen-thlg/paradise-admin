@@ -6,13 +6,18 @@ export interface Sidebar {
 	isCollapse: boolean
 	menu: Menu[]
 }
-import { getAuthInfo } from '@/api'
+import { getMenus } from '@/api'
 
 const state: Sidebar = {
 	isCollapse: true,
 	menu: [],
 }
-
+export const sidebar_mutations = {
+	/**侧边栏切换 */
+	SWITCH: 'sidebar/switch',
+	/**设置侧边栏数据 */
+	SETMENU: 'sidebar/setMenu',
+}
 const mutations: MutationTree<Sidebar> = {
 	switch(state) {
 		state.isCollapse = !state.isCollapse
@@ -23,19 +28,14 @@ const mutations: MutationTree<Sidebar> = {
 		}
 	},
 }
+export const sidebar_actions = {
+	/**刷新侧边栏菜单数据 */
+	ASYNCREFRESHMENU: 'sidebar/asyncRefreshMenu',
+}
 const actions: ActionTree<Sidebar, RootState> = {
-	/**
-	 *@description 刷新侧边栏菜单数据
-	 *
-	 */
-	asyncRefreshMenu({ commit }) {
-		getAuthInfo().then(data => {
-			if (data && data.code === 2000) {
-				commit('setMenu', data.data)
-				console.log('获取菜单成功');
-				
-			}
-		})
+	async asyncRefreshMenu({ commit }) {
+		const result = await getMenus()
+		commit('setMenu', result?.menus || [])
 	},
 }
 const module: Module<Sidebar, RootState> = {

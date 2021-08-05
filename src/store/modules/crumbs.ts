@@ -17,9 +17,9 @@ const state: Crumbs = {
 	tabsList: [],
 	cacheList: [],
 }
-export const enum crumbs_mutations {
-	ADDTAB = 'crumbs/addTab',
-	REMOVETAB = 'crumbs/removeTab',
+export const crumbs_mutations= {
+	ADDTAB : 'crumbs/addTab',
+	REMOVETAB : 'crumbs/removeTab',
 }
 
 const mutations: MutationTree<Crumbs> = {

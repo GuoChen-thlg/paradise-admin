@@ -7,6 +7,7 @@ router
 		'.json',
 		/**
 		 * @api {POST} /api/v1/products.json   创建新产品
+		 * @apiHeader Authorization 认证 token
 		 * @apiDescription 向数据库添加一个产品
 		 * @apiParam {String} title  产品名称
 		 * @apiParam {String} effect 产品类型

@@ -1,16 +1,30 @@
-import { RoleAttributes } from './../types/role.d'
-import { Optional, Model, DataTypes } from 'sequelize'
+import {
+	Optional,
+	Model,
+	DataTypes,
+	BelongsToManyGetAssociationsMixin,
+	BelongsToManySetAssociationsMixin,
+} from 'sequelize'
 import seque from '../controllers/mysql'
-
-interface RoleCreationAttributes
-	extends Optional<RoleAttributes, 'id' | 'role_id'> {}
+import Permission from './permission'
+import Menu from './menu'
+interface RoleAttributes {
+	id: number
+	name: string
+	describe: string
+}
+interface RoleCreationAttributes extends Optional<RoleAttributes, 'id'> {}
 
 class Role extends Model<RoleAttributes, RoleCreationAttributes>
 	implements RoleAttributes {
 	id: number
-	role_id: string
-	describe: string
 	name: string
+	describe: string
+
+	getPermissions: BelongsToManyGetAssociationsMixin<Permission>
+	setPermissions: BelongsToManySetAssociationsMixin<Permission, number>
+	getMenus: BelongsToManyGetAssociationsMixin<Menu>
+	setMenus: BelongsToManySetAssociationsMixin<Menu, number>
 }
 Role.init(
 	{
@@ -22,14 +36,8 @@ Role.init(
 			allowNull: false,
 			comment: '自增id',
 		},
-		role_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
-			unique: true,
-			allowNull: false,
-			comment: '角色id',
-		},
-		name: { type: DataTypes.STRING, allowNull: false },
+
+		name: { type: DataTypes.STRING, allowNull: false, unique: true },
 		describe: { type: DataTypes.STRING },
 	},
 	{
