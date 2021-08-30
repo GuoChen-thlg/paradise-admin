@@ -8,8 +8,9 @@
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "removeComments": true,
         "outDir": "dist",
-        "baseUrl": "./",
+        "baseUrl": ".",
         "types": [
             "node"
         ]

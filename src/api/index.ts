@@ -74,13 +74,21 @@ export async function login({
  * @returns Promise<ResponseData | null>
  */
 export async function getMenus() {
-			const response = await axios({
-				url: '/user/menus.json',
-				method: 'GET',
-			})
-			return f(response)
-		}
+	const response = await axios({
+		url: '/user/menus.json',
+		method: 'GET',
+	})
+	return f(response)
+}
 
+export async function getRoleMneus({ roleId }: { roleId: number }) {
+	const response = await axios({
+		url: '/system/menus.json',
+		params: { roleId },
+		method: 'GET',
+	})
+	return f(response)
+}
 export async function personnelList() {
 	const response = await axios({
 		url:

@@ -8,33 +8,88 @@
   <meta name="description" content="Author:THLG,Category: Backstage management,Description:paradise admin 一个神奇的后台管理平台(A magical background management platform)">
 
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
   <% if (htmlWebpackPlugin.options.cdn&&(htmlWebpackPlugin.options.cdn.css||htmlWebpackPlugin.options.cdn&&htmlWebpackPlugin.options.cdn.js)) { %>
   <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
   <% } %>
   <!--  CDN start -->
   <% for (var i in htmlWebpackPlugin.options.cdn&&htmlWebpackPlugin.options.cdn.css) { %>
-    <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.cdn.css[i] %>">
+    <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet">
   <% } %>
   <% for (var i in htmlWebpackPlugin.options.cdn&&htmlWebpackPlugin.options.cdn.js) { %>
     <link href="<%= htmlWebpackPlugin.options.cdn.js[i] %>" rel="prefetch">
   <% } %>
   <!--  CDN end -->
-  <% if (htmlWebpackPlugin.options.VUE_APP_ENV_NO_PRODUCTION===true) { %>
-    <script>
-      window.VUE_APP_ENV_NO_PRODUCTION=true
-    </script>
-  <% } %>
-  <title>
-    <%= htmlWebpackPlugin.options.title %>
-  </title>
+  <style type="text/css" role="loader-style">
+    .loader[role='loader'] {
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      margin-left: 10%;
+      transform: translate3d(-50%, -50%, 0);
+  
+    }
+  
+    .loader[role='loader'] .item {
+      width: 24px;
+      height: 24px;
+      background: #3ac;
+      border-radius: 100%;
+      display: inline-block;
+      animation: slide 1s infinite;
+    }
+  
+    .loader[role='loader'] .item:nth-child(1) {
+      animation-delay: .1s;
+      background: #33aacc;
+    }
+  
+    .loader[role='loader'] .item:nth-child(2) {
+      animation-delay: .2s;
+      background: #5cbcd6;
+    }
+  
+    .loader[role='loader'] .item:nth-child(3) {
+      animation-delay: .3s;
+      background: #85cde0;
+    }
+  
+    .loader[role='loader'] .item:nth-child(4) {
+      animation-delay: .4s;
+      background: #adddeb;
+    }
+  
+    .loader[role='loader'] .item:nth-child(5) {
+      animation-delay: .5s;
+      background: #d6eef5;
+    }
+  
+    @keyframes slide {
+      0% {
+        transform: scale(1);
+      }
+  
+      50% {
+        opacity: .3;
+        transform: scale(2);
+      }
+  
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
 
 <body>
   <noscript>
-    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
-        Please enable it to continue.</strong>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
+  <div class="loader" role="loader">
+    <span class="item"></span><span class="item"></span><span class="item"></span><span class="item"></span><span class="item"></span>
+  </div>
   <div id="app"></div>
   <!-- built files will be auto injected -->
   <!-- CDN start -->

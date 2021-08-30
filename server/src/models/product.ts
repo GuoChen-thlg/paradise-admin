@@ -7,6 +7,7 @@ import {
 } from 'sequelize'
 import seque from '../controllers/mysql'
 import { MaterialAttributes } from './material'
+import Media from './media'
 
 interface ProductAttributes extends MaterialAttributes {
 	// user group
@@ -15,8 +16,6 @@ interface ProductAttributes extends MaterialAttributes {
 	qr_code: string
 	/**产品标签 "tag1, tag2" */
 	tags: string
-	/**供应商 */
-	vendor_id: number
 	/**产品类型 */
 	product_type: string
 	/**开售时间 */
@@ -31,8 +30,6 @@ interface ProductAttributes extends MaterialAttributes {
 	price_min: number
 	/**产品分类 */
 	product_category: string
-	media_ids: string
-	variant_ids: string
 }
 
 interface ProductCreationAttributes
@@ -48,7 +45,6 @@ interface ProductCreationAttributes
 		| 'price_max'
 		| 'price_min'
 		| 'product_category'
-		| 'vendor_id'
 	> {}
 
 class Product extends Model<ProductAttributes, ProductCreationAttributes>
@@ -58,7 +54,6 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes>
 	barcode: string
 	qr_code: string
 	tags: string
-	vendor_id: number
 	product_type: string
 	published_at: string
 	active: Boolean
@@ -66,10 +61,8 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes>
 	price_max: number
 	price_min: number
 	product_category: string
-	variant_ids: string
 	title: string
 	effect: string
-	image_id: number
 }
 
 Product.init(
@@ -86,7 +79,6 @@ Product.init(
 		barcode: { type: DataTypes.STRING },
 		qr_code: { type: DataTypes.STRING },
 		tags: { type: DataTypes.JSON },
-		vendor_id: { type: DataTypes.INTEGER },
 		product_type: { type: DataTypes.JSON },
 		published_at: DataTypes.DATE,
 		active: {
@@ -98,9 +90,6 @@ Product.init(
 		price_min: { type: DataTypes.FLOAT },
 		product_category: { type: DataTypes.STRING },
 		effect: { type: DataTypes.VIRTUAL },
-		image_id: { type: DataTypes.INTEGER },
-		media_ids: { type: DataTypes.JSON },
-		variant_ids: { type: DataTypes.JSON },
 	},
 	{
 		sequelize: seque,
@@ -109,4 +98,7 @@ Product.init(
 		underscored: true,
 	}
 )
+Product.hasMany(Media, { foreignKey: 'product_id' })
+Media.belongsTo(Product, { foreignKey: 'Product_id', targetKey: 'id' })
+
 export default Product

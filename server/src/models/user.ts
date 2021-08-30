@@ -2,11 +2,8 @@ import {
 	Optional,
 	Model,
 	DataTypes,
-	BelongsToMany,
-	HasManyHasAssociationMixin,
 	BelongsToManyGetAssociationsMixin,
 	BelongsToManySetAssociationsMixin,
-	BelongsToManySetAssociationsMixinOptions,
 } from 'sequelize'
 
 import seque from '../controllers/mysql'
@@ -16,10 +13,12 @@ interface UserAttributes {
 	id: number
 	account: string
 	passwd: string
-	email:string
+	email: string
+	random_id: string
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes
+	extends Optional<UserAttributes, 'id' | 'random_id'> {}
 
 class User extends Model<UserAttributes, UserCreationAttributes>
 	implements UserAttributes {
@@ -27,13 +26,11 @@ class User extends Model<UserAttributes, UserCreationAttributes>
 	account: string
 	passwd: string
 	email: string
-
+	random_id: string
 	public getRoles: BelongsToManyGetAssociationsMixin<Role>
 	public setRoles: BelongsToManySetAssociationsMixin<Role, number>
 	public getProducts: BelongsToManyGetAssociationsMixin<Product>
 	public setProducts: BelongsToManySetAssociationsMixin<Product, number>
-	// public getinfo: BelongsToManyGetAssociationsMixin<Product>
-	// public setinfo: BelongsToManySetAssociationsMixin<Product, number>
 }
 
 User.init(
@@ -50,7 +47,10 @@ User.init(
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true,
-			comment: '账户',
+			comment: '账户 用户名 3-18位',
+			validate: {
+				is: /^\w{3,18}$/,
+			},
 		},
 		passwd: {
 			type: DataTypes.STRING(510),
@@ -65,6 +65,10 @@ User.init(
 				isEmail: true,
 			},
 		},
+		random_id: {
+			type: DataTypes.UUID,
+			comment: '单一登陆对比ID',
+		},
 	},
 	{
 		sequelize: seque,
@@ -73,5 +77,10 @@ User.init(
 		underscored: true,
 	}
 )
+Role.belongsToMany(User, { through: 'user_roles' })
+User.belongsToMany(Role, { through: 'user_roles', as: 'roles' })
+
+User.hasMany(Product, { foreignKey: 'user_id' })
+Product.belongsTo(User, { foreignKey: 'user_id', targetKey: 'id' })
 
 export default User

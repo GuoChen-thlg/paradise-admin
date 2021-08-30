@@ -11,6 +11,7 @@ const seque = new Sequelize(DB_DBNAME, DB_USERNAME, DB_PASSWORD, {
 	},
 	define: {
 		charset: 'utf8',
+		timestamps: false,
 	},
 	pool: {
 		max: 5,

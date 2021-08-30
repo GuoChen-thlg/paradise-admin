@@ -79,45 +79,46 @@
 </template>
 
 <script lang="ts">
+// 0755 86013799
 // @ is an alias to /src
-
-import { ECharts, registerMap } from 'echarts/core'
+import { ECharts } from 'echarts/core'
+import { vChart } from '@/plugins/echarts'
 import { defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { openIntervalF } from '@/utils/util'
 export default defineComponent({
   name: 'Home',
-
+  components: { vChart },
   setup: () => {
     /* 柱状图  */
     const option1 = reactive({
       title: {
         text: '三界人口实时增量统计',
-        textStyle: {},
+        textStyle: {}
       },
       grid: {
         left: 60,
-        bottom: 40,
+        bottom: 40
       },
       yAxis: {
         type: 'value',
         splitLine: {
-          show: false,
+          show: false
         },
         axisLine: {
           show: true,
           lineStyle: {
-            width: 2,
-          },
-        },
+            width: 2
+          }
+        }
       },
       xAxis: {
         type: 'category',
         axisLine: {
           lineStyle: {
-            width: 2,
-          },
+            width: 2
+          }
         },
-        data: (function () {
+        data: (function() {
           let now = new Date()
           let res = []
           let len = 5
@@ -126,18 +127,18 @@ export default defineComponent({
             now = new Date(now.getTime() - 2000)
           }
           return res
-        })(),
+        })()
       },
       series: [
         {
-          data: (function () {
+          data: (function() {
             return Array(5)
               .fill(0)
               .map(() => Math.random() * Math.random() * 1e3)
           })(),
-          type: 'bar',
-        },
-      ],
+          type: 'bar'
+        }
+      ]
     })
     /* 更新数据 */
     {
@@ -154,44 +155,44 @@ export default defineComponent({
     /* 柱状图 */
     const option2 = reactive({
       title: {
-        text: '人口总量',
+        text: '人口总量'
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'shadow',
-        },
+          type: 'shadow'
+        }
       },
       legend: {
-        data: ['2011年', '2012年'],
+        data: ['2011年', '2012年']
       },
       grid: {
         left: '3%',
         right: '10%',
         bottom: '3%',
-        containLabel: true,
+        containLabel: true
       },
       xAxis: {
         type: 'value',
-        boundaryGap: [0, 0.01],
+        boundaryGap: [0, 0.01]
       },
       yAxis: {
         type: 'category',
         name: '人口(亿)',
-        data: ['天', '地', '人'],
+        data: ['天', '地', '人']
       },
       series: [
         {
           name: '2011年',
           type: 'bar',
-          data: [18203, 23489, 29034],
+          data: [18203, 23489, 29034]
         },
         {
           name: '2012年',
           type: 'bar',
-          data: [19325, 23438, 31000],
-        },
-      ],
+          data: [19325, 23438, 31000]
+        }
+      ]
     })
 
     /*  */
@@ -204,14 +205,14 @@ export default defineComponent({
         left: '10%',
         top: '10%',
         right: '10%',
-        bottom: '10%',
+        bottom: '10%'
       },
 
       xAxis: [
         {
           type: 'category',
           boundaryGap: true,
-          data: (function () {
+          data: (function() {
             let now = new Date()
             let res = []
             let len = 10
@@ -220,20 +221,20 @@ export default defineComponent({
               now = new Date(now.getTime() - 2000)
             }
             return res
-          })(),
+          })()
         },
         {
           type: 'category',
           boundaryGap: true,
-          data: (function () {
+          data: (function() {
             let res = []
             let len = 10
             while (len--) {
               res.push(10 - len - 1)
             }
             return res
-          })(),
-        },
+          })()
+        }
       ],
       yAxis: [
         {
@@ -241,20 +242,20 @@ export default defineComponent({
           scale: true,
           max: 30,
           min: 0,
-          boundaryGap: [0.2, 0.2],
+          boundaryGap: [0.2, 0.2]
         },
         {
           type: 'value',
           scale: true,
           max: 1200,
           min: 0,
-          boundaryGap: [0.2, 0.2],
-        },
+          boundaryGap: [0.2, 0.2]
+        }
       ],
       dataZoom: {
         show: false,
         start: 0,
-        end: 100,
+        end: 100
       },
       series: [
         {
@@ -262,19 +263,19 @@ export default defineComponent({
           type: 'bar',
           xAxisIndex: 1,
           yAxisIndex: 1,
-          data: (function () {
+          data: (function() {
             let res = []
             let len = 10
             while (len--) {
               res.push(Math.round(Math.random() * 1000))
             }
             return res
-          })(),
+          })()
         },
         {
           name: '最新成交价',
           type: 'line',
-          data: (function () {
+          data: (function() {
             let res = []
             let len = 0
             while (len < 10) {
@@ -282,9 +283,9 @@ export default defineComponent({
               len++
             }
             return res
-          })(),
-        },
-      ],
+          })()
+        }
+      ]
     })
     setInterval(() => {
       let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '')
@@ -312,29 +313,29 @@ export default defineComponent({
         environment:
           'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data-gl/asset/starfield.jpg',
         realisticMaterial: {
-          roughness: 0.9,
+          roughness: 0.9
         },
         postEffect: {
-          enable: true,
+          enable: true
         },
         light: {
           main: {
             intensity: 4,
-            shadow: true,
+            shadow: true
           },
           ambientCubemap: {
             texture:
               'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data-gl/asset/pisa.hdr',
-            diffuseIntensity: 0.2,
-          },
-        },
-      },
+            diffuseIntensity: 0.2
+          }
+        }
+      }
     })
 
     const option5 = reactive({
       grid: {
         right: 80,
-        left: 80,
+        left: 80
       },
       series: [
         {
@@ -346,10 +347,10 @@ export default defineComponent({
             { value: 274, name: '联盟广告' },
             { value: 310, name: '邮件营销' },
             { value: 335, name: '直接访问' },
-            { value: 400, name: '搜索引擎' },
-          ],
-        },
-      ],
+            { value: 400, name: '搜索引擎' }
+          ]
+        }
+      ]
     })
     /* 实力排行榜 */
     const option6_data = Array(9)
@@ -371,7 +372,7 @@ export default defineComponent({
             '广聪健',
             '蔚雨星',
             '梅乐章',
-            '毛飞翮',
+            '毛飞翮'
           ][i],
           talent: parseFloat(openIntervalF(5, 100).toFixed(2)), //天赋 9
           intelligence: parseFloat(openIntervalF(50, 180).toFixed(2)), //智力 7
@@ -380,11 +381,11 @@ export default defineComponent({
           demon: parseFloat(openIntervalF(50, 6000).toFixed(2)), //魔抗 4
           magic: parseFloat(openIntervalF(50, 8000).toFixed(2)), //法强 6
           attack: parseFloat(openIntervalF(600, 2000).toFixed(2)), //攻击力 4
-          sum: 0, // 综合实力
+          sum: 0 // 综合实力
         }
       })
     const rank = option6_data
-      .map((r) => {
+      .map(r => {
         r.sum =
           r.talent * 9 +
           r.intelligence * 7 +
@@ -398,13 +399,13 @@ export default defineComponent({
       .sort((a, b) => a.sum - b.sum)
     const option6 = reactive({
       title: {
-        text: '实力排行',
+        text: '实力排行'
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'shadow',
-        },
+          type: 'shadow'
+        }
       },
       legend: {
         left: 150,
@@ -416,65 +417,65 @@ export default defineComponent({
           '防御',
           '智力',
           '血统',
-          '天赋',
-        ],
+          '天赋'
+        ]
       },
       grid: {
         left: '3%',
         right: '10%',
         bottom: '3%',
-        containLabel: true,
+        containLabel: true
       },
       xAxis: {
         type: 'value',
-        boundaryGap: [0, 0.01],
+        boundaryGap: [0, 0.01]
       },
       yAxis: {
         type: 'category',
-        data: rank.map((r) => r.name),
+        data: rank.map(r => r.name)
       },
       series: [
         {
           name: '综合实力',
           type: 'bar',
-          data: rank.map((r) => r.sum),
+          data: rank.map(r => r.sum)
         },
         {
           name: '法强',
           type: 'bar',
-          data: rank.map((r) => r.magic),
+          data: rank.map(r => r.magic)
         },
         {
           name: '攻击力',
           type: 'bar',
-          data: rank.map((r) => r.attack),
+          data: rank.map(r => r.attack)
         },
         {
           name: '法抗',
           type: 'bar',
-          data: rank.map((r) => r.demon),
+          data: rank.map(r => r.demon)
         },
         {
           name: '防御',
           type: 'bar',
-          data: rank.map((r) => r.defense),
+          data: rank.map(r => r.defense)
         },
         {
           name: '智力',
           type: 'bar',
-          data: rank.map((r) => r.intelligence),
+          data: rank.map(r => r.intelligence)
         },
         {
           name: '血统',
           type: 'bar',
-          data: rank.map((r) => r.bloodline),
+          data: rank.map(r => r.bloodline)
         },
         {
           name: '天赋',
           type: 'bar',
-          data: rank.map((r) => r.talent),
-        },
-      ],
+          data: rank.map(r => r.talent)
+        }
+      ]
     })
     /*  */
     const option7 = reactive({})
@@ -491,7 +492,7 @@ export default defineComponent({
     }
     const filling = ref<HTMLObjectElement | null>(null)
     const resizeCd = () => {
-      charts.forEach((el) => {
+      charts.forEach(el => {
         el.resize()
       })
     }
@@ -513,9 +514,9 @@ export default defineComponent({
       option7,
       option8,
       filling,
-      chart,
+      chart
     }
-  },
+  }
 })
 </script>
 <style lang="scss" scoped>

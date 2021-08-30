@@ -49,11 +49,8 @@ router
 			const { title } = ctx.request.body
 			const p = await Product.create({
 				price: 1234,
-				media_ids: 'sadsdsada',
-				variant_ids: 'asdsadsad,asdsadasd,dasdsad,dasdasd,adsadsa',
 				title: '产品1号',
 				effect: '简单的介绍',
-				image_id: 123,
 			})
 
 			ctx.body = { product: p }

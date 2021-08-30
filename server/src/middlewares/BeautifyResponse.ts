@@ -25,6 +25,10 @@ export const ErrorCode = {
 	 */
 	err35: '4035',
 	/**
+	 * @description 被踢掉
+	 */
+	err36: '4036',
+	/**
 	 * @description Authentication 为空
 	 */
 	err11: '4011',
@@ -47,13 +51,15 @@ export const ErrorCode = {
 }
 function beautifyResponse(): Koa.Middleware<{}, {}> {
 	return async function(ctx: Koa.ParameterizedContext, next: Koa.Next) {
+		console.log(ctx.request.ip, ctx.request.ips)
+
 		try {
 			await next()
 			if (/^\/api/.test(ctx.path) && ctx.status === 200 && ctx.body) {
 				;(ctx.body as ResponseBody).msg = '成功'
 			}
 		} catch (err) {
-			console.log(err)
+			console.log('美化', err)
 			if (!/^\d+$/.test(err.message)) {
 				switch (err.status) {
 					case 500:
@@ -90,6 +96,13 @@ function beautifyResponse(): Koa.Middleware<{}, {}> {
 				case ErrorCode.err35:
 					ctx.status = 403
 					ctx.body = { msg: '请求过于频繁，请稍后再试' }
+					break
+				case ErrorCode.err36:
+					ctx.status = 403
+					ctx.body = {
+						msg:
+							'由于该账号已重新登录，如果不是本人操作，请及时修改密码',
+					}
 					break
 				case ErrorCode.err11:
 					ctx.status = 401

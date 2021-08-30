@@ -3,41 +3,26 @@ import dotenv from 'dotenv'
 if ((process.argv.splice(2)[0] || '').trim() === 'production') {
 	dotenv.config({ path: '.env' })
 } else {
-	dotenv.config({ path: '.env.local' })
+	dotenv.config({ path: '.env.development.local' })
 }
 
 import { passwd } from './utils'
-import app from './controllers/server'
+import server from './controllers/server'
 import seque from './controllers/mysql'
 
 import { permissions, menuTree } from './config/dbInit'
 // 数据库表
-import Menu from './models/menu'
 import Permission from './models/permission'
 import Role from './models/role'
 import User from './models/user'
-import { treeToArray, arrayToTree } from './utils'
+import Menu from './models/menu'
+import Product from './models/product'
+import { treeToArray } from './utils'
+
 const { SERVER_PORT, NGINX_PORT, EMAIL_USER } = process.env
 const port = SERVER_PORT ? parseInt(SERVER_PORT) : 3000
 
 async function start() {
-	/* 库表关联 */
-	Permission.belongsToMany(Role, { through: 'role_permissions' })
-	Role.belongsToMany(Permission, {
-		through: 'role_permissions',
-		as: 'permissions',
-	})
-	Menu.belongsToMany(Role, {
-		through: 'role_menus',
-	})
-	Role.belongsToMany(Menu, {
-		through: 'role_menus',
-		as: 'menus',
-	})
-
-	Role.belongsToMany(User, { through: 'user_roles' })
-	User.belongsToMany(Role, { through: 'user_roles', as: 'roles' })
-
 	try {
 		await seque.authenticate()
 		console.info('\x1B[32m%s\x1B[0m', `[mysql] 数据库连接成功`)
@@ -45,16 +30,16 @@ async function start() {
 			await seque.sync()
 		} else {
 			// 数据库初始化
-			await seque.query('DROP TABLE IF EXISTS `devdb`.`menu_permission`;')
-			await seque.query('DROP TABLE IF EXISTS `devdb`.`role_permission`;')
-			await seque.query('DROP TABLE IF EXISTS `devdb`.`user_roles`;')
-			await seque.drop()
+			// await seque.query('DROP TABLE IF EXISTS `devdb`.`menu_permission`;')
+			// await seque.query('DROP TABLE IF EXISTS `devdb`.`role_permission`;')
+			// await seque.query('DROP TABLE IF EXISTS `devdb`.`user_roles`;')
+			// await seque.drop()
 			await seque.sync({})
 		}
 		/* 初次初始化数据库 */
 		await dbInit()
 		// 启动服务器
-		app.listen(port, () => {
+		server.listen(port, () => {
 			console.info(
 				'\x1B[32m%s\x1B[0m',
 				`[koa-server] 服务器启动成功\n Server: http://localhost:${port}\n Nginx: http://localhost:${NGINX_PORT}`
@@ -88,7 +73,7 @@ async function dbInit() {
 			const menus = await Menu.bulkCreate(aftMenus, { transaction: t })
 
 			const role_rootadmin = await Role.create(
-				{ name: 'rootadmin', describe: '这是超级管理员角色' },
+				{ name: 'rootadmin', describe: '超级管理员角色' },
 				{ transaction: t }
 			)
 			await role_rootadmin.setMenus(menus, { transaction: t })
@@ -106,8 +91,17 @@ async function dbInit() {
 				},
 				{ transaction: t }
 			)
+			const rootuser1 = await User.create(
+				{
+					account: 'rootadmin1',
+					passwd: passwd('rootadmin'),
+					email: EMAIL_USER,
+				},
+				{ transaction: t }
+			)
 			// 超级管理员账号关联角色
 			await rootuser.setRoles([role_rootadmin], { transaction: t })
+			await rootuser1.setRoles([role_rootadmin], { transaction: t })
 			await t.commit()
 		} catch (err) {
 			console.log(err)

@@ -4,6 +4,8 @@ import products from './modules/products'
 import user from './modules/user'
 import login from './modules/auth'
 import system from './modules/system'
+
+
 const router = new Router()
 /**
  * @apiDefine v1
@@ -49,11 +51,9 @@ const router = new Router()
 router.use('/auth', login)
 
 router.use('/products', products)
+
 router.use('/user', user)
 
-
 router.use('/system', system)
-
-
 
 export default router.routes()

@@ -6,6 +6,8 @@ import { RootState } from '@/store/index'
 import { ActionTree, Module, MutationTree } from 'vuex'
 
 import { AUTHORITY } from '@/enum'
+import Cookies from 'js-cookie'
+import { json } from 'sequelize/types'
 /* 用户 */
 export interface User extends user {
 	/**
@@ -17,7 +19,9 @@ export interface User extends user {
 
 const state: User = {
 	id: 0,
-	login_statu: false,
+	login_statu: JSON.parse(
+		localStorage.getItem('login_statu') || '{"statu":false}'
+	).statu,
 	name: '',
 	authority: [
 		AUTHORITY.PERSONNEL_C,
@@ -52,9 +56,21 @@ export const user_mutations = {
 const mutations: MutationTree<User> = {
 	logIn(state) {
 		state.login_statu = true
+		localStorage.setItem('login_statu', JSON.stringify({ statu: true }))
 	},
 	signOut(state) {
+		console.log('退出')
+		Cookies.set('authorization', '', {
+			path: '/',
+			expires: new Date(),
+		})
+		Cookies.set('authorization.sig', '', {
+			path: '/',
+			expires: new Date(),
+		})
+		localStorage.removeItem('authorization')
 		state.login_statu = false
+		localStorage.setItem('login_statu', JSON.stringify({ statu: false }))
 	},
 	addToWishlist(state, product: product) {
 		if (
@@ -109,30 +125,11 @@ const mutations: MutationTree<User> = {
 		}
 	},
 }
-export const user_actions = {
-	/**验证登录 */
-	ASYNCVERIFYLOGIN: 'user/asyncVerifyLogin',
-}
-const actions: ActionTree<User, RootState> = {
-	asyncVerifyLogin({ commit }) {
-		verifyLogin()
-			.then(data => {
-				if (data && data.code === 2000) {
-					commit('logIn')
-				} else {
-					commit('signOut')
-				}
-			})
-			.catch(error => {
-				commit('signOut')
-			})
-	},
-}
+
 const module: Module<User, RootState> = {
 	namespaced: true,
 	state,
 	mutations,
-	actions,
 }
 
 export default module

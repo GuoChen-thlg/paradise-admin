@@ -1,19 +1,18 @@
 import Router from 'koa-router'
-import jsonwebtoken from 'jsonwebtoken'
 import Role from '../../../../models/role'
 import Permission from '../../../../models/permission'
 import { Op } from 'sequelize'
 import User from '../../../../models/user'
 import Menu from '../../../../models/menu'
 import { arrayToTree, unique } from '../../../../utils'
+
 const router = new Router()
-const { JWT_PRIVATEKEY } = process.env
 router
 	.get(
-		'/permission.json',
+		'/permissions.json',
 		/**
 		 *
-		 * @api {GET} /api/v1/user/permission.json 获取权限
+		 * @api {GET} /api/v1/user/permissions.json 获取权限
 		 * @apiHeader Authorization 认证 token
 		 * @apiGroup User
 		 * @apiUse v1
@@ -121,5 +120,18 @@ router
 		}
 	)
 	.get('/materials.json', async (ctx, next) => {})
+	.put(
+		'/change-pass.json',
+		/**
+		 * @api {PUT} /api/v1/user/change-pass.json 修改密码
+		 * @apiParam {String} newPass 旧密码
+		 * @apiParam {String} oldPass 新密码
+		 * @apiHeader Authorization 认证 token
+		 * @apiGroup User
+		 * @apiUse v1
+		 * @apiVersion 1.0.0
+		 */
+		async (ctx, next) => {}
+	)
 
 export default router.routes()

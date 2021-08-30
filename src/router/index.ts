@@ -5,15 +5,17 @@ import {
 } from 'vue-router'
 import { routes } from '@/router/routes'
 import store from '@/store'
-import { verifyLogin, } from '@/api'
+
 
 import hasAuthority from '@/utils/hasAuthority'
 import { crumbs_mutations } from '@/store/modules/crumbs'
 const router = createRouter({
 	// history: createWebHashHistory(),
-	history: (window as any).VUE_APP_ENV_NO_PRODUCTION
-		? createWebHashHistory()
-		: createWebHistory(),
+	history:
+		// process.env.NODE_ENV === 'production'
+		// 	? createWebHistory()
+		// 	:
+		createWebHashHistory(),
 	routes,
 	scrollBehavior(to, from, savedPosition) {
 		// ...

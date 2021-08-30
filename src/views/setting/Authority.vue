@@ -1,10 +1,12 @@
 <template>
   <el-main>
+    <h1>菜单</h1>
     <el-tree
       :data="data"
       node-key="id"
+      :props="defaultProps"
       show-checkbox
-      default-expand-all
+      accordion
       @node-drag-start="handleDragStart"
       @node-drag-enter="handleDragEnter"
       @node-drag-leave="handleDragLeave"
@@ -19,29 +21,35 @@
   </el-main>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import Node from 'element-plus/packages/tree/src/model/node'
 
 interface authorityNode {
   id: number
-  label: string
+  name: string
   children?: authorityNode[]
-  disabled?: boolean
-  url: string
+  path: string
   icon: string
   parent_id: number
-  permissions: string
 }
-
+import { getRoleMneus } from '@/api'
 export default defineComponent({
   name: 'authorityNode',
   setup() {
     const defaultProps = reactive({
       children: 'children',
-      label: 'label',
+      label: 'name',
     })
-    const data = reactive<authorityNode[]>([])
-
+    const data = ref<authorityNode[]>([])
+    onMounted(async () => {
+      try {
+        const result = await getRoleMneus({ roleId: 1 })
+        data.value = result?.menus as authorityNode[]
+        console.log(result?.menus)
+      } catch (err) {
+        console.log(err)
+      }
+    })
     const handleDragStart = (node: authorityNode, ev: Event) => {
       //   console.log('drag start', node)
     }
@@ -64,7 +72,7 @@ export default defineComponent({
       dropNode: authorityNode,
       ev: Event
     ) => {
-      console.log('tree drag over: ', dropNode.label)
+      console.log('tree drag over: ', dropNode.name)
     }
     const handleDragEnd = (
       draggingNode: authorityNode,

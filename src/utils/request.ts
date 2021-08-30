@@ -60,22 +60,22 @@ _axios.interceptors.request.use(
 		if (Cookie.get('authorization')) {
 			reqConfig.headers.Authorization = `Bearer ${Cookie.get(
 				'authorization'
-			)}`
+			) || localStorage.getItem('authorization')}`
 		}
 
 		return registReq(reqConfig)
 	},
 	err => {
-		console.log('请求拦截', err)
+		console.log('请求拦截err', err)
 	}
 )
 _axios.interceptors.response.use(
 	(res: AxiosResponse<ResponseData>) => {
-		console.log(res)
+		console.log('响应拦截', res)
 		return removeReq(res)
 	},
 	err => {
-		console.log('响应拦截', err, err.response)
+		console.log('响应拦截err', err, err.response)
 		return handlingError(err)
 	}
 )

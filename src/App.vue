@@ -26,12 +26,7 @@
       >
         <div class="control-container">
           <div class="open-close hidden-xs-only" @click="on_off">
-            <i
-              :class="{
-                'el-icon-s-fold': !isCollapse,
-                'el-icon-s-unfold': isCollapse,
-              }"
-            />
+            <i :class="[isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']" />
           </div>
           <div class="open-close hidden-sm-and-up" @click="drawer = true">
             <i class="el-icon-s-unfold" />
@@ -55,7 +50,7 @@
             <i
               :class="{
                 'el-icon-s-fold': !isCollapse,
-                'el-icon-s-unfold': isCollapse,
+                'el-icon-s-unfold': isCollapse
               }"
             />
           </div>
@@ -73,7 +68,7 @@
       <!-- TAB 标签 -->
       <ceumbs v-if="showTabNav"></ceumbs>
 
-      <!--  -->
+      <!-- 路由 -->
       <router-view v-slot="{ Component }">
         <keep-alive max="10" :include="cacheList" exclude="Home">
           <component :is="Component" />
@@ -89,14 +84,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch, toRefs, ref } from 'vue'
+import {
+  defineComponent,
+  reactive,
+  watch,
+  toRefs,
+  ref,
+  provide,
+  onBeforeUnmount,
+  onMounted,
+  onBeforeMount
+} from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { key } from '@/store'
 import SidebarControl from '@/components/SidebarControl.vue'
 import Ceumbs from '@/components/Crumbs.vue'
 import HeadUser from '@/components/HeadUser.vue'
-import { user_actions } from './store/modules/user'
 import { sidebar_actions, sidebar_mutations } from './store/modules/sidebar'
 
 export default defineComponent({
@@ -104,7 +108,7 @@ export default defineComponent({
   components: {
     SidebarControl,
     Ceumbs,
-    HeadUser,
+    HeadUser
   },
   setup() {
     const route = useRoute()
@@ -113,15 +117,27 @@ export default defineComponent({
       showAside: true,
       showHeader: true,
       showFooter: true,
-      showTabNav: true,
+      showTabNav: true
     })
+    /**侧边栏在移动端时 收缩展开*/
     const drawer = ref(false)
-    store.dispatch(user_actions.ASYNCVERIFYLOGIN)
-    store.dispatch(sidebar_actions.ASYNCREFRESHMENU)
 
     const { isCollapse } = toRefs(store.state.sidebar)
     const { scrollTop } = toRefs(store.state.device)
     const { cacheList } = toRefs(store.state.crumbs)
+    console.log(store.state.user.login_statu)
+    if (store.state.user.login_statu) {
+      store.dispatch(sidebar_actions.ASYNCREFRESHMENU)
+    }
+
+    watch(
+      () => store.state.user.login_statu,
+      newVal => {
+        if (newVal) {
+          store.dispatch(sidebar_actions.ASYNCREFRESHMENU)
+        }
+      }
+    )
     watch(
       () => route.path,
       () => {
@@ -150,7 +166,10 @@ export default defineComponent({
     document.addEventListener('resize', () => {
       store.commit('device/update')
     })
-
+    onBeforeMount(() => {
+      document.querySelector(".loader[role='loader']")?.remove()
+      document.querySelector("[role='loader-style']")?.remove()
+    })
     return {
       ...toRefs(isShow),
       isCollapse,
@@ -158,9 +177,9 @@ export default defineComponent({
       isMobile: false,
       cacheList,
       on_off: () => store.commit(sidebar_mutations.SWITCH),
-      drawer,
+      drawer
     }
-  },
+  }
 })
 </script>
 

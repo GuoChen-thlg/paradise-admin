@@ -231,6 +231,7 @@ export default defineComponent({
             store.commit(user_mutations.LOGIN)
             router.push('/home')
             store.commit(sidebar_mutations.SETMENU, result?.menus || [])
+            localStorage.setItem('authorization', result?.token || '')
           } catch (err) {
             console.log('失败', err.response)
           }

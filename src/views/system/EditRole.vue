@@ -1,0 +1,13 @@
+<template>
+  <el-main> </el-main>
+</template>
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'EditRole',
+  setup() {
+    return {}
+  },
+})
+</script>

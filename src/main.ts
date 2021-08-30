@@ -3,8 +3,10 @@ import App from './App.vue'
 import store, { key } from './store'
 import router from './router'
 import ElementPlus from './plugins/element'
-import EchartsPlus from './plugins/echarts'
 import has from './directives/has'
+import ElDialogDrag from './directives/el-dialog-drag'
+import ElDialogCorenr from './directives/el-dialog-corner'
+import ElDialogDragWidth from './directives/el-dialog-drag-width'
 /*  */
 import '@/assets/scss/element-variables.scss'
 import '@/assets/scss/theme.scss'
@@ -16,7 +18,8 @@ const app = createApp(App)
 app.use(router)
 	.use(store, key)
 	.use(ElementPlus)
-	.use(EchartsPlus)
 	.use(has)
-
+	.use(ElDialogDrag)
+	.use(ElDialogCorenr)
+	.use(ElDialogDragWidth)
 app.mount('#app')

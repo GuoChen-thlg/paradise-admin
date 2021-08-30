@@ -9,7 +9,7 @@ export interface Sidebar {
 import { getMenus } from '@/api'
 
 const state: Sidebar = {
-	isCollapse: true,
+	isCollapse: false,
 	menu: [],
 }
 export const sidebar_mutations = {
@@ -34,8 +34,12 @@ export const sidebar_actions = {
 }
 const actions: ActionTree<Sidebar, RootState> = {
 	async asyncRefreshMenu({ commit }) {
-		const result = await getMenus()
-		commit('setMenu', result?.menus || [])
+		try {
+			const result = await getMenus()
+			commit('setMenu', result?.menus || [])
+		} catch (err) {
+			console.error(err)
+		}
 	},
 }
 const module: Module<Sidebar, RootState> = {

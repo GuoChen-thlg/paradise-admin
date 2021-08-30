@@ -47,5 +47,13 @@ Role.init(
 		underscored: true,
 	}
 )
+Permission.belongsToMany(Role, { through: 'role_permissions' })
+Role.belongsToMany(Permission, {
+	through: 'role_permissions',
+	as: 'permissions',
+})
+
+Menu.belongsToMany(Role, { through: 'role_menus' })
+Role.belongsToMany(Menu, { through: 'role_menus', as: 'menus' })
 
 export default Role

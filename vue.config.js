@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const CompressionPlugin = require('compression-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
 const isProduction = process.env.NODE_ENV === 'production'
 module.exports = {
 	devServer: {
@@ -10,11 +11,13 @@ module.exports = {
 	lintOnSave: false,
 	css: {
 		extract: isProduction,
+		
 	},
-	productionSourceMap: false,
+	productionSourceMap: !isProduction,
 	publicPath: './',
 	chainWebpack: config => {
 		if (isProduction) {
+			// 生产环境下
 			config.plugin('html').tap(args => {
 				args[0].cdn = {
 					css: [
@@ -27,15 +30,17 @@ module.exports = {
 						"https://cdn.jsdelivr.net/npm/konva@8.0.4/konva.min.js",
 						"https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js",
 						"https://cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.runtime.global.prod.js",
+						"https://cdn.jsdelivr.net/npm/vue-echarts@6.0.0-rc.6/dist/index.umd.min.js",
 						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.28/lib/index.full.js",
 						"https://cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js",
 						"https://cdn.jsdelivr.net/npm/vue-router@4.0.10/dist/vue-router.global.min.js",
+						"https://cdn.jsdelivr.net/npm/webrtc-adapter@8.1.0/out/adapter.js"
 					]
 				}
 				return args
 			})
 		} else {
-
+			// 开发环境
 			config.plugin('html').tap(args => {
 				args[0].VUE_APP_ENV_NO_PRODUCTION = true
 				args[0].cdn = {
@@ -43,7 +48,7 @@ module.exports = {
 						"https://at.alicdn.com/t/font_2493604_92b74ed8whl.css",
 						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.55/lib/theme-chalk/display.css"
 					],
-					js: []
+					js: ["https://cdn.jsdelivr.net/npm/webrtc-adapter@8.1.0/out/adapter.js"]
 				}
 				return args
 			})
@@ -55,9 +60,9 @@ module.exports = {
 				new UglifyJsPlugin({
 					uglifyOptions: {
 						compress: {
-							drop_debugger: true,
-							drop_console: true,
-							pure_funcs: ['console.log()']
+							// drop_debugger: true,
+							// drop_console: true,
+							// pure_funcs: ['console.log()']
 						}
 					},
 					sourceMap: false,
@@ -79,6 +84,7 @@ module.exports = {
 				konva: 'Konva',
 				'js-cookie': 'Cookies',
 				vue: 'Vue',
+				"vue-echarts": "VEcharts",
 				"element-plus": "ElementPlus",
 				vuex: 'Vuex',
 				'vue-router': 'VueRouter',
@@ -99,9 +105,6 @@ module.exports = {
 					}
 				}
 			}
-
-
-
 		}
 	},
 }

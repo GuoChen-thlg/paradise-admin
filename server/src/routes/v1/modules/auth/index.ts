@@ -3,7 +3,7 @@ import Router from 'koa-router'
 import jsonwebtoken from 'jsonwebtoken'
 import RSA from 'node-rsa'
 import { Op } from 'sequelize'
-
+import { v4 as uuidv4 } from 'uuid'
 import { passwd } from '../../../../utils/index'
 import User from '../../../../models/user'
 import { ErrorCode } from '../../../../middlewares/BeautifyResponse'
@@ -89,7 +89,21 @@ router
 				_pass &&
 				user.passwd === passwd(_pass)
 			) {
-				const userJson = user.toJSON() as { account: string, passwd: string, roles: { name: string ,permissions: { flag_key: string }[] ,menus: { id: 1 ,name: string ,path: string ,icon: string ,parent_id: number }[] }[] }
+				const userJson = user.toJSON() as {
+					account: string
+					passwd: string
+					roles: {
+						name: string
+						permissions: { flag_key: string }[]
+						menus: {
+							id: 1
+							name: string
+							path: string
+							icon: string
+							parent_id: number
+						}[]
+					}[]
+				}
 				const permissions: string[] = []
 				let menuList: unknown[] = []
 				userJson.roles.forEach(role => {
@@ -99,25 +113,37 @@ router
 					menuList = menuList.concat(menuList, role.menus)
 				})
 				menuList = unique(menuList, 'id')
+				const uuid = uuidv4()
+				await User.update(
+					{
+						random_id: uuid,
+					},
+					{
+						where: {
+							account: `${account}`,
+						},
+					}
+				)
 				const cookieVal = jsonwebtoken.sign(
 					{
 						account: user.account,
 						email: user.email,
 						permissions,
+						uuid,
 					},
 					JWT_PRIVATEKEY,
 					{
-						expiresIn: '1d',
+						expiresIn: '7d',
 					}
 				)
 
 				ctx.cookies.set('authorization', cookieVal, {
-					maxAge: 1e3 * 60 * 60 * 24,
+					maxAge: 1e3 * 60 * 60 * 24 * 7,
 					sameSite: 'strict',
 					path: '/',
 					httpOnly: false,
 					expires: new Date(
-						new Date().getTime() + 1e3 * 60 * 60 * 24
+						new Date().getTime() + 1e3 * 60 * 60 * 24 * 7
 					),
 					signed: true,
 					overwrite: true,
@@ -130,13 +156,13 @@ router
 					permissions: Array.from(new Set(permissions)),
 				}
 			} else if (!user) {
-				ctx.status = 401
+				ctx.status = 403
 				ctx.body = { msg: '该账号尚未注册' }
-				ctx.throw('该账号尚未注册', 401)
+				ctx.throw('该账号尚未注册', 403)
 			} else {
-				ctx.status = 401
+				ctx.status = 403
 				ctx.body = { msg: '账号或密码错误' }
-				ctx.throw('账号或密码错误', 401)
+				ctx.throw('账号或密码错误', 403)
 			}
 		}
 	)
@@ -186,9 +212,9 @@ router
 					},
 				})
 				if (new_user) {
-					ctx.status = 401
+					ctx.status = 403
 					ctx.body = { msg: '该账号已注册' }
-					ctx.throw('该账号已注册', 401)
+					ctx.throw('该账号已注册', 403)
 				}
 				if (email == jwtPly.email && code == jwtPly.code) {
 					await User.create({

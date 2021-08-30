@@ -155,7 +155,36 @@ export const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
-		/* 设置页面 */
+		/* 系统设置 */
+		path: '/system',
+		name: 'System',
+		component: () =>
+			import(
+				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+			),
+		children: [
+			{
+				path: 'edit-role',
+				name: 'EditRole',
+				component: () =>
+					import(
+						/* webpackChunkName: "edit-role" */ '@/views/system/EditRole.vue'
+					),
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: [],
+					title: '角色编辑',
+					verifyLogin: true,
+					tabSwitch: true,
+				},
+			},
+		],
+	},
+	{
+		/* 系统设置 */
 		path: '/setting',
 		name: 'Setting',
 		component: () =>
@@ -175,7 +204,7 @@ export const routes: Array<RouteRecordRaw> = [
 					showHeader: true,
 					showFooter: true,
 					showTabNav: true,
-					authority: ['a'],
+					authority: [],
 					title: '权限控制',
 					verifyLogin: true,
 					tabSwitch: true,
@@ -411,17 +440,48 @@ export const routes: Array<RouteRecordRaw> = [
 		/* 视频 */
 		path: '/share',
 		component: () =>
-			import(/* webpackChunkName: "share" */ '@/views/share/Share.vue'),
-		meta: {
-			showAside: true,
-			showHeader: true,
-			showFooter: true,
-			showTabNav: true,
-			authority: [],
-			title: '分享',
-			verifyLogin: true,
-			tabSwitch: true,
-		},
+			import(
+				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+			),
+
+		children: [
+			{
+				path: '',
+				name: 'Share',
+				component: () =>
+					import(
+						/* webpackChunkName: "share" */ '@/views/share/Share.vue'
+					),
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: [],
+					title: '分享',
+					verifyLogin: true,
+					tabSwitch: true,
+				},
+			},
+			{
+				path: 'socket',
+				name: 'Socket',
+				component: () =>
+					import(
+						/* webpackChunkName: "socket" */ '@/views/share/Socket.vue'
+					),
+				meta: {
+					showAside: true,
+					showHeader: true,
+					showFooter: true,
+					showTabNav: true,
+					authority: [],
+					title: '通信',
+					verifyLogin: true,
+					tabSwitch: true,
+				},
+			},
+		],
 	},
 	{
 		/* 人界 */
