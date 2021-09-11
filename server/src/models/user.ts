@@ -15,10 +15,11 @@ interface UserAttributes {
 	passwd: string
 	email: string
 	random_id: string
+	state:boolean
 }
 
 interface UserCreationAttributes
-	extends Optional<UserAttributes, 'id' | 'random_id'> {}
+	extends Optional<UserAttributes, 'id' | 'random_id'|'state'> {}
 
 class User extends Model<UserAttributes, UserCreationAttributes>
 	implements UserAttributes {
@@ -27,6 +28,8 @@ class User extends Model<UserAttributes, UserCreationAttributes>
 	passwd: string
 	email: string
 	random_id: string
+	state:boolean
+
 	public getRoles: BelongsToManyGetAssociationsMixin<Role>
 	public setRoles: BelongsToManySetAssociationsMixin<Role, number>
 	public getProducts: BelongsToManyGetAssociationsMixin<Product>
@@ -69,6 +72,12 @@ User.init(
 			type: DataTypes.UUID,
 			comment: '单一登陆对比ID',
 		},
+		state:{
+			type:DataTypes.BOOLEAN,
+			allowNull:false,
+			comment:'账号状态',
+			defaultValue:true
+		}
 	},
 	{
 		sequelize: seque,

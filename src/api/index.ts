@@ -81,6 +81,24 @@ export async function getMenus() {
 	return f(response)
 }
 
+export async function getRoles(param?: { key: string }) {
+	if (param) {
+		const { key } = param
+		return f(
+			await axios({
+				url: `/system/roles/${key}.json`,
+				method: 'GET',
+			})
+		)
+	}
+	return f(
+		await axios({
+			url: '/system/roles.json',
+			method: 'GET',
+		})
+	)
+}
+
 export async function getRoleMneus({ roleId }: { roleId: number }) {
 	const response = await axios({
 		url: '/system/menus.json',

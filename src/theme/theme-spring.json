@@ -1,5 +1,6 @@
 {
     "_": "此文件为主题配置文件 ",
+    "_name":"",
     "--theme-background-color": "#031327",
     "--theme-font-color": "#04a5ca",
     "--theme-link-font-color": "#23edff",

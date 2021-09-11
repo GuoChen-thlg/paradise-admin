@@ -1,5 +1,4 @@
 import { App } from 'vue'
-import VEcharts from 'vue-echarts'
 import { registerTheme, use } from 'echarts/core'
 import { GlobeComponent } from 'echarts-gl/components'
 import { CanvasRenderer } from 'echarts/renderers'
@@ -22,6 +21,8 @@ import {
 	MarkLineComponent,
 	MarkPointComponent,
 } from 'echarts/components'
+
+import VueECharts from 'vue-echarts'
 
 use([
 	CanvasRenderer,
@@ -46,9 +47,9 @@ use([
 import customize1 from '@/theme/echarts.theme-customize1.json'
 
 registerTheme('customize1', customize1)
-export const vChart = VEcharts
+export const vChart = VueECharts
 export default {
 	install: (app: App): void => {
-		app.component('v-chart', VEcharts)
+		app.component('v-chart', VueECharts)
 	},
 }

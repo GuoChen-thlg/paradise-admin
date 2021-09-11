@@ -25,7 +25,7 @@ const f = (): Koa.Middleware => async (
 		})
 		const userJSON = <{ random_id: string }>user.toJSON()
 		if (userJSON.random_id !== ctx.state.user.uuid) {
-			ctx.throw(403, ErrorCode.err36)
+			ctx.throw(401, ErrorCode.err16)
 		}
 		await next()
 	}

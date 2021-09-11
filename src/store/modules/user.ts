@@ -14,25 +14,18 @@ export interface User extends user {
 	 * 登录状态
 	 */
 	login_statu: boolean
-	authority: string[]
+	permissions: string[]
 }
 
 const state: User = {
 	id: 0,
 	login_statu: JSON.parse(
-		localStorage.getItem('login_statu') || '{"statu":false}'
+		localStorage.getItem('login_statu') || JSON.stringify({ statu: false })
 	).statu,
 	name: '',
-	authority: [
-		AUTHORITY.PERSONNEL_C,
-		AUTHORITY.PERSONNEL_D,
-		AUTHORITY.PERSONNEL_R,
-		AUTHORITY.PERSONNEL_U,
-		AUTHORITY.PEUDUCT_C,
-		AUTHORITY.PEUDUCT_D,
-		AUTHORITY.PEUDUCT_R,
-		AUTHORITY.PEUDUCT_U,
-	],
+	permissions: JSON.parse(
+		localStorage.getItem('permissions') || JSON.stringify([])
+	),
 	backpack: [],
 	cart: [],
 	wishlist: JSON.parse(localStorage.getItem('user_wishlis') || '[]') as {
@@ -52,6 +45,8 @@ export const user_mutations = {
 	REMOVEFROMWISHLIST: 'user/removeFromWishlist',
 	/**添加到购物车 */
 	ADDTOCART: 'user/addToCart',
+	/**设置用户当前权限 */
+	SETPERMISSIONS: 'user/setPermissions',
 }
 const mutations: MutationTree<User> = {
 	logIn(state) {
@@ -123,6 +118,10 @@ const mutations: MutationTree<User> = {
 				}
 			})
 		}
+	},
+	setPermission(state, permissions: string[]) {
+		state.permissions = permissions
+		localStorage.setItem('permissions', JSON.stringify(permissions))
 	},
 }
 

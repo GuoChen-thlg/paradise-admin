@@ -319,9 +319,7 @@ export default defineComponent({
       log_err(err)
     }
 
-    async function handleDialogOpen() {
-      chat.video_show = !chat.video_show
-    }
+
     /** 创建 PeerConnection 并绑定事件
      * @param {boolean} flag 提议者 true 应答者 false
      */
@@ -331,7 +329,16 @@ export default defineComponent({
       // 设置事件处理程序
       peerConnection = new RTCPeerConnection({
         iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' }
+          { urls: 'stun:turn2.l.google.com' },
+          { urls: 'stun:stun.l.google.com:19302' },
+          {
+            urls: 'stun:101.37.26.86:3478'
+          },
+          {
+            urls: 'turn:101.37.26.86:3478',
+            username: 'kurento',
+            credential: 'kurento666'
+          }
         ]
       })
       if (flag) {
@@ -353,12 +360,13 @@ export default defineComponent({
       try {
         log('创建 offer')
         const offer = await (peerConnection as RTCPeerConnection).createOffer()
+        const desc = new RTCSessionDescription(offer)
         if ((peerConnection as RTCPeerConnection).signalingState != 'stable') {
           return
         }
         // 设置为本地描述 我们需要创建一个 SDP 提议并将其发送给我们想要连接的对等方
         // 包括有关我们在本地添加到连接的媒体流的信息（即我们要发送到通话另一端的视频），以及收集的任何 ICE 候选已经通过 ICE 层
-        await (peerConnection as RTCPeerConnection).setLocalDescription(offer)
+        await (peerConnection as RTCPeerConnection).setLocalDescription(desc)
         log('向远端发送 offer')
         // 通过信令服务器发送给远端
         emitToServer({
@@ -402,12 +410,13 @@ export default defineComponent({
     // 当状态发生改变  closed failed
     // disconnected
     function handleIceconnectionstatechangeEvnet() {
-      // log('ICE 代理的状态变更' + peerConnection?.iceConnectionState)
+      log('ICE 代理的状态变更' + peerConnection?.iceConnectionState)
       switch (
         (peerConnection as RTCPeerConnection).iceConnectionState as string
       ) {
         case 'closed':
         case 'failed':
+          // case 'disconnected':
           handleCloseVideoCall()
           break
       }
@@ -433,6 +442,14 @@ export default defineComponent({
       switch ((peerConnection as RTCPeerConnection).signalingState as string) {
         case 'closed':
           log('信令状态变更 ----closed')
+          emitToServer({
+            account: chat.remote as string,
+            data: {
+              type: 'hand-up',
+              sponsor: chat.account as string,
+              recipient: chat.remote as string
+            }
+          })
           handleCloseVideoCall()
           break
       }
@@ -508,7 +525,8 @@ export default defineComponent({
       try {
         log('创建 answer', '设置本地描述')
         const answer = await (peerConnection as RTCPeerConnection).createAnswer()
-        await (peerConnection as RTCPeerConnection).setLocalDescription(answer)
+        const desc = new RTCSessionDescription(answer)
+        await (peerConnection as RTCPeerConnection).setLocalDescription(desc)
         // 将本地 answer 发送给远端
         emitToServer({
           account: chat.remote as string,
@@ -528,9 +546,9 @@ export default defineComponent({
     // eslint-disable-next-line no-undef
     async function handleVideoAnswerMsg(answer: RTCSessionDescriptionInit) {
       log('接收远端 answer')
-      // const desc = new RTCSessionDescription(answer)
+      const desc = new RTCSessionDescription(answer)
       try {
-        await (peerConnection as RTCPeerConnection).setRemoteDescription(answer)
+        await (peerConnection as RTCPeerConnection).setRemoteDescription(desc)
       } catch (err) {
         log_err(err)
       }
@@ -683,7 +701,6 @@ export default defineComponent({
       remote_video,
       handleCall,
       handleCloseVideoCall,
-      handleDialogOpen,
       handleRingTone
     }
   }

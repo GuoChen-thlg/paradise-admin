@@ -8,17 +8,10 @@ export const routes: Array<RouteRecordRaw> = [
 	{
 		/*  */
 		path: '/',
-		redirect: () => {
-			if (store.state.user.login_statu === true) {
-				return '/home'
-			} else {
-				return '/login'
-			}
-		},
+		redirect: () => (store.state.user.login_statu ? '/home' : '/login'),
 	},
 	{
 		/* 基础页面  */
-
 		path: '/about',
 		name: 'About',
 		component: () =>
@@ -47,13 +40,20 @@ export const routes: Array<RouteRecordRaw> = [
 			title: '南天门登记处',
 			verifyLogin: false,
 		},
+		beforeEnter: (to, from) => {
+			if (store.state.user.login_statu) {
+				return '/home'
+			}
+		},
 	},
 	{
 		/* 未找到 */
 		path: '/404',
 		name: 'NotFound',
 		component: () =>
-			import(/* webpackChunkName: "not-fount" */ '@/views/NotFount.vue'),
+			import(
+				/* webpackChunkName: "not-fount" */ '@/views/error/NotFount.vue'
+			),
 		meta: {
 			showAside: false,
 			showHeader: false,
@@ -69,7 +69,6 @@ export const routes: Array<RouteRecordRaw> = [
 		path: '/:pathMatch(.*)*',
 		redirect: { name: 'NotFound' },
 	},
-	/* *********************************************************************** */
 	{
 		/* 首页 */
 		path: '/home',
@@ -87,6 +86,7 @@ export const routes: Array<RouteRecordRaw> = [
 			tabSwitch: true,
 		},
 	},
+	/* *********************************************************************** */
 	{
 		/* 人员列表 不可增删改同等级及以上人员信息 */
 		path: '/personnel',
@@ -162,26 +162,7 @@ export const routes: Array<RouteRecordRaw> = [
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
 			),
-		children: [
-			{
-				path: 'edit-role',
-				name: 'EditRole',
-				component: () =>
-					import(
-						/* webpackChunkName: "edit-role" */ '@/views/system/EditRole.vue'
-					),
-				meta: {
-					showAside: true,
-					showHeader: true,
-					showFooter: true,
-					showTabNav: true,
-					authority: [],
-					title: '角色编辑',
-					verifyLogin: true,
-					tabSwitch: true,
-				},
-			},
-		],
+		children: [],
 	},
 	{
 		/* 系统设置 */
@@ -211,28 +192,56 @@ export const routes: Array<RouteRecordRaw> = [
 				},
 			},
 			{
-				path: 'edit-role/:role?',
-				name: 'EditRole',
+				path: 'role',
+				name: 'Role',
 				component: () =>
 					import(
-						/* webpackChunkName: "edit-role" */ '@/views/setting/EditRole.vue'
+						/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
 					),
-				meta: {
-					showAside: true,
-					showHeader: true,
-					showFooter: true,
-					showTabNav: true,
-					authority: ['a'],
-					title: '角色编辑',
-					verifyLogin: true,
-					tabSwitch: true,
-				},
+				children: [
+					{
+						path: '',
+						component: () =>
+							import(
+								/* webpackChunkName: "role" */ '@/views/setting/Role.vue'
+							),
+						meta: {
+							showAside: true,
+							showHeader: true,
+							showFooter: true,
+							showTabNav: true,
+							authority: [],
+							title: '角色权限',
+							verifyLogin: true,
+							tabSwitch: true,
+						},
+					},
+					{
+						path: ':key',
+						name: 'EditRole',
+						component: () =>
+							import(
+								/* webpackChunkName: "edit-role" */ '@/views/setting/EditRole.vue'
+							),
+						meta: {
+							showAside: true,
+							showHeader: true,
+							showFooter: true,
+							showTabNav: true,
+							authority: [],
+							title: '角色权限编辑',
+							verifyLogin: true,
+							tabSwitch: true,
+						},
+					},
+				],
 			},
 		],
 	},
 	{
 		/* 产品页面 */
 		path: '/product',
+		name: 'Product',
 		component: () =>
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
@@ -241,7 +250,6 @@ export const routes: Array<RouteRecordRaw> = [
 			{
 				/*  */
 				path: '',
-				name: 'Product',
 				component: () =>
 					import(
 						/* webpackChunkName: "product" */ '@/views/product/Product.vue'
@@ -315,6 +323,7 @@ export const routes: Array<RouteRecordRaw> = [
 	{
 		/* 地府 */
 		path: '/hell',
+		name: 'Hell',
 		component: () =>
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
@@ -323,7 +332,6 @@ export const routes: Array<RouteRecordRaw> = [
 			{
 				/*  */
 				path: '',
-				name: 'Hell',
 				component: () =>
 					import(
 						/* webpackChunkName: "hell" */ '@/views/hell/Hell.vue'
@@ -439,6 +447,7 @@ export const routes: Array<RouteRecordRaw> = [
 	{
 		/* 视频 */
 		path: '/share',
+		name: 'Share',
 		component: () =>
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
@@ -447,7 +456,6 @@ export const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: '',
-				name: 'Share',
 				component: () =>
 					import(
 						/* webpackChunkName: "share" */ '@/views/share/Share.vue'
@@ -486,6 +494,7 @@ export const routes: Array<RouteRecordRaw> = [
 	{
 		/* 人界 */
 		path: '/world',
+		name: 'Integrate',
 		component: () =>
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
@@ -494,7 +503,6 @@ export const routes: Array<RouteRecordRaw> = [
 			{
 				/*  */
 				path: '',
-				name: 'Integrate',
 				component: () =>
 					import(
 						/* webpackChunkName: "integrate" */ '@/views/world/Integrate.vue'
@@ -532,6 +540,7 @@ export const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/user',
+		name: 'My',
 		component: () =>
 			import(
 				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
@@ -540,7 +549,6 @@ export const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: '',
-				name: 'My',
 				component: () =>
 					import(/* webpackChunkName: "my" */ '@/views/my/My.vue'),
 				meta: {

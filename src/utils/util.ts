@@ -9,7 +9,7 @@ export function download(url: string, filename: string) {
 	a.href = url
 	a.click()
 }
-
+// 随机 ID
 export const randomId = () => {
 	return (
 		'id_' +
@@ -78,6 +78,7 @@ export function closeLeftOpenRight(min: number, max: number) {
 export function openLeftCloseRight(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min
 }
+
 function processingTime(date: Date | number | string | undefined) {
 	if ((!date && typeof date !== 'number') || date === '') {
 		return new Date()
@@ -139,3 +140,60 @@ export function format(
 	return format
 }
 
+/**
+ * @description  树状结构将转为一维数组
+ * @param tree
+ * @param childrenKey
+ * @returns
+ */
+export const treeToArray = (
+	tree: { [k: string]: any }[] | { [k: string]: any },
+	childrenKey: string
+) => {
+	let arr: { [k: string]: any }[] = []
+	const a = (ls: { [k: string]: any }[]) => {
+		if (ls instanceof Array) {
+			ls.forEach(o => {
+				let c = o[childrenKey]
+				delete o[childrenKey]
+				arr.push(o)
+				a(c)
+			})
+		}
+	}
+	tree instanceof Array ? a(tree) : a([tree])
+	return arr
+}
+/**
+ * @description  将一维数组转为树状结构
+ * @param arr 对象数组
+ * @param id  ID 属性
+ * @param pid 父对象 ID 属性
+ * @returns
+ */
+export const arrayToTree = (arr: unknown[], id: string, pid: string) => {
+	if (!id || id == '') {
+		return []
+	}
+	if (arr instanceof Array) {
+		let tree: unknown[] = []
+		let treeMap: any = {}
+		arr.forEach(o => {
+			treeMap[o[id]] = o
+		})
+		arr.forEach(o => {
+			let parent = treeMap[o[pid]]
+			if (parent && o[id] != o[pid]) {
+				if (!parent.children) {
+					parent.children = []
+				}
+				parent.children.push(o)
+			} else {
+				tree.push(o)
+			}
+		})
+		return tree
+	} else {
+		return [arr]
+	}
+}

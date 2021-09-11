@@ -39,9 +39,9 @@ Media.init(
 		type: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			set() {
-				this.setDataValue('type', 'Video')
-			},
+			// set() {
+			// 	this.setDataValue('type', 'Video')
+			// },
 		},
 		src: {
 			type: DataTypes.STRING,

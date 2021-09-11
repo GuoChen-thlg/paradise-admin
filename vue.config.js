@@ -11,7 +11,7 @@ module.exports = {
 	lintOnSave: false,
 	css: {
 		extract: isProduction,
-		
+
 	},
 	productionSourceMap: !isProduction,
 	publicPath: './',
@@ -21,6 +21,7 @@ module.exports = {
 			config.plugin('html').tap(args => {
 				args[0].cdn = {
 					css: [
+						"https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css",
 						"https://at.alicdn.com/t/font_2493604_92b74ed8whl.css",
 						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.55/lib/theme-chalk/display.css"
 					],
@@ -30,7 +31,6 @@ module.exports = {
 						"https://cdn.jsdelivr.net/npm/konva@8.0.4/konva.min.js",
 						"https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js",
 						"https://cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.runtime.global.prod.js",
-						"https://cdn.jsdelivr.net/npm/vue-echarts@6.0.0-rc.6/dist/index.umd.min.js",
 						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.28/lib/index.full.js",
 						"https://cdn.jsdelivr.net/npm/vuex@4.0.2/dist/vuex.global.min.js",
 						"https://cdn.jsdelivr.net/npm/vue-router@4.0.10/dist/vue-router.global.min.js",
@@ -45,10 +45,12 @@ module.exports = {
 				args[0].VUE_APP_ENV_NO_PRODUCTION = true
 				args[0].cdn = {
 					css: [
+						"https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css",
 						"https://at.alicdn.com/t/font_2493604_92b74ed8whl.css",
 						"https://cdn.jsdelivr.net/npm/element-plus@1.0.2-beta.55/lib/theme-chalk/display.css"
 					],
-					js: ["https://cdn.jsdelivr.net/npm/webrtc-adapter@8.1.0/out/adapter.js"]
+					js: [
+						"https://cdn.jsdelivr.net/npm/webrtc-adapter@8.1.0/out/adapter.js"]
 				}
 				return args
 			})
@@ -79,12 +81,12 @@ module.exports = {
 					deleteOriginalAssets: false,
 				}))
 			config.externals = {
+				'nprogress': 'NProgress',
 				"jsencrypt": "JSEncrypt",
 				"axios": "axios",
 				konva: 'Konva',
 				'js-cookie': 'Cookies',
 				vue: 'Vue',
-				"vue-echarts": "VEcharts",
 				"element-plus": "ElementPlus",
 				vuex: 'Vuex',
 				'vue-router': 'VueRouter',
@@ -104,6 +106,11 @@ module.exports = {
 						},
 					}
 				}
+			}
+		} else {
+			// 开发环境
+			config.externals = {
+				'nprogress': 'NProgress',
 			}
 		}
 	},

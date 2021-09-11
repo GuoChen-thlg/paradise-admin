@@ -27,7 +27,7 @@ export const ErrorCode = {
 	/**
 	 * @description 被踢掉
 	 */
-	err36: '4036',
+	err16: '4016',
 	/**
 	 * @description Authentication 为空
 	 */
@@ -97,13 +97,7 @@ function beautifyResponse(): Koa.Middleware<{}, {}> {
 					ctx.status = 403
 					ctx.body = { msg: '请求过于频繁，请稍后再试' }
 					break
-				case ErrorCode.err36:
-					ctx.status = 403
-					ctx.body = {
-						msg:
-							'由于该账号已重新登录，如果不是本人操作，请及时修改密码',
-					}
-					break
+
 				case ErrorCode.err11:
 					ctx.status = 401
 					ctx.body = { msg: 'Authentication 为空' }
@@ -123,6 +117,13 @@ function beautifyResponse(): Koa.Middleware<{}, {}> {
 				case ErrorCode.err15:
 					ctx.status = 401
 					ctx.body = { msg: '请重新获取验证码' }
+					break
+				case ErrorCode.err16:
+					ctx.status = 401
+					ctx.body = {
+						msg:
+							'由于该账号已重新登录，如果不是本人操作，请及时修改密码',
+					}
 					break
 			}
 		}

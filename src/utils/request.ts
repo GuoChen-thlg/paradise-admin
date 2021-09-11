@@ -7,7 +7,8 @@ import axios, {
 import { ElMessage } from 'element-plus'
 import { ResponseData } from '@/custom'
 import Cookie from 'js-cookie'
-
+import store from '@/store/index'
+import { user_mutations } from '@/store/modules/user'
 const config: AxiosRequestConfig = {
 	baseURL: process.env.VUE_APP_API,
 	headers: {
@@ -51,6 +52,15 @@ const handlingError = (err: any) => {
 		message: err?.response?.data?.msg || '发生了错误',
 		type: 'error',
 	})
+	switch (err?.response.status) {
+		case 401:
+			store.commit(user_mutations.SIGNOUT)
+			window.location.reload()
+			break
+		default:
+			break
+	}
+
 	return Promise.reject(err)
 }
 

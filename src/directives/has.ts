@@ -8,7 +8,7 @@ const has = (el: Element, binding: DirectiveBinding<string>) => {
 		.replaceAll(/ /g, '')
 		.split(',')
 		.filter(per => per.trim() !== '')
-	const userAuthority = store.state.user.authority as string[]
+	const userAuthority = store.state.user.permissions as string[]
 	if (
 		permissionList.length === 0 ||
 		userAuthority.length === 0 ||

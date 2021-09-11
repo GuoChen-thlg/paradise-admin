@@ -10,6 +10,7 @@ import Permission from './permission'
 import Menu from './menu'
 interface RoleAttributes {
 	id: number
+	key: string
 	name: string
 	describe: string
 }
@@ -18,6 +19,7 @@ interface RoleCreationAttributes extends Optional<RoleAttributes, 'id'> {}
 class Role extends Model<RoleAttributes, RoleCreationAttributes>
 	implements RoleAttributes {
 	id: number
+	key: string
 	name: string
 	describe: string
 
@@ -36,9 +38,14 @@ Role.init(
 			allowNull: false,
 			comment: '自增id',
 		},
-
-		name: { type: DataTypes.STRING, allowNull: false, unique: true },
-		describe: { type: DataTypes.STRING },
+		key: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true,
+			comment: '角色 key',
+		},
+		name: { type: DataTypes.STRING, allowNull: false, comment: '角色名' },
+		describe: { type: DataTypes.STRING, comment: '描述' },
 	},
 	{
 		sequelize: seque,

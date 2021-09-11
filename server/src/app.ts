@@ -16,7 +16,6 @@ import Permission from './models/permission'
 import Role from './models/role'
 import User from './models/user'
 import Menu from './models/menu'
-import Product from './models/product'
 import { treeToArray } from './utils'
 
 const { SERVER_PORT, NGINX_PORT, EMAIL_USER } = process.env
@@ -68,12 +67,16 @@ async function dbInit() {
 			const permissionList = await Permission.bulkCreate(permissions, {
 				transaction: t,
 			})
-			const befMenus = treeToArray(menuTree, 'child')
+			const befMenus = treeToArray(menuTree, 'children')
 			const aftMenus = befMenus.sort((a, b) => a.id - b.id) as Menu[]
 			const menus = await Menu.bulkCreate(aftMenus, { transaction: t })
 
 			const role_rootadmin = await Role.create(
-				{ name: 'rootadmin', describe: '超级管理员角色' },
+				{
+					key: 'rootadmin',
+					name: 'rootadmin',
+					describe: '超级管理员角色',
+				},
 				{ transaction: t }
 			)
 			await role_rootadmin.setMenus(menus, { transaction: t })

@@ -19,7 +19,7 @@ router
 		 */
 		async (ctx, next) => {
 			const roles = await Role.findAll({
-				attributes: ['id', 'name', 'describe'],
+				attributes: ['id', 'key', 'name', 'describe'],
 				include: [
 					{
 						model: Permission,
@@ -62,6 +62,66 @@ router
 			})
 			ctx.body = {
 				roles: rolesJson,
+			}
+		}
+	)
+	.get(
+		'/roles/:key.json',
+		/**
+		 *
+		 * @api {GET} /api/v1/system/roles.json 获取所有角色
+		 * @apiHeader Authorization 认证 token
+		 * @apiGroup System
+		 * @apiVersion 1.0.0
+		 */
+		async (ctx, next) => {
+			const role = await Role.findOne({
+				where: {
+					key: ctx.params.key,
+				},
+				attributes: ['id', 'key', 'name', 'describe'],
+				include: [
+					{
+						model: Permission,
+						as: 'permissions',
+						through: { attributes: [] },
+						attributes: ['id', 'flag_key', 'describe'],
+					},
+					{
+						model: Menu,
+						as: 'menus',
+						through: { attributes: [] },
+						attributes: ['id', 'name', 'path', 'icon', 'parent_id'],
+					},
+				],
+			})
+			if (!role) {
+				ctx.status = 404
+				ctx.body = { msg: '未查询到' }
+				ctx.throw(404)
+			}
+			const roleJson = role.toJSON() as {
+				id: number
+				name: string
+				describe: string
+				permissions: { id: number; flag_key: string }[]
+				menus: {
+					id: number
+					name: string
+					path: string | null
+					icon: string | null
+					parent_id: number
+				}[]
+			}
+
+			roleJson.menus = arrayToTree(
+				roleJson.menus,
+				'id',
+				'parent_id'
+			) as typeof roleJson.menus
+
+			ctx.body = {
+				role: roleJson,
 			}
 		}
 	)
