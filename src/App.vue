@@ -102,7 +102,7 @@ import SidebarControl from '@/components/SidebarControl.vue'
 import Ceumbs from '@/components/Crumbs.vue'
 import HeadUser from '@/components/HeadUser.vue'
 import { sidebar_actions, sidebar_mutations } from './store/modules/sidebar'
-
+import Nprogress from 'nprogress'
 export default defineComponent({
   name: 'App',
   components: {
@@ -125,11 +125,24 @@ export default defineComponent({
     const { isCollapse } = toRefs(store.state.sidebar)
     const { scrollTop } = toRefs(store.state.device)
     const { cacheList } = toRefs(store.state.crumbs)
-    console.log(store.state.user.login_statu)
+
+    Nprogress.inc()
+    /* 设置主题 */
+    const themeJson = JSON.parse(localStorage.getItem('themejson') || '{}')
+    // themeJson?._name || '默认主题'
+    for (const key in themeJson) {
+      if (
+        Object.prototype.hasOwnProperty.call(themeJson, key) &&
+        /^--/.test(key)
+      ) {
+        document.documentElement.style.setProperty(key, themeJson[key])
+      }
+    }
+    /* 若页面刷新 则请求菜单数据 */
     if (store.state.user.login_statu) {
       store.dispatch(sidebar_actions.ASYNCREFRESHMENU)
     }
-
+    /* 登录后 请求菜单数据 */
     watch(
       () => store.state.user.login_statu,
       newVal => {
@@ -138,6 +151,8 @@ export default defineComponent({
         }
       }
     )
+
+    /* 当页面发生改变时 */
     watch(
       () => route.path,
       () => {
@@ -159,6 +174,8 @@ export default defineComponent({
             : (route.meta.showTabNav as boolean)
       }
     )
+    /* 请求通知权限 */
+    Notification.requestPermission()
 
     document.addEventListener('scroll', () => {
       store.commit('device/update')
@@ -167,8 +184,12 @@ export default defineComponent({
       store.commit('device/update')
     })
     onBeforeMount(() => {
+      Nprogress.set(0.9)
       document.querySelector(".loader[role='loader']")?.remove()
       document.querySelector("[role='loader-style']")?.remove()
+    })
+    onMounted(() => {
+      Nprogress.done()
     })
     return {
       ...toRefs(isShow),
@@ -190,6 +211,11 @@ export default defineComponent({
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+ul,
+ol,
+li {
+  list-style: none;
 }
 html {
   font-size: 100px !important;
