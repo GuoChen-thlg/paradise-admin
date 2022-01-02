@@ -233,7 +233,7 @@ export default defineComponent({
       // TODO 分页加载数据
       if (look) {
         look = false
-        const result = await getProducts({})
+        const result = await getProducts()
         if (result && result.code === 2000) {
           productsList.splice(-1, 0, ...result.data.products)
 

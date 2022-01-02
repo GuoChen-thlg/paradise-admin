@@ -493,7 +493,7 @@ export default defineComponent({
     const filling = ref<HTMLObjectElement | null>(null)
     const resizeCd = () => {
       charts.forEach(el => {
-        el.resize()
+        el&&el.resize()
       })
     }
     onMounted(() => {

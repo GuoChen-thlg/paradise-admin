@@ -90,8 +90,6 @@ import {
   watch,
   toRefs,
   ref,
-  provide,
-  onBeforeUnmount,
   onMounted,
   onBeforeMount
 } from 'vue'
@@ -237,9 +235,9 @@ body {
   }
   color: var(--theme-font-color);
 }
-#app {
+// #app {
   
-}
+// }
 .hidder-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

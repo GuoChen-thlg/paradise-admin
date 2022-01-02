@@ -5,7 +5,7 @@ import { closedInterval } from '../../../../utils'
 import { ErrorCode } from '../../../../middlewares/BeautifyResponse'
 const { EMAIL_SERVICE, EMAIL_USER, EMAIL_PASS, JWT_PRIVATEKEY } = process.env
 
-export async function emailer(ctx: Koa.ParameterizedContext, next: Koa.Next) {
+export async function emailer(ctx: Koa.DefaultContext) {
 	const { email } = ctx.request.body
 	const cookie_name = 'verification-code'
 	if (email === undefined) {

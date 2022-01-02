@@ -19,7 +19,7 @@ export async function register({
 	code,
 }: {
 	[key: string]: string
-}) {
+}): Promise<ResponseData | null> {
 	const response = await axios({
 		url: '/auth/register.json',
 		method: 'POST',
@@ -33,7 +33,11 @@ export async function register({
 	return f(response)
 }
 
-export async function acceptCode({ email }: { email: string }) {
+export async function acceptCode({
+	email,
+}: {
+	email: string
+}): Promise<ResponseData | null> {
 	const response = await axios({
 		url: '/auth/emailer.json',
 		method: 'POST',
@@ -41,7 +45,7 @@ export async function acceptCode({ email }: { email: string }) {
 	})
 	return f(response)
 }
-export async function verifyLogin() {
+export async function verifyLogin(): Promise<ResponseData | null> {
 	const response = await axios({
 		url:
 			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/verifyLogin',
@@ -61,7 +65,7 @@ export async function login({
 }: {
 	account: string
 	pass: string
-}) {
+}): Promise<ResponseData | null> {
 	const response = await axios({
 		url: '/auth/login.json',
 		method: 'POST',
@@ -73,7 +77,7 @@ export async function login({
  * @description 获取用户  菜单 路由
  * @returns Promise<ResponseData | null>
  */
-export async function getMenus() {
+export async function getMenus(): Promise<ResponseData | null> {
 	const response = await axios({
 		url: '/user/menus.json',
 		method: 'GET',
@@ -81,7 +85,9 @@ export async function getMenus() {
 	return f(response)
 }
 
-export async function getRoles(param?: { key: string }) {
+export async function getRoles(param?: {
+	key: string
+}): Promise<ResponseData | null> {
 	if (param) {
 		const { key } = param
 		return f(
@@ -99,7 +105,11 @@ export async function getRoles(param?: { key: string }) {
 	)
 }
 
-export async function getRoleMneus({ roleId }: { roleId: number }) {
+export async function getRoleMneus({
+	roleId,
+}: {
+	roleId: number
+}): Promise<ResponseData | null> {
 	const response = await axios({
 		url: '/system/menus.json',
 		params: { roleId },
@@ -107,7 +117,7 @@ export async function getRoleMneus({ roleId }: { roleId: number }) {
 	})
 	return f(response)
 }
-export async function personnelList() {
+export async function personnelList(): Promise<ResponseData | null> {
 	const response = await axios({
 		url:
 			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/personnel/list',
@@ -115,7 +125,7 @@ export async function personnelList() {
 	})
 	return f(response)
 }
-export async function obituary() {
+export async function obituary(): Promise<ResponseData | null> {
 	const response = await axios({
 		url:
 			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/obituary',
@@ -124,7 +134,7 @@ export async function obituary() {
 	return f(response)
 }
 
-export async function randomQuotation() {
+export async function randomQuotation(): Promise<ResponseData | null> {
 	const response = await axios({
 		url: 'https://api.66mz8.com/api/quotation.php?format=json',
 		method: 'GET',
@@ -132,14 +142,13 @@ export async function randomQuotation() {
 	return f(response)
 }
 
-export async function getProducts(
-	{
-		// keyword
-		// type
-		// price
-		// date
-	}
-) {
+export async function getProducts(): Promise<ResponseData | null> {
+// {
+// 	// keyword
+// 	// type
+// 	// price
+// 	// date
+// }
 	const response = await axios({
 		url:
 			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/dan-medicines',
