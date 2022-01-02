@@ -95,9 +95,9 @@ export default defineComponent({
     const { isCollapse, menu } = toRefs<Sidebar>(store.state.sidebar)
     return {
       menu,
-      isCollapse,
+      isCollapse
     }
-  },
+  }
 })
 </script>
 <style lang="scss" scoped>
@@ -122,11 +122,16 @@ export default defineComponent({
   top: 0;
   left: 0;
   z-index: 999;
-  .el-menu-item.is-active {
+}
+:deep(.el-submenu__title),
+:deep(.el-menu-item) {
+  &:hover {
+    background-color: var(--sidebar-hover-background-color) !important;
+  }
+  &.is-active {
     background-color: var(--sidebar-active-background-color) !important;
   }
 }
-
 .side-navigation:not(.el-menu--collapse) {
   width: 200px;
   min-height: 100vh;

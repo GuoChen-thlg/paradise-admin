@@ -1,25 +1,32 @@
 :root {
 	/* 侧边栏 */
 	--sidebar-text-color: #fff;
-	--sidebar-background-color: #001120;
-	--sidebar-active-text-color: #ffd04b;
-	--sidebar-active-background-color: #10848f;
+	--sidebar-background-color: #1e2b55;
+	--sidebar-active-text-color: #fff;
+	--sidebar-active-background-color: #1a6aa9;
+	--sidebar-hover-background-color: #1a6aa9;
 
 	/* 头部高度 */
 	--header-height: 0.6rem;
+	--header-background-color: #162455;
 
 	/* 主题 */
+	--theme-background-linear-gradient: linear-gradient(
+		to bottom right,
+		#22397a,
+		#0c173d
+	);
+	--theme-background-color: #162455;
 
-	--theme-background-color: #031327;
 	--theme-font-color: #04a5ca;
 	--theme-link-font-color: #23edff;
 
 	--theme-button-font-color: #fff;
 	--theme-button-border-color: #04a5ca;
 
-
 	--theme-border-color: #04a6cc;
 }
+// icon 图标
 .iconfont {
 	display: inline-block;
 	width: 24px;
@@ -27,6 +34,7 @@
 	vertical-align: middle;
 	text-align: center;
 }
+// 轮播图
 .swiper-media-item {
 	display: flex;
 	justify-content: center;
@@ -34,3 +42,24 @@
 	width: 100%;
 	height: 100%;
 }
+
+
+// el-table
+// .el-table {
+// 	color: #93bdf6;
+// 	background: var(--theme-background-linear-gradient);
+// 	thead {
+// 		color: #93bdf6;
+// 	}
+// 	th,
+// 	tr {
+// 		background-color: #ffffff00 !important;
+// 		td {
+// 			background-color: #ffffff00 !important;
+// 		border-bottom:1px solid #293C79;
+// 		}
+// 	}
+// }
+// .el-card,.el-tree{
+// 	background: var(--theme-background-linear-gradient);
+// }

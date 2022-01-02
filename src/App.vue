@@ -66,7 +66,7 @@
         </div>
       </el-header>
       <!-- TAB 标签 -->
-      <ceumbs v-if="showTabNav"></ceumbs>
+      <ceumbs v-show="showTabNav"></ceumbs>
 
       <!-- 路由 -->
       <router-view v-slot="{ Component }">
@@ -138,6 +138,7 @@ export default defineComponent({
         document.documentElement.style.setProperty(key, themeJson[key])
       }
     }
+
     /* 若页面刷新 则请求菜单数据 */
     if (store.state.user.login_statu) {
       store.dispatch(sidebar_actions.ASYNCREFRESHMENU)
@@ -237,7 +238,7 @@ body {
   color: var(--theme-font-color);
 }
 #app {
-  // background-color: var(--theme-background-color);
+  
 }
 .hidder-scrollbar {
   -ms-overflow-style: none;
@@ -264,9 +265,9 @@ x-vue-echarts {
   bottom: 0;
   padding: 0.1rem;
 }
-.el-main {
-  // background-color: var(--theme-background-color);
-}
+// .el-main {
+//   background: var(--theme-background-linear-gradient);
+// }
 .el-popper {
   & > .el-menu--vertical {
     max-height: 90vh;
@@ -291,7 +292,7 @@ x-vue-echarts {
 .head-navigation {
   display: flex;
   padding: 0 !important;
-  background-color: var(--theme-background-color);
+  background-color: var(--header-background-color);
   // border-bottom: 3px solid var(--theme-border-color);
   &.fixed {
     position: fixed;

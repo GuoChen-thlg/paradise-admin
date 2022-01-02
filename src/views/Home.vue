@@ -567,17 +567,6 @@ export default defineComponent({
         padding-bottom: 64%;
         // @media (min-width: 1920px) {
         // }
-        /**
-6     11
-6     11
-6     11
-23    23
-23    23
-24    24
-
-23    24
-
-*/
         // @media (max-width: 1919px) and (min-width: 1200px) {
         // }
 
