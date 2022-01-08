@@ -130,7 +130,7 @@ import { defineComponent, reactive, onMounted, toRefs, toRef, ref } from 'vue'
 
 import { useRoute } from 'vue-router'
 import { getRoles } from '@/api'
-import menuTree from '@/router/routeMenu'
+import menuTree from '@/router/index/routeMenu'
 import { treeToArray } from '@/utils/util'
 import { key } from '@/store'
 import { ElCheckbox } from 'element-plus'

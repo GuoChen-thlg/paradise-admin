@@ -19,7 +19,8 @@ module.exports = {
     'no-console': 'off',
     'no-debugger': 'off',
     'vue/no-template-key': 'off',
-    'vue/no-v-for-template-key': 'off'
+    'vue/no-v-for-template-key': 'off',
+    "vue/comment-directive": 'off'
   },
 
   overrides: [

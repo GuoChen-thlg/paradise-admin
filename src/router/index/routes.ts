@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
-import store from '@/store'
-import Login from '@/views/Login.vue'
+import store from '@/store/index'
+import Login from '@/views/index/Login.vue'
 
 import { AUTHORITY } from '@/enum'
 
@@ -15,7 +15,7 @@ export const routes: Array<RouteRecordRaw> = [
 		path: '/about',
 		name: 'About',
 		component: () =>
-			import(/* webpackChunkName: "about" */ '@/views/About.vue'),
+			import(/* webpackChunkName: "about" */ '@/views/public/about/About.vue'),
 		meta: {
 			showAside: false,
 			showHeader: false,
@@ -52,7 +52,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'NotFound',
 		component: () =>
 			import(
-				/* webpackChunkName: "not-fount" */ '@/views/error/NotFount.vue'
+				/* webpackChunkName: "not-fount" */ '@/views/public/error/NotFount.vue'
 			),
 		meta: {
 			showAside: false,
@@ -74,7 +74,7 @@ export const routes: Array<RouteRecordRaw> = [
 		path: '/home',
 		name: 'Home',
 		component: () =>
-			import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+			import(/* webpackChunkName: "home" */ '@/views/index/Home.vue'),
 		meta: {
 			showAside: true,
 			showHeader: true,
@@ -93,7 +93,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'Personnel',
 		component: () =>
 			import(
-				/* webpackChunkName: "personnel" */ '@/views/personnel-bureau/Personnel.vue'
+				/* webpackChunkName: "personnel" */ '@/views/index/personnel-bureau/Personnel.vue'
 			),
 		meta: {
 			showAside: true,
@@ -113,7 +113,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Personnel',
 				component: () =>
 					import(
-						/* webpackChunkName: "edit-personnel" */ '@/views/personnel-bureau/EditPersonnel.vue'
+						/* webpackChunkName: "edit-personnel" */ '@/views/index/personnel-bureau/EditPersonnel.vue'
 					),
 				props: {},
 				meta: {
@@ -138,7 +138,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Addnew',
 				component: () =>
 					import(
-						/* webpackChunkName: "add-new" */ '@/views/personnel-bureau/AddNew.vue'
+						/* webpackChunkName: "add-new" */ '@/views/index/personnel-bureau/AddNew.vue'
 					),
 				props: {},
 				meta: {
@@ -160,7 +160,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'System',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 		children: [],
 	},
@@ -170,7 +170,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'Setting',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 		children: [
 			{
@@ -178,7 +178,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Authority',
 				component: () =>
 					import(
-						/* webpackChunkName: "authority" */ '@/views/setting/Authority.vue'
+						/* webpackChunkName: "authority" */ '@/views/index/setting/Authority.vue'
 					),
 				meta: {
 					showAside: true,
@@ -196,14 +196,14 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Role',
 				component: () =>
 					import(
-						/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+						/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 					),
 				children: [
 					{
 						path: '',
 						component: () =>
 							import(
-								/* webpackChunkName: "role" */ '@/views/setting/Role.vue'
+								/* webpackChunkName: "role" */ '@/views/index/setting/Role.vue'
 							),
 						meta: {
 							showAside: true,
@@ -221,7 +221,7 @@ export const routes: Array<RouteRecordRaw> = [
 						name: 'EditRole',
 						component: () =>
 							import(
-								/* webpackChunkName: "edit-role" */ '@/views/setting/EditRole.vue'
+								/* webpackChunkName: "edit-role" */ '@/views/index/setting/EditRole.vue'
 							),
 						meta: {
 							showAside: true,
@@ -244,7 +244,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'Product',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 		children: [
 			{
@@ -252,7 +252,7 @@ export const routes: Array<RouteRecordRaw> = [
 				path: '',
 				component: () =>
 					import(
-						/* webpackChunkName: "product" */ '@/views/product/Product.vue'
+						/* webpackChunkName: "product" */ '@/views/index/product/Product.vue'
 					),
 				meta: {
 					showAside: true,
@@ -271,7 +271,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Details',
 				component: () =>
 					import(
-						/* webpackChunkName: "details" */ '@/views/product/Details.vue'
+						/* webpackChunkName: "details" */ '@/views/index/product/Details.vue'
 					),
 				meta: {
 					showAside: true,
@@ -289,7 +289,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'EditProduct',
 				component: () =>
 					import(
-						/* webpackChunkName: "edit-product" */ '@/views/product/EditProduct.vue'
+						/* webpackChunkName: "edit-product" */ '@/views/index/product/EditProduct.vue'
 					),
 				meta: {
 					showAside: true,
@@ -308,7 +308,7 @@ export const routes: Array<RouteRecordRaw> = [
 		path: '/stock',
 		name: 'Stock',
 		component: () =>
-			import(/* webpackChunkName: "stock" */ '@/views/Stock.vue'),
+			import(/* webpackChunkName: "stock" */ '@/views/index/Stock.vue'),
 		meta: {
 			showAside: true,
 			showHeader: true,
@@ -326,7 +326,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'Hell',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 		children: [
 			{
@@ -334,7 +334,7 @@ export const routes: Array<RouteRecordRaw> = [
 				path: '',
 				component: () =>
 					import(
-						/* webpackChunkName: "hell" */ '@/views/hell/Hell.vue'
+						/* webpackChunkName: "hell" */ '@/views/index/hell/Hell.vue'
 					),
 				meta: {
 					showAside: true,
@@ -353,7 +353,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'DangerSpot',
 				component: () =>
 					import(
-						/* webpackChunkName: "danger-spot" */ '@/views/hell/DangerSpot.vue'
+						/* webpackChunkName: "danger-spot" */ '@/views/index/hell/DangerSpot.vue'
 					),
 				meta: {
 					showAside: true,
@@ -372,7 +372,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Reincarnation',
 				component: () =>
 					import(
-						/* webpackChunkName: "reincarnation" */ '@/views/hell/Reincarnation.vue'
+						/* webpackChunkName: "reincarnation" */ '@/views/index/hell/Reincarnation.vue'
 					),
 				meta: {
 					showAside: true,
@@ -391,7 +391,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Township',
 				component: () =>
 					import(
-						/* webpackChunkName: "reincarnation" */ '@/views/hell/Township.vue'
+						/* webpackChunkName: "reincarnation" */ '@/views/index/hell/Township.vue'
 					),
 				meta: {
 					showAside: true,
@@ -410,7 +410,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'MengPoPavilion',
 				component: () =>
 					import(
-						/* webpackChunkName: "meng-po-pavilion" */ '@/views/hell/MengPoPavilion.vue'
+						/* webpackChunkName: "meng-po-pavilion" */ '@/views/index/hell/MengPoPavilion.vue'
 					),
 				meta: {
 					showAside: true,
@@ -429,7 +429,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Obituary',
 				component: () =>
 					import(
-						/* webpackChunkName: "obituary" */ '@/views/hell/Obituary.vue'
+						/* webpackChunkName: "obituary" */ '@/views/index/hell/Obituary.vue'
 					),
 				meta: {
 					showAside: true,
@@ -450,7 +450,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'Share',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 
 		children: [
@@ -458,7 +458,7 @@ export const routes: Array<RouteRecordRaw> = [
 				path: '',
 				component: () =>
 					import(
-						/* webpackChunkName: "share" */ '@/views/share/Share.vue'
+						/* webpackChunkName: "share" */ '@/views/index/share/Share.vue'
 					),
 				meta: {
 					showAside: true,
@@ -476,7 +476,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Socket',
 				component: () =>
 					import(
-						/* webpackChunkName: "socket" */ '@/views/share/Socket.vue'
+						/* webpackChunkName: "socket" */ '@/views/index/share/Socket.vue'
 					),
 				meta: {
 					showAside: true,
@@ -497,7 +497,7 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'Integrate',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 		children: [
 			{
@@ -505,7 +505,7 @@ export const routes: Array<RouteRecordRaw> = [
 				path: '',
 				component: () =>
 					import(
-						/* webpackChunkName: "integrate" */ '@/views/world/Integrate.vue'
+						/* webpackChunkName: "integrate" */ '@/views/index/world/Integrate.vue'
 					),
 				meta: {
 					showAside: true,
@@ -523,7 +523,7 @@ export const routes: Array<RouteRecordRaw> = [
 				path: 'territory/:continent',
 				component: () =>
 					import(
-						/* webpackChunkName: "territory" */ '@/views/world/Territory.vue'
+						/* webpackChunkName: "territory" */ '@/views/index/world/Territory.vue'
 					),
 				meta: {
 					showAside: true,
@@ -543,14 +543,14 @@ export const routes: Array<RouteRecordRaw> = [
 		name: 'My',
 		component: () =>
 			import(
-				/* webpackChunkName: "router-view" */ '@/views/router-view.vue'
+				/* webpackChunkName: "router-view" */ '@/views/index/router-view.vue'
 			),
 
 		children: [
 			{
 				path: '',
 				component: () =>
-					import(/* webpackChunkName: "my" */ '@/views/my/My.vue'),
+					import(/* webpackChunkName: "my" */ '@/views/index/my/My.vue'),
 				meta: {
 					showAside: true,
 					showHeader: true,
@@ -567,7 +567,7 @@ export const routes: Array<RouteRecordRaw> = [
 				name: 'Backpack',
 				component: () =>
 					import(
-						/* webpackChunkName: "backpack" */ '@/views/my/Backpack.vue'
+						/* webpackChunkName: "backpack" */ '@/views/index/my/Backpack.vue'
 					),
 				meta: {
 					showAside: true,

@@ -99,7 +99,7 @@ import { key } from '@/store'
 import SidebarControl from '@/components/SidebarControl.vue'
 import Ceumbs from '@/components/Crumbs.vue'
 import HeadUser from '@/components/HeadUser.vue'
-import { sidebar_actions, sidebar_mutations } from './store/modules/sidebar'
+import { sidebar_actions, sidebar_mutations } from '@/store/modules/sidebar'
 import Nprogress from 'nprogress'
 export default defineComponent({
   name: 'App',
@@ -236,7 +236,7 @@ body {
   color: var(--theme-font-color);
 }
 // #app {
-  
+
 // }
 .hidder-scrollbar {
   -ms-overflow-style: none;

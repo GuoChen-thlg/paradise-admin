@@ -3,7 +3,7 @@ import {
 	createWebHashHistory,
 	createWebHistory,
 } from 'vue-router'
-import { routes } from '@/router/routes'
+import { routes } from '@/router/index/routes'
 import store from '@/store'
 
 import hasAuthority from '@/utils/hasAuthority'

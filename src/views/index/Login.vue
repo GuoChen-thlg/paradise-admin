@@ -407,7 +407,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .login-main {
   min-height: 100vh;
-  background: #000 url('../assets/image/ntm0.jpg') no-repeat 50%;
+  background: #000 url('../../assets/image/ntm0.jpg') no-repeat 50%;
   background-size: cover;
 }
 
