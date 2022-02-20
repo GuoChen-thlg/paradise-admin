@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["details"],{c48f:function(e,n,t){"use strict";t.r(n);var o=t("8bbf"),c=Object(o.defineComponent)({name:"Details",setup:function(){return{}}}),r=t("6b0d");r=t.n(r);n.default=r()(c,[["render",function(e,n,t,c,r,a){var i=Object(o.resolveComponent)("el-main");return Object(o.openBlock)(),Object(o.createBlock)(i)}]])}}]);

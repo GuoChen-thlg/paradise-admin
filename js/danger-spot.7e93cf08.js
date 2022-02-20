@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["danger-spot"],{a0fe:function(e,n,t){"use strict";t.r(n);var o=t("8bbf"),r=Object(o.defineComponent)({name:"DangerSpot",setup:function(){return{}}}),c=t("6b0d");c=t.n(c);n.default=c()(r,[["render",function(e,n,t,r,c,a){var p=Object(o.resolveComponent)("el-main");return Object(o.openBlock)(),Object(o.createBlock)(p)}]])}}]);
