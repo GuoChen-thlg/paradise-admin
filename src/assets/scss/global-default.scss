@@ -1,0 +1,23 @@
+*,
+*:after,
+*:before {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+::-webkit-scrollbar {
+	width: 8px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #0003;
+	border-radius: 10px;
+	transition: all 0.2s ease-in-out;
+}
+::-webkit-scrollbar-track {
+	border-radius: 4px;
+}
+ul,
+ol,
+li {
+	list-style: none;
+}

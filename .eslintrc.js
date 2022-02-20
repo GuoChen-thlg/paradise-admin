@@ -20,7 +20,8 @@ module.exports = {
     'no-debugger': 'off',
     'vue/no-template-key': 'off',
     'vue/no-v-for-template-key': 'off',
-    "vue/comment-directive": 'off'
+    "vue/comment-directive": 'off',
+    "no-undef":"off",
   },
 
   overrides: [

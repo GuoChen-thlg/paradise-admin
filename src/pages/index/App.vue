@@ -9,21 +9,12 @@
       <sidebar-control />
     </el-aside>
 
-    <el-drawer
-      direction="ltr"
-      size="200"
-      v-model="drawer"
-      custom-class="hiddem-sm-and-up"
-    >
+    <el-drawer direction="ltr" size="200" v-model="drawer" custom-class="hiddem-sm-and-up">
       <sidebar-control />
     </el-drawer>
 
     <el-container class="main-container">
-      <el-header
-        v-show="showHeader"
-        class="head-navigation"
-        height="var(--header-height)"
-      >
+      <el-header v-show="showHeader" class="head-navigation" height="var(--header-height)">
         <div class="control-container">
           <div class="open-close hidden-xs-only" @click="on_off">
             <i :class="[isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']" />
@@ -58,9 +49,7 @@
             <i class="el-icon-s-unfold" />
           </div>
           <div class="slogan-box">
-            <p class="slogan">
-              此项目正在开发中，所有数据均为 mock 数据 切勿当真！！！
-            </p>
+            <p class="slogan">此项目正在开发中，所有数据均为 mock 数据 切勿当真！！！</p>
           </div>
           <head-user />
         </div>
@@ -95,12 +84,13 @@ import {
 } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import Nprogress from 'nprogress'
 import { key } from '@/store'
 import SidebarControl from '@/components/SidebarControl.vue'
 import Ceumbs from '@/components/Crumbs.vue'
 import HeadUser from '@/components/HeadUser.vue'
 import { sidebar_actions, sidebar_mutations } from '@/store/modules/sidebar'
-import Nprogress from 'nprogress'
+import { useResize } from '@/hooks'
 export default defineComponent({
   name: 'App',
   components: {
@@ -178,10 +168,13 @@ export default defineComponent({
 
     document.addEventListener('scroll', () => {
       store.commit('device/update')
+
     })
-    document.addEventListener('resize', () => {
+    useResize(() => {
+      console.log('123resize');
       store.commit('device/update')
     })
+    // document.addEventListener('resize', )
     onBeforeMount(() => {
       Nprogress.set(0.9)
       document.querySelector(".loader[role='loader']")?.remove()
@@ -204,18 +197,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-*,
-*:after,
-*:before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-ul,
-ol,
-li {
-  list-style: none;
-}
+@import "@/assets/scss/global-default.scss";
 html {
   font-size: 100px !important;
 }
@@ -233,7 +215,7 @@ body {
   font : {
     size: 0.16rem;
   }
-  color: var(--theme-font-color);
+  // color: var(--theme-font-color);
 }
 // #app {
 
@@ -246,7 +228,7 @@ body {
   }
 }
 .clearfix::after {
-  content: '';
+  content: "";
   display: block;
   width: 0;
   height: 0;
@@ -268,7 +250,7 @@ x-vue-echarts {
 // }
 .el-popper {
   & > .el-menu--vertical {
-    max-height: 90vh;
+    max-height: 88vh;
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;

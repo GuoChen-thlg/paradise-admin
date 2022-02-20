@@ -166,10 +166,8 @@ import { defineComponent, reactive, ref, unref } from 'vue'
 
 import { acceptCode, register, login } from '@/api'
 import { key } from '@/store'
-import { Menu, ResponseData } from '@/custom'
 import { useRouter } from 'vue-router'
 import { user_mutations } from '@/store/modules/user'
-import SidebarControlVue from '@/components/SidebarControl.vue'
 import encrypt from '@/utils/encrypt'
 import { ElMessage } from 'element-plus'
 import { sidebar_mutations } from '@/store/modules/sidebar'
@@ -249,9 +247,10 @@ export default defineComponent({
             store.commit(sidebar_mutations.SETMENU, result?.menus || [])
             localStorage.setItem('authorization', result?.token || '')
           } catch (err) {
-            console.log('失败', err.response)
+            console.log('失败', (err as any).response)
             return false
           }
+          
         } else {
           return false
         }
@@ -284,7 +283,7 @@ export default defineComponent({
         },
         {
           pattern: /^\w{3,16}$/,
-          message: '只能包含字母数字下划线（3-16）',
+          message: '只能包含字母数字下划线(3-16)',
           trigger: 'blur'
         }
       ],
@@ -407,7 +406,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .login-main {
   min-height: 100vh;
-  background: #000 url('../../assets/image/ntm0.jpg') no-repeat 50%;
+  background: #000 url('~@/assets/image/ntm0.jpg') no-repeat 50%;
   background-size: cover;
 }
 

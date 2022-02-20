@@ -2,7 +2,7 @@
   <div v-if="editor">
     <div
       class="tools-container"
-      :style="{ 'flex-direction': `${sourceShow ? 'row-reverse' : 'row'}` }"
+      :style="{ 'flexDirection': `${sourceShow ? 'row-reverse' : 'row'}` }"
     >
       <div class="item" v-show="!sourceShow">
         <template v-for="(arr, i) in toolsList" :key="i">

@@ -3,29 +3,33 @@
  * @param url String
  * @param filename String
  */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function download(url: string, filename: string) {
 	const a = document.createElement('a')
 	a.download = filename
 	a.href = url
 	a.click()
 }
-// 随机 ID
-export const randomId = () => {
+/**
+ * @description: 随机 ID
+ * @param {*} prefix
+ * @return {*}
+ */
+export function randomId(prefix = 'id_'): string {
 	return (
-		'id_' +
+		prefix +
 		Math.random()
 			.toString(36)
-			.substr(2)
+			.substring(2)
 	)
 }
 
 export const isSafari = /^((?!chrome|android).)*safari/i.test(
 	navigator.userAgent
 )
-
 export const isFirefox = /.*firefox.*/i.test(navigator.userAgent)
-
 export const isEdge =
+	// ie
 	(document as any).documentMode || /edg/i.test(navigator.userAgent)
 
 /**
@@ -35,7 +39,7 @@ export const isEdge =
  * @param {Number} max
  * @returns {Number} randomInteger    — A numeric expression.
  */
-export function closedInterval(min: number, max: number) {
+export function closedInterval(min: number, max: number): number {
 	return Math.floor(Math.random() * (max + 1 - min)) + min
 }
 /**
@@ -45,7 +49,7 @@ export function closedInterval(min: number, max: number) {
  * @param {Number} max
  * @returns {Number} randomInteger    — A numeric expression.
  */
-export function openInterval(min: number, max: number) {
+export function openInterval(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - (min + 1)) + min + 1)
 }
 /**
@@ -55,7 +59,7 @@ export function openInterval(min: number, max: number) {
  * @param {Number} max
  * @returns  randomFloating    — A numeric expression.
  */
-export function openIntervalF(min: number, max: number) {
+export function openIntervalF(min: number, max: number): number {
 	return min + Math.random() * (max - min)
 }
 /**
@@ -65,7 +69,7 @@ export function openIntervalF(min: number, max: number) {
  * @param {Number} max
  * @returns {Number} randomInteger    — A numeric expression.
  */
-export function closeLeftOpenRight(min: number, max: number) {
+export function closeLeftOpenRight(min: number, max: number): number {
 	return Math.ceil(Math.random() * (max - min)) + min
 }
 /**
@@ -75,7 +79,7 @@ export function closeLeftOpenRight(min: number, max: number) {
  * @param {Number} max
  * @returns {Number} randomInteger    — A numeric expression.
  */
-export function openLeftCloseRight(min: number, max: number) {
+export function openLeftCloseRight(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min)) + min
 }
 
@@ -107,9 +111,9 @@ function processingTime(date: Date | number | string | undefined) {
 export function format(
 	format = 'YYYY-MM-DD hh:mm:ss',
 	date: Date | number | string | undefined = ''
-) {
+): string {
 	date = processingTime(date)
-	let Y = date.getFullYear(),
+	const Y = date.getFullYear(),
 		M = date.getMonth() + 1,
 		D = date.getDate(),
 		h = date.getHours(),
@@ -146,15 +150,15 @@ export function format(
  * @param childrenKey
  * @returns
  */
-export const treeToArray = (
+export function treeToArray(
 	tree: { [k: string]: any }[] | { [k: string]: any },
 	childrenKey: string
-) => {
-	let arr: { [k: string]: any }[] = []
+): { [k: string]: any }[] {
+	const arr: { [k: string]: any }[] = []
 	const a = (ls: { [k: string]: any }[]) => {
 		if (ls instanceof Array) {
 			ls.forEach(o => {
-				let c = o[childrenKey]
+				const c = o[childrenKey]
 				delete o[childrenKey]
 				arr.push(o)
 				a(c)
@@ -176,13 +180,13 @@ export const arrayToTree = (arr: unknown[], id: string, pid: string) => {
 		return []
 	}
 	if (arr instanceof Array) {
-		let tree: unknown[] = []
-		let treeMap: any = {}
+		const tree: unknown[] = []
+		const treeMap: any = {}
 		arr.forEach(o => {
 			treeMap[o[id]] = o
 		})
 		arr.forEach(o => {
-			let parent = treeMap[o[pid]]
+			const parent = treeMap[o[pid]]
 			if (parent && o[id] != o[pid]) {
 				if (!parent.children) {
 					parent.children = []
@@ -196,4 +200,61 @@ export const arrayToTree = (arr: unknown[], id: string, pid: string) => {
 	} else {
 		return [arr]
 	}
+}
+/**
+ * @description: 驼峰命名转连接线
+ * @param {string} str
+ * @return {string}
+ */
+export function parseToLink(str: string): string {
+	const r1 = /([a-z])([A-Z])/g
+	return str
+		.replace(r1, function(_, g1, g2) {
+			return g1 + '-' + g2.toLowerCase()
+		})
+		.toLowerCase()
+}
+/**
+ * @description: 克隆 json 对象
+ * @param {T} jsonObj
+ * @return {T}
+ */
+export function jsonClone<T>(jsonObj: T): T {
+	return JSON.parse(JSON.stringify(jsonObj))
+}
+
+/**
+ * @description:
+ * @param {T} oldObj
+ * @param {string} path
+ * @param {any} newVal
+ * @param {boolean} isClone
+ * @return {T} 返回修改后的对象
+ */
+export function jsonSet<T>(
+	oldObj: T,
+	path: string[] = [],
+	newVal: any,
+	isClone = true
+): T {
+	let obj = undefined
+	let tem: any
+	if (isClone) {
+		obj = jsonClone(oldObj)
+	} else {
+		obj = oldObj
+	}
+	tem = obj
+	if (path.length === 0) {
+		return obj
+	} 
+	for (let i = 0; i < path.length; i++) {
+		if (i === path.length - 1) {
+			tem[path[i]] = newVal
+			return obj
+		} else {
+			tem = tem[path[i]]
+		}
+	}
+	return obj
 }

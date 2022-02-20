@@ -12,13 +12,10 @@
       首页
     </el-tag>
     <div class="sliding-window">
-      <div
-        class="sliding-container"
-        :style="{ transform: `translateX(${offsetX}px)` }"
-      >
+      <div class="sliding-container" :style="{ transform: `translateX(${offsetX}px)` }">
         <el-tag
           v-for="(tag, i) in tabsList"
-          :key="`${tag.name}-${tag.path}`"
+          :key="`${tag.name as String}-${tag.path}`"
           closable
           :effect="tag.path === $route.path ? 'dark' : 'plain'"
           @close="handleClose(tag, i)"
@@ -28,7 +25,8 @@
             })
           "
         >
-          <i :data-index="i" :class="tag.icon" /> {{ tag.meta.title }}
+          <!-- <i :data-index="i" :class="tag.icon" />  -->
+          {{ tag.meta.title }}
         </el-tag>
       </div>
     </div>
@@ -119,7 +117,7 @@ export default defineComponent({
           if (
             windowNode &&
             getTagsNodeWidht(i, firstSubscript.value - 1) >
-              windowNode.clientWidth
+            windowNode.clientWidth
           ) {
             const _offsetX =
               offsetX.value + getTagsNodeWidht(i, firstSubscript.value - 1)
@@ -131,7 +129,7 @@ export default defineComponent({
           } else if (
             windowNode &&
             getTagsNodeWidht(0, firstSubscript.value - 1) <=
-              windowNode.clientWidth
+            windowNode.clientWidth
           ) {
             firstSubscript.value = 0
             offsetX.value = 0

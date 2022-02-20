@@ -12,9 +12,10 @@
 <script lang="ts">
 import { ECharts } from 'echarts/core'
 import { defineComponent, onMounted, onUnmounted, reactive, ref } from 'vue'
-
+import { vChart } from '@/plugins/echarts'
 export default defineComponent({
   name: 'Stock' /* 股票市场 */, //
+  components: { vChart },
   setup() {
     const upColor = '#ec0000'
     const upBorderColor = '#8A0000'
@@ -108,7 +109,7 @@ export default defineComponent({
       ['2013/6/5', 2270.71, 2270.93, 2260.87, 2276.86],
       ['2013/6/6', 2264.43, 2242.11, 2240.07, 2266.69],
       ['2013/6/7', 2242.26, 2210.9, 2205.07, 2250.63],
-      ['2013/6/13', 2190.1, 2148.35, 2126.22, 2190.1],
+      ['2013/6/13', 2190.1, 2148.35, 2126.22, 2190.1]
     ])
 
     function splitData(rawData: (number | string)[][]) {
@@ -120,7 +121,7 @@ export default defineComponent({
       }
       return {
         categoryData: categoryData,
-        values: values,
+        values: values
       }
     }
     function calculateMA(dayCount: number) {
@@ -142,21 +143,21 @@ export default defineComponent({
     const option = reactive({
       title: {
         text: '上证指数',
-        left: 0,
+        left: 0
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'cross',
-        },
+          type: 'cross'
+        }
       },
       legend: {
-        data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+        data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
       },
       grid: {
         left: '10%',
         right: '10%',
-        bottom: '15%',
+        bottom: '15%'
       },
       xAxis: {
         type: 'category',
@@ -167,27 +168,27 @@ export default defineComponent({
         splitLine: { show: false },
         splitNumber: 20,
         min: 'dataMin',
-        max: 'dataMax',
+        max: 'dataMax'
       },
       yAxis: {
         scale: true,
         splitArea: {
-          show: true,
-        },
+          show: true
+        }
       },
       dataZoom: [
         {
           type: 'inside',
           start: 50,
-          end: 100,
+          end: 100
         },
         {
           show: true,
           type: 'slider',
           top: '90%',
           start: 50,
-          end: 100,
-        },
+          end: 100
+        }
       ],
       series: [
         {
@@ -198,15 +199,15 @@ export default defineComponent({
             color: upColor,
             color0: downColor,
             borderColor: upBorderColor,
-            borderColor0: downBorderColor,
+            borderColor0: downBorderColor
           },
           markPoint: {
             label: {
               normal: {
-                formatter: function (param: any) {
+                formatter: function(param: any) {
                   return param != null ? Math.round(param.value) : ''
-                },
-              },
+                }
+              }
             },
             data: [
               {
@@ -214,30 +215,30 @@ export default defineComponent({
                 coord: ['2013/5/31', 2300],
                 value: 2300,
                 itemStyle: {
-                  color: 'rgb(41,60,85)',
-                },
+                  color: 'rgb(41,60,85)'
+                }
               },
               {
                 name: 'highest value',
                 type: 'max',
-                valueDim: 'highest',
+                valueDim: 'highest'
               },
               {
                 name: 'lowest value',
                 type: 'min',
-                valueDim: 'lowest',
+                valueDim: 'lowest'
               },
               {
                 name: 'average value on close',
                 type: 'average',
-                valueDim: 'close',
-              },
+                valueDim: 'close'
+              }
             ],
             tooltip: {
-              formatter: function (param: any) {
+              formatter: function(param: any) {
                 return param.name + '<br>' + (param.data.coord || '')
-              },
-            },
+              }
+            }
           },
           markLine: {
             symbol: ['none', 'none'],
@@ -250,13 +251,13 @@ export default defineComponent({
                   symbol: 'circle',
                   symbolSize: 10,
                   label: {
-                    show: false,
+                    show: false
                   },
                   emphasis: {
                     label: {
-                      show: false,
-                    },
-                  },
+                      show: false
+                    }
+                  }
                 },
                 {
                   type: 'max',
@@ -264,27 +265,27 @@ export default defineComponent({
                   symbol: 'circle',
                   symbolSize: 10,
                   label: {
-                    show: false,
+                    show: false
                   },
                   emphasis: {
                     label: {
-                      show: false,
-                    },
-                  },
-                },
+                      show: false
+                    }
+                  }
+                }
               ],
               {
                 name: 'min line on close',
                 type: 'min',
-                valueDim: 'close',
+                valueDim: 'close'
               },
               {
                 name: 'max line on close',
                 type: 'max',
-                valueDim: 'close',
-              },
-            ],
-          },
+                valueDim: 'close'
+              }
+            ]
+          }
         },
         {
           name: 'MA5',
@@ -292,8 +293,8 @@ export default defineComponent({
           data: calculateMA(5),
           smooth: true,
           lineStyle: {
-            opacity: 0.5,
-          },
+            opacity: 0.5
+          }
         },
         {
           name: 'MA10',
@@ -301,8 +302,8 @@ export default defineComponent({
           data: calculateMA(10),
           smooth: true,
           lineStyle: {
-            opacity: 0.5,
-          },
+            opacity: 0.5
+          }
         },
         {
           name: 'MA20',
@@ -310,8 +311,8 @@ export default defineComponent({
           data: calculateMA(20),
           smooth: true,
           lineStyle: {
-            opacity: 0.5,
-          },
+            opacity: 0.5
+          }
         },
         {
           name: 'MA30',
@@ -319,10 +320,10 @@ export default defineComponent({
           data: calculateMA(30),
           smooth: true,
           lineStyle: {
-            opacity: 0.5,
-          },
-        },
-      ],
+            opacity: 0.5
+          }
+        }
+      ]
     })
     const charts = reactive<ECharts[]>([])
     const chart = (el: ECharts) => {
@@ -332,7 +333,7 @@ export default defineComponent({
     }
     const filling = ref<HTMLObjectElement | null>(null)
     const resizeCd = () => {
-      charts.forEach((el) => {
+      charts.forEach(el => {
         el.resize()
       })
     }
@@ -345,9 +346,9 @@ export default defineComponent({
     return {
       chart,
       filling,
-      option,
+      option
     }
-  },
+  }
 })
 </script>
 

@@ -65,7 +65,7 @@ body {
   font : {
     size: 0.16rem;
   }
-  color: var(--theme-font-color);
+  // color: var(--theme-font-color);
 }
 // #app {
 
@@ -100,7 +100,7 @@ x-vue-echarts {
 // }
 .el-popper {
   & > .el-menu--vertical {
-    max-height: 90vh;
+    max-height: 88vh;
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;

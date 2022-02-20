@@ -96,7 +96,7 @@ npm run deploy
 
 开发
 
--   默认咦安装 docker
+-   默认已安装 docker
 
 ```sh
 npm run compose-up-dev

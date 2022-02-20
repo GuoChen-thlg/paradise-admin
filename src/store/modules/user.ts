@@ -19,8 +19,8 @@ export interface User extends user {
 
 const state: User = {
 	id: 0,
-	login_statu: JSON.parse(
-		localStorage.getItem('login_statu') || JSON.stringify({ statu: false })
+	login_statu: JSON.parse(/* 默认为登陆状态 */
+		localStorage.getItem('login_statu') || JSON.stringify({ statu: true })
 	).statu,
 	name: '',
 	permissions: JSON.parse(

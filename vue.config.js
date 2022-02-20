@@ -24,7 +24,8 @@ module.exports = {
 	devServer: {
 		host: '0.0.0.0',
 		port: parseInt(process.env.VUE_APP_PORT) || 8080,
-		open: true
+		open: true,
+		public: 'localhost:8080',
 	},
 	lintOnSave: false,
 	css: {

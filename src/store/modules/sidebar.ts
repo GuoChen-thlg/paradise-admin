@@ -1,12 +1,12 @@
-import { RootState } from '@/store/index'
-import { Menu } from '@/custom'
 import { ActionTree, Module, MutationTree } from 'vuex'
+import { RootState } from '@/store/index'
+import { Menu, ResponseData } from '@/custom'
+import { getMenus } from '@/api'
 /* 侧边栏菜单 */
 export interface Sidebar {
 	isCollapse: boolean
 	menu: Menu[]
 }
-import { getMenus } from '@/api'
 
 const state: Sidebar = {
 	isCollapse: false,
@@ -36,7 +36,7 @@ const actions: ActionTree<Sidebar, RootState> = {
 	async asyncRefreshMenu({ commit }) {
 		try {
 			const result = await getMenus()
-			commit('setMenu', result?.menus || [])
+			result && commit('setMenu', result['menus'] || [])
 		} catch (err) {
 			console.error(err)
 		}

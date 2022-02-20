@@ -13,9 +13,9 @@ export const createImage = (
 	t = `image`,
 	c = '#cfc8cc',
 	bc = '#f5f7fa'
-) => {
+): string => {
 	const canvas = document.createElement('canvas')
-	const ctx = canvas.getContext('2d')!
+	const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
 	canvas.width = w
 	canvas.height = h
@@ -34,3 +34,4 @@ export const createImage = (
 
 	return canvas.toDataURL()
 }
+export default createImage

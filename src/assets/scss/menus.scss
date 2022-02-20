@@ -1,0 +1,14 @@
+// 右键菜单样式
+.v3-menus {
+	.v3-menus-body {
+		.v3-menus-item {
+			line-height: 18px;
+			padding: 0 18px;
+			font-size: 16px;
+			.v3-menus-suffix {
+				margin-left: 70px;
+				// font-size: 29px;
+			}
+		}
+	}
+}

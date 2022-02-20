@@ -48,7 +48,7 @@ export async function acceptCode({
 export async function verifyLogin(): Promise<ResponseData | null> {
 	const response = await axios({
 		url:
-			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/verifyLogin',
+			'/verifyLogin',
 		method: 'POST',
 	})
 	return f(response)
@@ -120,7 +120,7 @@ export async function getRoleMneus({
 export async function personnelList(): Promise<ResponseData | null> {
 	const response = await axios({
 		url:
-			'https://www.fastmock.site/mock/daf4bf7d1a1ae8cbc92a8bea8bc08a41/paradise_admin/api/v1/personnel/list',
+			'/personnel/list',
 		method: 'GET',
 	})
 	return f(response)

@@ -31,9 +31,9 @@ export default {
 					let originalX: number, originalY: number
 					if (style.left.includes('%')) {
 						originalX =
-							width * (+style.left.replace(/\%/g, '') / 100)
+							width * (+style.left.replace(/%/g, '') / 100)
 						originalY =
-							height * (+style.top.replace(/\%/g, '') / 100)
+							height * (+style.top.replace(/%/g, '') / 100)
 					} else {
 						originalX = +style.left.replace(/\px/g, '')
 						originalY = +style.top.replace(/\px/g, '')
