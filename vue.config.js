@@ -14,7 +14,7 @@ module.exports = {
 		},
 		mobile: {
 			entry: 'src/pages/mobile/main.ts',
-			template: 'public/mobile/mobile.html',
+			template: 'public/mobile.html',
 			filename: 'mobile.html',
 			title: 'mobile',
 			chunks: ['chunk-vendors', 'chunk-common', 'mobile']
@@ -143,21 +143,21 @@ module.exports = {
 				'vue-router': 'VueRouter',
 			}
 
-			config.optimization = {
-				splitChunks: {
-					cacheGroups: {
-						vendor: {
-							chunks: 'all',
-							test: /node_modules/,
-							name: 'vendor',
-							minChunks: 2,
-							maxInitialRequests: 5,
-							minSize: 0,
-							priority: 100
-						},
-					}
-				}
-			}
+			// config.optimization = {
+			// 	splitChunks: {
+			// 		cacheGroups: {
+			// 			vendor: {
+			// 				chunks: 'all',
+			// 				test: /node_modules/,
+			// 				name: 'vendor',
+			// 				minChunks: 2,
+			// 				maxInitialRequests: 5,
+			// 				minSize: 0,
+			// 				priority: 100
+			// 			},
+			// 		}
+			// 	}
+			// }
 		} else {
 			// 开发环境
 			config.externals = {
