@@ -26,8 +26,7 @@ services:
         working_dir: /usr/src/app
         volumes:
             - .:/usr/src/app
-        command: /bin/bash -c "npm install -g npm@6.14.13 --registry https://registry.npm.taobao.org &&  npm run serve:dev"
-# npm install --registry https://registry.npm.taobao.org &&
+        command: /bin/bash -c "npm run serve:dev"
         ports:
             - ${SERVER_PORT}:${SERVER_PORT}
             - ${VUE_APP_PORT}:${VUE_APP_PORT}
