@@ -1,6 +1,6 @@
-import { order } from './../../types/order'
-import { product } from './../../types/product'
-import { user } from '@/types/user'
+import { order } from '../../../typings/order'
+import { product } from '../../../typings/product'
+import { IUser } from '../../../typings/user/user'
 import { verifyLogin } from '@/api'
 import { RootState } from '@/store/index'
 import { ActionTree, Module, MutationTree } from 'vuex'
@@ -9,7 +9,7 @@ import { AUTHORITY } from '@/enum'
 import Cookies from 'js-cookie'
 import { json } from 'sequelize/types'
 /* 用户 */
-export interface User extends user {
+export interface User extends IUser {
 	/**
 	 * 登录状态
 	 */

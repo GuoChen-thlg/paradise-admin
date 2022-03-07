@@ -1,14 +1,14 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-02 21:21:56
- * @LastEditTime: 2022-02-16 23:29:46
+ * @LastEditTime: 2022-03-03 22:30:49
  * @LastEditors: 天火流光
  * @Description: 配置组件数据
  * @FilePath: \paradise-admin\src\components\low_code\ComSetting.vue
  * 
 -->
 <template>
-	<div class="com-setting">
+	<div class="com-setting" v-if="active.path !== ''">
 		<el-tabs
 			v-model="activeTabName"
 			type="border-card"
@@ -31,11 +31,13 @@
 	</div>
 </template>
 <script lang="ts">
-	import { defineComponent, ref } from 'vue'
+	import { defineComponent, ref, toRefs } from 'vue'
 	import LayoutSetting from '@/components/low_code/setting/LayoutSetting.vue'
 	import DataSetting from '@/components/low_code/setting/DataSetting.vue'
 	import AnimationSetting from '@/components/low_code/setting/Animationsetting.vue'
 	import EventSetting from '@/components/low_code/setting/EventSetting.vue'
+	import { key } from '@/store'
+	import { useStore } from 'vuex'
 	export default defineComponent({
 		name: 'ComSetting',
 		components: {
@@ -45,9 +47,12 @@
 			EventSetting,
 		},
 		setup() {
+			const store = useStore(key)
+			const { active } = toRefs(store.state.template)
+
 			const activeTabName = ref('LAYER')
 
-			return { activeTabName }
+			return { activeTabName, active }
 		},
 	})
 </script>
@@ -59,6 +64,14 @@
 			:deep(.el-tabs__item) {
 				user-select: none;
 			}
+			:deep(.el-tabs__content) {
+				height: calc(100% - 38px);
+				overflow-y: scroll;
+			}
 		}
 	}
+	// :deep(.el-form-item) {
+	// 	border: 1px solid #cfcfcf;
+	// 	border-radius: 4px;
+	// }
 </style>

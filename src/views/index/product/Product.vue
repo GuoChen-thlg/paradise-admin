@@ -191,13 +191,13 @@
 <script lang="ts">
 import { useRouter } from 'vue-router'
 import { defineComponent, onUnmounted, reactive, ref, watch } from 'vue'
-import { product } from '@/types/product'
+import { product } from '@type/product'
 import { getProducts } from '@/api'
 import { useStore } from 'vuex'
 import { key } from '@/store'
 import { createImage } from '@/utils/default/image'
 import { user_mutations } from '@/store/modules/user'
-import { order } from '@/types/order'
+import { order } from '@type/order'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default defineComponent({

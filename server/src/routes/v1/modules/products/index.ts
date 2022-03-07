@@ -62,7 +62,9 @@ router
 		 *
 		 * @param ctx
 		 */
-		async ctx => {}
+		async ctx => {
+			//
+		}
 	)
 	.put(
 		'/:id.json',
@@ -70,7 +72,9 @@ router
 		 *
 		 * @param ctx
 		 */
-		async ctx => {}
+		async ctx => {
+			//
+		}
 	)
 	.get(
 		'.json',
@@ -103,10 +107,20 @@ router
 		ctx.body = 'hello world 2' + ctx.params.id
 	})
 
-	.post('/:product_id.images.json', async ctx => {})
-	.delete('/:product_id/images/:image_id.json', async ctx => {})
-	.put('/:product_id/images/:image_id.json', async ctx => {})
-	.get('/:product_id.images.json', async ctx => {})
-	.get('/:product_id.images/:image_id.json', async ctx => {})
+	.post('/:product_id.images.json', async ctx => {
+		//
+	})
+	.delete('/:product_id/images/:image_id.json', async ctx => {
+		//
+	})
+	.put('/:product_id/images/:image_id.json', async ctx => {
+		//
+	})
+	.get('/:product_id.images.json', async ctx => {
+		//
+	})
+	.get('/:product_id.images/:image_id.json', async ctx => {
+		//
+	})
 
 export default router.routes()

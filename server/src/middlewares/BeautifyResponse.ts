@@ -49,14 +49,25 @@ export const ErrorCode = {
 	 */
 	err15: '4015',
 }
-function beautifyResponse(): Koa.Middleware<{}, {}> {
-	return async function(ctx: Koa.ParameterizedContext, next: Koa.Next) {
+function beautifyResponse(): Koa.Middleware<
+	Koa.DefaultState,
+	Koa.DefaultContext,
+	ResponseBody
+> {
+	return async function(
+		ctx: Koa.ParameterizedContext<
+			Koa.DefaultState,
+			Koa.DefaultContext,
+			ResponseBody
+		>,
+		next: Koa.Next
+	) {
 		console.log(ctx.request.ip, ctx.request.ips)
 
 		try {
 			await next()
 			if (/^\/api/.test(ctx.path) && ctx.status === 200 && ctx.body) {
-				;(ctx.body as ResponseBody).msg = '成功'
+				ctx.body.msg = '成功'
 			}
 		} catch (err) {
 			console.log('美化', err)

@@ -21,7 +21,7 @@ interface ProductAttributes extends MaterialAttributes {
 	/**开售时间 */
 	published_at: string
 	/**是否销售 */
-	active: Boolean
+	active: boolean
 	/**价格 */
 	price: number
 	/**最大价格 */
@@ -32,20 +32,19 @@ interface ProductAttributes extends MaterialAttributes {
 	product_category: string
 }
 
-interface ProductCreationAttributes
-	extends Optional<
-		ProductAttributes,
-		| 'id'
-		| 'barcode'
-		| 'qr_code'
-		| 'active'
-		| 'tags'
-		| 'product_type'
-		| 'published_at'
-		| 'price_max'
-		| 'price_min'
-		| 'product_category'
-	> {}
+type ProductCreationAttributes = Optional<
+	ProductAttributes,
+	| 'id'
+	| 'barcode'
+	| 'qr_code'
+	| 'active'
+	| 'tags'
+	| 'product_type'
+	| 'published_at'
+	| 'price_max'
+	| 'price_min'
+	| 'product_category'
+>
 
 class Product extends Model<ProductAttributes, ProductCreationAttributes>
 	implements ProductAttributes {
@@ -56,7 +55,7 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes>
 	tags: string
 	product_type: string
 	published_at: string
-	active: Boolean
+	active: boolean
 	price: number
 	price_max: number
 	price_min: number

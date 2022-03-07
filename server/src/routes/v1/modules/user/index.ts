@@ -4,7 +4,7 @@ import Permission from '../../../../models/permission'
 import { Op } from 'sequelize'
 import User from '../../../../models/user'
 import Menu from '../../../../models/menu'
-import { arrayToTree, unique } from '../../../../utils'
+import { arrayToTree, unique } from '../../../../utils/utils'
 
 const router = new Router()
 router
@@ -119,7 +119,9 @@ router
 			ctx.body = { menus: arrayToTree(menuList, 'id', 'parent_id') }
 		}
 	)
-	.get('/materials.json', async (ctx, next) => {})
+	.get('/materials.json', async (ctx, next) => {
+		// 
+	})
 	.put(
 		'/change-pass.json',
 		/**
@@ -131,7 +133,9 @@ router
 		 * @apiUse v1
 		 * @apiVersion 1.0.0
 		 */
-		async (ctx, next) => {}
+		async (ctx, next) => {
+			// 
+		}
 	)
 
 export default router.routes()

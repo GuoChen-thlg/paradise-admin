@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-02 22:34:17
- * @LastEditTime: 2022-02-20 13:52:44
+ * @LastEditTime: 2022-03-07 23:08:45
  * @LastEditors: 天火流光
  * @Description: 
  * @FilePath: \paradise-admin\src\components\public\ComItem.vue
@@ -20,17 +20,21 @@
 			v-bind="componentData.props"
 			:index="indexPrefix + index"
 		></component>
+		<drag-vertex v-if="isActvie"></drag-vertex>
 	</div>
 </template>
 <script lang="ts">
 	import { defineComponent, computed, onMounted, PropType } from 'vue'
 	import { ElMessageBox } from 'element-plus'
-	import comBase from '@/components/modules/base/Base.vue'
-	import comBaseImage from '@/components/modules/base/BaseImage.vue'
 	import { useStore } from 'vuex'
 	import { key } from '@/store'
 	import { template_mutations } from '@/store/modules/template'
 	import { Base } from '@/modules/base/Base'
+	import DragVertex from '@/components/public/DragVertex.vue'
+	//
+	import comBase from '@/components/modules/base/Base.vue'
+	import comBaseImage from '@/components/modules/base/BaseImage.vue'
+	import useHookEvent from '@/hooks/hookEvent'
 	export default defineComponent({
 		name: 'ComItem',
 		props: {
@@ -52,18 +56,31 @@
 			},
 		},
 		components: {
+			DragVertex,
+			// 无代码组件
 			Base: comBase,
 			BaseImage: comBaseImage,
 		},
 		setup(props) {
 			const store = useStore(key)
-
+			const hookEvent = useHookEvent()
 			/**
 			 * @description: 处理组件编辑状态下的点击事件
 			 */
 			const handleSelect = () => {
 				handleSetActive()
 			}
+			hookEvent.on('deag-move', evt => {
+				if (props.componentData.id == store.state.template.active.id) {
+					handleSetActive()
+					console.log(
+						'选中组件***',
+						props.componentData.id,
+						props.index,
+						evt
+					)
+				}
+			})
 			onMounted(() => {
 				handleSetActive()
 			})
@@ -78,14 +95,13 @@
 						label: '返回(B)',
 						tip: '数据信息',
 						click: () => {
-							// 
+							//
 						},
 					},
 					{
 						label: '删除',
 						click: () => {
 							console.log(e)
-
 						},
 					},
 				],
@@ -108,7 +124,7 @@
 				() => props.componentData.id == store.state.template.active.id
 			)
 
-			return { isActvie, handleSelect, contextMenus }
+			return { isActvie, handleSelect, contextMenus, store, props }
 		},
 	})
 </script>

@@ -1,16 +1,16 @@
-import { arrayToTree } from './../../../../utils/index'
+import { arrayToTree } from '../../../../utils/utils'
 import Router from 'koa-router'
 import jsonwebtoken from 'jsonwebtoken'
 import RSA from 'node-rsa'
 import { v4 as uuidv4 } from 'uuid'
-import { passwd } from '../../../../utils/index'
+import { passwd } from '../../../../utils/utils'
 import User from '../../../../models/user'
 import { ErrorCode } from '../../../../middlewares/BeautifyResponse'
 import { emailer } from './emailer'
 import Permission from '../../../../models/permission'
 import Role from '../../../../models/role'
 import Menu from '../../../../models/menu'
-import { unique } from '../../../../utils'
+import { unique } from '../../../../utils/utils'
 const router = new Router()
 
 const { JWT_PRIVATEKEY, SERVER_PRIVATEKEY } = process.env

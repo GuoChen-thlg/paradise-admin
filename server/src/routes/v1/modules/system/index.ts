@@ -3,7 +3,7 @@ import Router from 'koa-router'
 import Menu from '../../../../models/menu'
 import Role from '../../../../models/role'
 import User from '../../../../models/user'
-import { arrayToTree, unique } from '../../../../utils'
+import { arrayToTree, unique } from '../../../../utils/utils'
 import Permission from '../../../../models/permission'
 const router = new Router()
 

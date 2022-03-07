@@ -1,4 +1,13 @@
-import { user } from '@/types/user'
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:06:21
+ * @LastEditTime: 2022-02-26 23:58:51
+ * @LastEditors: 天火流光
+ * @Description: 
+ * @FilePath: \paradise-admin\typings\product.ts
+ * 
+ */
+import { IUser } from './user/user'
 import { image, media } from './media'
 import { material } from './material'
 
@@ -48,7 +57,7 @@ export interface product extends material {
 	qr_code: string
 	tags: string[]
 	/**供应商 */
-	vendor: user
+	vendor: IUser
 	/**产品类型 */
 	product_type: string[]
 	created_at: string

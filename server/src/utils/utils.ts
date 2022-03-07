@@ -1,10 +1,20 @@
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:06:00
+ * @LastEditTime: 2022-02-24 00:18:47
+ * @LastEditors: 天火流光
+ * @Description:
+ * @FilePath: \paradise-admin\server\src\utils\utils.ts
+ *
+ */
 import crypto from 'crypto'
+
 /**
  * @description  加密字符串
- * @param pass
+ * @param {string} pass
  * @returns
  */
-export const passwd = (pass: string) =>
+export const passwd = (pass: string): string =>
 	crypto.pbkdf2Sync(pass, '', 100, 255, 'sha256').toString('hex')
 
 /**
@@ -22,15 +32,15 @@ export const closedInterval = (min: number, max: number): number =>
  * @param childrenKey
  * @returns
  */
-export const treeToArray = (
-	tree: { [k: string]: any }[] | { [k: string]: any },
-	childrenKey: string
-) => {
-	let arr: { [k: string]: any }[] = []
-	const a = (ls: { [k: string]: any }[]) => {
+export function treeToArray<T, K extends keyof T>(
+	tree: T,
+	childrenKey: K
+): T[] {
+	const arr: T[] = []
+	const a = (ls: T[]) => {
 		if (ls instanceof Array) {
 			ls.forEach(o => {
-				let c = o[childrenKey]
+				const c = (o[childrenKey] as unknown) as T[]
 				delete o[childrenKey]
 				arr.push(o)
 				a(c)
@@ -52,13 +62,13 @@ export const arrayToTree = (arr: unknown[], id: string, pid: string) => {
 		return []
 	}
 	if (arr instanceof Array) {
-		let tree: unknown[] = []
-		let treeMap: any = {}
+		const tree: unknown[] = []
+		const treeMap: any = {}
 		arr.forEach(o => {
 			treeMap[o[id]] = o
 		})
 		arr.forEach(o => {
-			let parent = treeMap[o[pid]]
+			const parent = treeMap[o[pid]]
 			if (parent && o[id] != o[pid]) {
 				if (!parent.children) {
 					parent.children = []

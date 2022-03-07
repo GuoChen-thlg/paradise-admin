@@ -1,3 +1,12 @@
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:05:59
+ * @LastEditTime: 2022-02-23 22:25:57
+ * @LastEditors: 天火流光
+ * @Description:
+ * @FilePath: \paradise-admin\server\src\models\user.ts
+ *
+ */
 import {
 	Optional,
 	Model,
@@ -15,11 +24,13 @@ interface UserAttributes {
 	passwd: string
 	email: string
 	random_id: string
-	state:boolean
+	state: boolean
 }
 
-interface UserCreationAttributes
-	extends Optional<UserAttributes, 'id' | 'random_id'|'state'> {}
+type UserCreationAttributes = Optional<
+	UserAttributes,
+	'id' | 'random_id' | 'state'
+>
 
 class User extends Model<UserAttributes, UserCreationAttributes>
 	implements UserAttributes {
@@ -28,7 +39,7 @@ class User extends Model<UserAttributes, UserCreationAttributes>
 	passwd: string
 	email: string
 	random_id: string
-	state:boolean
+	state: boolean
 
 	public getRoles: BelongsToManyGetAssociationsMixin<Role>
 	public setRoles: BelongsToManySetAssociationsMixin<Role, number>
@@ -72,12 +83,12 @@ User.init(
 			type: DataTypes.UUID,
 			comment: '单一登陆对比ID',
 		},
-		state:{
-			type:DataTypes.BOOLEAN,
-			allowNull:false,
-			comment:'账号状态',
-			defaultValue:true
-		}
+		state: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			comment: '账号状态',
+			defaultValue: true,
+		},
 	},
 	{
 		sequelize: seque,

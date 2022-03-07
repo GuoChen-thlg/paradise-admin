@@ -1,7 +1,7 @@
 import Koa from 'koa'
 import jsonwebtoken from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
-import { closedInterval } from '../../../../utils'
+import { closedInterval } from '../../../../utils/utils'
 import { ErrorCode } from '../../../../middlewares/BeautifyResponse'
 const { EMAIL_SERVICE, EMAIL_USER, EMAIL_PASS, JWT_PRIVATEKEY } = process.env
 

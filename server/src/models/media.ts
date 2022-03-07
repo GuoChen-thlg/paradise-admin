@@ -1,3 +1,12 @@
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:05:58
+ * @LastEditTime: 2022-02-23 22:23:07
+ * @LastEditors: 天火流光
+ * @Description: 
+ * @FilePath: \paradise-admin\server\src\models\media.ts
+ * 
+ */
 import { DataTypes, Model, Optional } from 'sequelize'
 import seque from '../controllers/mysql'
 
@@ -16,8 +25,7 @@ interface MediaAttributes {
 	height: number
 }
 
-interface MediaCreationAttributes
-	extends Optional<MediaAttributes, 'id' | 'type'> {}
+type MediaCreationAttributes = Optional<MediaAttributes, 'id' | 'type'>
 
 class Media extends Model<MediaAttributes, MediaCreationAttributes>
 	implements MediaAttributes {

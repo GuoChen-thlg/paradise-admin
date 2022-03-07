@@ -1,3 +1,12 @@
+<!--
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:06:30
+ * @LastEditTime: 2022-02-26 23:58:00
+ * @LastEditors: 天火流光
+ * @Description: 
+ * @FilePath: \paradise-admin\src\views\index\setting\Role.vue
+ * 
+-->
 <template>
   <el-main class="role">
     <el-button @click="handleAddRole">
@@ -27,7 +36,6 @@
 import { defineComponent, reactive, ref } from 'vue'
 import { getRoles } from '@/api'
 import { useRoute, useRouter } from 'vue-router'
-import { unique } from 'server/src/utils'
 
 export default defineComponent({
   name: 'Role',

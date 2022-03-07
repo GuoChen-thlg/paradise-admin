@@ -1,7 +1,7 @@
 import http from 'http'
 import { Server, Socket } from 'socket.io'
 import socket from './socketjwt'
-const f = (server: http.Server) => {
+const f = (server: http.Server): void => {
 	const io = new Server(server, {
 		cors: {
 			origin: '*',

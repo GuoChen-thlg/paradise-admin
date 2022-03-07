@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-02 12:48:56
- * @LastEditTime: 2022-02-19 17:10:18
+ * @LastEditTime: 2022-03-07 22:45:38
  * @LastEditors: 天火流光
  * @Description: 组件列表
  * @FilePath: \paradise-admin\src\components\low_code\ComList.vue
@@ -36,30 +36,48 @@
 					<!-- 组件分组 -->
 					<li class="group-item">
 						<p class="group-title">{{ group.name }}</p>
-						<ul class="com-list">
-							<!-- 组件 -->
-							<li
-								v-for="com in group.list"
-								:key="com.id"
-								class="com-item"
-							>
-								<div
-									class="inner"
-									draggable="true"
-									@click="handleAddComponent(com.className)"
-								>
-									<div class>
-										<img
-											class="cover"
-											draggable="false"
-											:src="createImage(95, 60, com.name)"
-											alt=""
-										/>
+						<!-- 组件 -->
+						<!-- v-for="com in group.list" -->
+						<draggable
+							class="com-list"
+							tag="ul"
+							item-key="id"
+							v-model="group.list"
+							:group="{ name: 'page', pull: 'clone', put: false }"
+							:clone="handleDragClone"
+						>
+							<template #item="{element}">
+								<li class="com-item">
+									<div
+										class="inner"
+										draggable="true"
+										@click="
+											handleAddComponent(
+												element.className
+											)
+										"
+									>
+										<div class>
+											<img
+												class="cover"
+												draggable="false"
+												:src="
+													createImage(
+														95,
+														60,
+														element.name
+													)
+												"
+												:alt="element.name"
+											/>
+										</div>
+										<p class="com-name">
+											{{ element.name }}
+										</p>
 									</div>
-									<p class="com-name">{{ com.name }}</p>
-								</div>
-							</li>
-						</ul>
+								</li>
+							</template>
+						</draggable>
 					</li>
 				</ul>
 			</li>
@@ -70,12 +88,14 @@
 	import { defineComponent, toRefs, unref } from 'vue'
 	import comList from '@/modules/comList'
 	import { createImage } from '@/utils/default/image'
-	import { Base } from '@/modules/base/Base'
-	import BaseImage from '@/modules/base/BaseImage'
 	import { useStore } from 'vuex'
 	import { key } from '@/store'
 	import { template_mutations } from '@/store/modules/template'
 	import { jsonClone } from '@/utils/util'
+	import draggable from 'vuedraggable'
+	// 组件数据
+	import { Base } from '@/modules/base/Base'
+	import BaseImage from '@/modules/base/BaseImage'
 
 	const componentMap: { [key: string]: () => Base } = {
 		Base: () => new Base(),
@@ -84,6 +104,7 @@
 
 	export default defineComponent({
 		name: 'ComList',
+		components: { draggable },
 		setup() {
 			const store = useStore(key)
 			const handleAddComponent = (com: string) => {
@@ -93,11 +114,15 @@
 				comList.push(componentMap[com]())
 				store.commit(template_mutations.SETBLOCK, comList)
 			}
-
+			function handleDragClone(evt: any) {
+				console.log('clone--', evt)
+				return jsonClone(componentMap[evt.className]())
+			}
 			return {
 				comList,
 				createImage,
 				handleAddComponent,
+				handleDragClone,
 			}
 		},
 	})

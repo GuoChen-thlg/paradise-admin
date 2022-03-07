@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-02 18:40:10
- * @LastEditTime: 2022-02-20 03:58:24
+ * @LastEditTime: 2022-03-07 22:06:02
  * @LastEditors: 天火流光
  * @Description: 页面搭建预览
  * @FilePath: \paradise-admin\src\components\low_code\ComView.vue
@@ -17,7 +17,17 @@
 			<div class="simulator-view page-view">
 				<div class="page-scroll">
 					<div class="page-body" @click.self="handleClick">
-						<draggable v-model="components" item-key="id">
+						<!-- "Start", "Add", "Remove", "Update", "End" -->
+						<!-- "Choose", "Unchoose", "Sort", "Filter", "Clone" -->
+						<draggable
+							:list="components"
+							item-key="id"
+							group="page"
+							@move="handleDragMove"
+							@add="handleDragAdd"
+							@update="handleDragUpdate"
+							@end="hadnleDragEnd"
+						>
 							<template #item="{element,index}">
 								<com-item
 									:componentData="element"
@@ -41,6 +51,7 @@
 	import { useResize } from '@/hooks'
 	import { Base } from '@/modules/base/Base'
 	import { template_mutations } from '@/store/modules/template'
+	import useHookEvent from '@/hooks/hookEvent'
 	export default defineComponent({
 		name: 'ComView',
 		components: {
@@ -50,6 +61,7 @@
 		setup() {
 			const store = useStore(key)
 			const { page } = toRefs(store.state.template)
+			const hookEvent = useHookEvent()
 			const scale = ref(1)
 			const isShowDevice = ref(false)
 			useResize(() => {
@@ -57,6 +69,21 @@
 				scale.value =
 					(window.innerHeight - 90) / (isShowDevice.value ? 875 : 664)
 			})
+			function handleDragUpdate(evt: any) {
+				console.log('update', evt)
+			}
+			function handleDragAdd(evt: any) {
+				//
+				console.log('add', evt)
+			}
+			function handleDragMove(evt: any) {
+				hookEvent.emit('deag-move', evt)
+				console.log('move ...')
+			}
+			function hadnleDragEnd(evt: any) {
+				hookEvent.emit('deag-move', evt)
+				console.log('hadnleEnd')
+			}
 			function handleClick() {
 				// 选中页面
 				console.log('click me')
@@ -71,7 +98,17 @@
 				},
 			})
 
-			return { page, scale, components, isShowDevice, handleClick }
+			return {
+				page,
+				scale,
+				components,
+				isShowDevice,
+				handleClick,
+				handleDragMove,
+				handleDragUpdate,
+				hadnleDragEnd,
+				handleDragAdd,
+			}
 		},
 	})
 </script>

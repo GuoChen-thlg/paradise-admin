@@ -13,7 +13,15 @@
         "baseUrl": ".",
         "types": [
             "node"
-        ]
+        ],
+        "paths": {
+            "@/*": [
+                "src/*"
+            ],
+            "@type/*": [
+                "../typings/*"
+            ]
+        }
     },
     "include": [
         "src/**/*"

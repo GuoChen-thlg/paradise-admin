@@ -6,7 +6,7 @@ if ((process.argv.splice(2)[0] || '').trim() === 'production') {
 	dotenv.config({ path: '.env.development.local' })
 }
 
-import { passwd } from './utils'
+import { passwd } from './utils/utils'
 import server from './controllers/server'
 import seque from './controllers/mysql'
 
@@ -16,7 +16,7 @@ import Permission from './models/permission'
 import Role from './models/role'
 import User from './models/user'
 import Menu from './models/menu'
-import { treeToArray } from './utils'
+import { treeToArray } from './utils/utils'
 
 const { SERVER_PORT, NGINX_PORT, EMAIL_USER } = process.env
 const port = SERVER_PORT ? parseInt(SERVER_PORT) : 3000

@@ -1,4 +1,4 @@
-import { user } from '@/types/user'
+import { user } from '@type/user'
 import { image } from './media'
 export interface material_image extends image {
 	/**资源地址*/

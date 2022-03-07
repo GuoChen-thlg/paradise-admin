@@ -1,7 +1,7 @@
 /*
  * @Author: 天火流光
  * @Date: 2022-02-01 13:37:22
- * @LastEditTime: 2022-02-04 14:49:59
+ * @LastEditTime: 2022-03-06 13:55:37
  * @LastEditors: 天火流光
  * @Description: 事件类 用于绑定事件触发事件
  * @FilePath: \paradise-admin\src\utils\public\event.ts
@@ -29,7 +29,6 @@ export class Event {
 	 * @param {boolean} is_once // 默认为 false 用于区别事件是否为单次触发
 	 * @return {void}
 	 */
-
 	private _add(handle = '', hook = defaultHook, is_once = false): void {
 		if (!this._events.has(handle)) {
 			this._events.set(handle, [])

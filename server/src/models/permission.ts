@@ -1,3 +1,12 @@
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:05:58
+ * @LastEditTime: 2022-03-07 23:26:39
+ * @LastEditors: 天火流光
+ * @Description: 
+ * @FilePath: \paradise-admin\server\src\models\permission.ts
+ * 
+ */
 import { Optional, Model, DataTypes } from 'sequelize'
 import seque from '../controllers/mysql'
 
@@ -7,8 +16,7 @@ interface PermissionAttributes {
 	describe: string
 	flag_key: string
 }
-interface PermissionCreationAttributes
-	extends Optional<PermissionAttributes, 'id'> {}
+type PermissionCreationAttributes = Optional<PermissionAttributes, 'id'>
 
 class Permission
 	extends Model<PermissionAttributes, PermissionCreationAttributes>

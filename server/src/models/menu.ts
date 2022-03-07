@@ -1,3 +1,12 @@
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:05:58
+ * @LastEditTime: 2022-02-23 22:24:23
+ * @LastEditors: 天火流光
+ * @Description:
+ * @FilePath: \paradise-admin\server\src\models\menu.ts
+ *
+ */
 import {
 	BelongsToManySetAssociationsMixin,
 	DataTypes,
@@ -17,8 +26,7 @@ interface MenuAttributes {
 	parent_id: number
 }
 
-interface MenuCreationAttributes
-	extends Optional<MenuAttributes, 'id' | 'icon' | 'path'> {}
+type MenuCreationAttributes = Optional<MenuAttributes, 'id' | 'icon' | 'path'>
 
 class Menu extends Model<MenuAttributes, MenuCreationAttributes>
 	implements MenuAttributes {
