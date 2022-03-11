@@ -39,6 +39,7 @@
     "build:apidoc": "apidoc -i server/src/routes/ -o apidocs/"
   },
   "dependencies": {
+    "@types/three": "^0.138.0",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
@@ -107,6 +108,7 @@
     "sass-loader": "^8.0.2",
     "socket.io-client": "^4.1.3",
     "supertest": "^6.1.4",
+    "three": "^0.138.3",
     "ts-node": "^10.1.0",
     "typescript": "^3.9.10",
     "uglifyjs-webpack-plugin": "^2.2.0",
