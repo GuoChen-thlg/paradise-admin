@@ -116,7 +116,18 @@
 	import Ceumbs from '@/components/Crumbs.vue'
 	import HeadUser from '@/components/HeadUser.vue'
 	import { sidebar_actions, sidebar_mutations } from '@/store/modules/sidebar'
-	import { useResize } from '@/hooks'
+	import { useHookEvent, useResize } from '@/hooks'
+	type WinEventMap =
+		| keyof WindowEventMap
+		| keyof GlobalEventHandlersEventMap
+		| keyof WindowEventHandlersEventMap
+
+	const events: Array<WinEventMap> = [
+		'resize',
+		'scroll',
+		'gamepadconnected',
+		'gamepaddisconnected',
+	]
 	export default defineComponent({
 		name: 'App',
 		components: {
@@ -127,6 +138,7 @@
 		setup() {
 			const route = useRoute()
 			const store = useStore(key)
+			const hookEvent = useHookEvent()
 			const isShow = reactive({
 				showAside: true,
 				showHeader: true,
@@ -197,13 +209,13 @@
 			/* 请求通知权限 */
 			Notification.requestPermission()
 
-			document.addEventListener('scroll', () => {
+			hookEvent.on('scroll', () => {
 				store.commit('device/update')
 			})
 			useResize(() => {
 				store.commit('device/update')
 			})
-			// document.addEventListener('resize', )
+
 			onBeforeMount(() => {
 				Nprogress.set(0.9)
 				document.querySelector(".loader[role='loader']")?.remove()
@@ -212,6 +224,13 @@
 			onMounted(() => {
 				Nprogress.done()
 			})
+
+			events.forEach(type => {
+				window.addEventListener(type, e => {
+					hookEvent.emit(type, e)
+				})
+			})
+
 			return {
 				...toRefs(isShow),
 				isCollapse,
@@ -225,152 +244,5 @@
 	})
 </script>
 
-<style lang="scss">
-	@import '@/assets/scss/global-default.scss';
-	html {
-		font-size: 100px !important;
-	}
-	@media screen and (max-width: 541px) {
-		html {
-			font-size: calc(100vw / 3.75) !important;
-		}
-	}
-	@media screen and (max-width: 375px) {
-		html {
-			font-size: calc(100vw / 3.75) !important;
-		}
-	}
-	body {
-		font : {
-			size: 0.16rem;
-		}
-		// color: var(--theme-font-color);
-	}
-	// #app {
-
-	// }
-	.hidder-scrollbar {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
-		&::-webkit-scrollbar {
-			display: none;
-		}
-	}
-	.clearfix::after {
-		content: '';
-		display: block;
-		width: 0;
-		height: 0;
-		clear: both;
-		font-size: 0;
-		visibility: hidden;
-		overflow: hidden;
-	}
-	x-vue-echarts {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		padding: 0.1rem;
-	}
-	// .el-main {
-	//   background: var(--theme-background-linear-gradient);
-	// }
-	.el-popper {
-		& > .el-menu--vertical {
-			max-height: 88vh;
-			overflow-y: auto;
-			-ms-overflow-style: none;
-			scrollbar-width: none;
-			&::-webkit-scrollbar {
-				display: none;
-			}
-		}
-	}
-</style>
-
-<style lang="scss" scoped>
-	.container {
-		min-height: 100vh;
-
-		// .el-main {
-		//   // padding: 0;
-		// }
-	}
-	.head-navigation {
-		display: flex;
-		padding: 0 !important;
-		background-color: var(--header-background-color);
-		// border-bottom: 3px solid var(--theme-border-color);
-		&.fixed {
-			position: fixed;
-			right: 0;
-			top: 0;
-			z-index: 9e6;
-			transition: left 0.3s cubic-bezier(0.4, 0, 1, 1);
-			box-shadow: rgb(0 0 0 / 40%) 0px 10px 8px;
-			border: none;
-			@media only screen and (max-width: 768px) {
-				left: 0 !important;
-			}
-		}
-		.control-container {
-			flex-grow: 1;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-	}
-	// .main-container {
-	// }
-	.aside-sidebar {
-		background-color: var(--sidebar-background-color);
-		transition: width 0.3s ease-in-out;
-	}
-	.open-close {
-		display: inline-block;
-		height: 100%;
-		.el-icon-s-fold,
-		.el-icon-s-unfold {
-			height: 100%;
-			width: 0.6rem;
-			display: inline-flex;
-			justify-content: center;
-			align-items: center;
-			font-size: 0.24rem;
-			cursor: pointer;
-		}
-	}
-
-	.el-footer {
-		background-color: var(--theme-background-color);
-	}
-	.slogan-box {
-		overflow: hidden;
-	}
-	.slogan {
-		position: relative;
-		background: -webkit-linear-gradient(
-			0deg,
-			rgb(255, 0, 0),
-			rgb(255, 165, 0),
-			rgb(255, 255, 0),
-			rgb(0, 255, 0),
-			rgb(0, 127, 255),
-			rgb(0, 0, 255),
-			rgb(139, 0, 255)
-		);
-		background-clip: text;
-		-webkit-text-fill-color: transparent;
-		animation: wave 9s linear infinite;
-	}
-	@keyframes wave {
-		0% {
-			transform: translateX(100%);
-		}
-		100% {
-			transform: translateX(-100%);
-		}
-	}
-</style>
+<style lang="scss" src="./style.scss"></style>
+<style lang="scss" scoped src="./style.scoped.scss"></style>

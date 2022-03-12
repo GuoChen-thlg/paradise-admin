@@ -1,0 +1,62 @@
+@import '@/assets/scss/global-default.scss';
+html {
+	font-size: 100px !important;
+}
+@media screen and (max-width: 541px) {
+	html {
+		font-size: calc(100vw / 3.75) !important;
+	}
+}
+@media screen and (max-width: 375px) {
+	html {
+		font-size: calc(100vw / 3.75) !important;
+	}
+}
+body {
+	font : {
+		size: 0.16rem;
+	}
+	// color: var(--theme-font-color);
+}
+// #app {
+
+// }
+.hidder-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+.clearfix::after {
+	content: '';
+	display: block;
+	width: 0;
+	height: 0;
+	clear: both;
+	font-size: 0;
+	visibility: hidden;
+	overflow: hidden;
+}
+x-vue-echarts {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 0.1rem;
+}
+// .el-main {
+//   background: var(--theme-background-linear-gradient);
+// }
+.el-popper {
+	& > .el-menu--vertical {
+		max-height: 88vh;
+		overflow-y: auto;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+}
