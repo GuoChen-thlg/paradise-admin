@@ -110,7 +110,7 @@
     "supertest": "^6.1.4",
     "three": "^0.138.3",
     "ts-node": "^10.1.0",
-    "typescript": "^3.9.10",
+    "typescript": "^4.6.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue": "^3.0.11",
     "vue-cli-plugin-element-plus": "~0.0.13",
