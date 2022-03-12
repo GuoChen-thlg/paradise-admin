@@ -1,3 +1,12 @@
+/*
+ * @Author: 天火流光
+ * @Date: 2022-02-20 22:06:23
+ * @LastEditTime: 2022-03-12 19:42:31
+ * @LastEditors: 天火流光
+ * @Description:
+ * @FilePath: \paradise-admin\src\utils\request.ts
+ *
+ */
 import axios, {
 	AxiosInstance,
 	AxiosRequestConfig,
@@ -52,7 +61,7 @@ const handlingError = (err: any) => {
 		message: err?.response?.data?.msg || '发生了错误',
 		type: 'error',
 	})
-	switch (err?.response.status) {
+	switch (err?.response?.status) {
 		case 401:
 			store.commit(user_mutations.SIGNOUT)
 			window.location.reload()
