@@ -1,7 +1,7 @@
 /*
  * @Author: 天火流光
  * @Date: 2022-02-01 13:37:22
- * @LastEditTime: 2022-03-12 19:36:01
+ * @LastEditTime: 2022-03-13 01:54:01
  * @LastEditors: 天火流光
  * @Description: 事件类 用于绑定事件触发事件
  * @FilePath: \paradise-admin\src\utils\public\event.ts
@@ -87,7 +87,7 @@ export class Event {
 					}
 				}
 			}
-		} else {
+		} else if (process.env.NODE_ENV !== 'production') {
 			console.warn(new Error(`没有绑定 \`${handle}\` 监听事件`).stack)
 		}
 	}
