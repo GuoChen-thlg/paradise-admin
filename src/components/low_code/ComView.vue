@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-02 18:40:10
- * @LastEditTime: 2022-03-07 22:06:02
+ * @LastEditTime: 2022-03-27 22:22:56
  * @LastEditors: 天火流光
  * @Description: 页面搭建预览
  * @FilePath: \paradise-admin\src\components\low_code\ComView.vue
@@ -16,16 +16,19 @@
 		>
 			<div class="simulator-view page-view">
 				<div class="page-scroll">
-					<div class="page-body" @click.self="handleClick">
+					<div class="page-body">
 						<!-- "Start", "Add", "Remove", "Update", "End" -->
 						<!-- "Choose", "Unchoose", "Sort", "Filter", "Clone" -->
 						<draggable
-							:list="components"
+							@click.self="handleClick"
+							ref="sortable"
 							item-key="id"
-							group="page"
+							:list="components"
+							v-bind="sortableOption"
 							@move="handleDragMove"
 							@add="handleDragAdd"
 							@update="handleDragUpdate"
+							@start="handleDragStart"
 							@end="hadnleDragEnd"
 						>
 							<template #item="{element,index}">
@@ -43,20 +46,27 @@
 	</div>
 </template>
 <script lang="ts">
-	import { defineComponent, toRefs, ref, computed, unref } from 'vue'
+	import {
+		defineComponent,
+		toRefs,
+		ref,
+		computed,
+		unref,
+		reactive,
+	} from 'vue'
 	import { useStore } from 'vuex'
-	import ComItem from '@/components/public/ComItem.vue'
-	import draggable from 'vuedraggable'
 	import { key } from '@/store'
 	import { useResize } from '@/hooks'
 	import { Base } from '@/modules/base/Base'
 	import { template_mutations } from '@/store/modules/template'
 	import useHookEvent from '@/hooks/hookEvent'
+	import ComItem from '@/components/public/ComItem.vue'
+	import BaseContainer from '@/modules/base/BaseContainer'
+
 	export default defineComponent({
 		name: 'ComView',
 		components: {
 			ComItem,
-			draggable,
 		},
 		setup() {
 			const store = useStore(key)
@@ -64,11 +74,30 @@
 			const hookEvent = useHookEvent()
 			const scale = ref(1)
 			const isShowDevice = ref(false)
+			const sortable = ref()
+			const sortableOption = reactive({
+				group: {
+					name: 'component',
+					pull: true,
+					put: true,
+					revertClone: false,
+				},
+				handle:'.com-item',
+				scroll: true,
+				sort: true,
+				fallbackTolerance: 20,
+				disabled: false,
+				fallbackOnBody: true,
+				animation: 0,
+				dragClass: 'deag-self',
+			})
+
 			useResize(() => {
 				// 模拟器随窗口变化而变化
 				scale.value =
 					(window.innerHeight - 90) / (isShowDevice.value ? 875 : 664)
 			})
+
 			function handleDragUpdate(evt: any) {
 				console.log('update', evt)
 			}
@@ -80,16 +109,22 @@
 				hookEvent.emit('deag-move', evt)
 				console.log('move ...')
 			}
+			function handleDragStart(evt: any) {
+				sortableOption.animation = 5e2
+				console.log('handleDragStart', evt)
+			}
 			function hadnleDragEnd(evt: any) {
+				sortableOption.animation = 0
 				hookEvent.emit('deag-move', evt)
 				console.log('hadnleEnd')
 			}
 			function handleClick() {
 				// 选中页面
 				console.log('click me')
+				console.log('sortable val', sortable.value)
 			}
 
-			const components = computed<Base[]>({
+			const components = computed<(Base | BaseContainer)[]>({
 				get() {
 					return page.value.blocks
 				},
@@ -101,13 +136,16 @@
 			return {
 				page,
 				scale,
+				sortable,
 				components,
 				isShowDevice,
+				sortableOption,
 				handleClick,
 				handleDragMove,
 				handleDragUpdate,
 				hadnleDragEnd,
 				handleDragAdd,
+				handleDragStart,
 			}
 		},
 	})
@@ -163,6 +201,18 @@
 				.page-body {
 					& > *:not(.com-item) {
 						height: 100%;
+					}
+					:deep(.deag-self) {
+						border: 1px solid red;
+					}
+					:deep(li.com-item) {
+						text-align: center;
+						width: 100%;
+						margin: 0;
+						padding: 0;
+						.com-name {
+							display: none;
+						}
 					}
 				}
 			}

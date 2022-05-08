@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-01-09 19:03:35
- * @LastEditTime: 2022-02-06 18:37:10
+ * @LastEditTime: 2022-03-19 17:27:47
  * @LastEditors: 天火流光
  * @Description: 低代码搭建页面 编辑页
  * @FilePath: \paradise-admin\src\views\index\construct\Construct.vue
@@ -12,7 +12,7 @@
 		<el-container>
 			<el-header> <h1>顶部</h1> </el-header>
 			<el-container class="edit-container">
-				<el-aside>
+				<el-aside width="400px">
 					<com-list></com-list>
 				</el-aside>
 				<el-main class="preview-content">

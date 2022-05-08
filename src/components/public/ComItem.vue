@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-02 22:34:17
- * @LastEditTime: 2022-03-07 23:08:45
+ * @LastEditTime: 2022-03-24 21:31:43
  * @LastEditors: 天火流光
  * @Description: 
  * @FilePath: \paradise-admin\src\components\public\ComItem.vue
@@ -15,12 +15,13 @@
 		v-menus="contextMenus(componentData)"
 		:style="componentData.style"
 	>
+		<drag-vertex v-if="isActvie"></drag-vertex>
 		<component
 			:is="componentData.componentKey"
 			v-bind="componentData.props"
+			:origin="componentData"
 			:index="indexPrefix + index"
 		></component>
-		<drag-vertex v-if="isActvie"></drag-vertex>
 	</div>
 </template>
 <script lang="ts">
@@ -32,8 +33,6 @@
 	import { Base } from '@/modules/base/Base'
 	import DragVertex from '@/components/public/DragVertex.vue'
 	//
-	import comBase from '@/components/modules/base/Base.vue'
-	import comBaseImage from '@/components/modules/base/BaseImage.vue'
 	import useHookEvent from '@/hooks/hookEvent'
 	export default defineComponent({
 		name: 'ComItem',
@@ -57,9 +56,6 @@
 		},
 		components: {
 			DragVertex,
-			// 无代码组件
-			Base: comBase,
-			BaseImage: comBaseImage,
 		},
 		setup(props) {
 			const store = useStore(key)
@@ -132,6 +128,7 @@
 	.com-item {
 		position: relative;
 		user-select: none;
+		max-width: 100%;
 		&.active {
 			border: 1px solid;
 		}

@@ -2,16 +2,16 @@
 html {
 	font-size: 100px !important;
 }
-@media screen and (max-width: 541px) {
-	html {
-		font-size: calc(100vw / 3.75) !important;
-	}
-}
-@media screen and (max-width: 375px) {
-	html {
-		font-size: calc(100vw / 3.75) !important;
-	}
-}
+// @media screen and (max-width: 541px) {
+// 	html {
+// 		font-size: calc(100vw / 3.75) !important;
+// 	}
+// }
+// @media screen and (max-width: 375px) {
+// 	html {
+// 		font-size: calc(100vw / 3.75) !important;
+// 	}
+// }
 body {
 	font : {
 		size: 0.16rem;

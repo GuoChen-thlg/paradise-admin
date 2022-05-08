@@ -1,7 +1,7 @@
 /*
  * @Author: 天火流光
  * @Date: 2022-02-20 13:07:04
- * @LastEditTime: 2022-02-26 00:45:55
+ * @LastEditTime: 2022-03-20 20:29:18
  * @LastEditors: 天火流光
  * @Description:
  * @FilePath: \paradise-admin\src\modules\base\BaseContainer.ts
@@ -13,7 +13,7 @@ import {
 } from '@type/modules/baseContainer'
 
 import { jsonClone, parseToLink } from '@/utils/util'
-import Base from '@/modules/base/base'
+import Base from '@/modules/base/Base'
 import comBaseContainer from '@/components/modules/base/BaseContainer.vue'
 
 export class BaseContainer extends Base {

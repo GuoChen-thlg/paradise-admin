@@ -1,7 +1,7 @@
 <!--
  * @Author: 天火流光
  * @Date: 2022-02-20 15:21:19
- * @LastEditTime: 2022-02-20 15:28:44
+ * @LastEditTime: 2022-03-20 19:58:24
  * @LastEditors: 天火流光
  * @Description: 
  * @FilePath: \paradise-admin\src\components\modules\base\BaseText.vue
@@ -16,7 +16,7 @@
 	import { computed, defineComponent } from 'vue'
 
 	export default defineComponent({
-		name: 'BaseImage',
+		name: 'BaseText',
 		inheritAttrs: false,
 		props: {
 			text: {
