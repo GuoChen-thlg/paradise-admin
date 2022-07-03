@@ -1,4 +1,6 @@
 export interface media {
+	/**媒体文件ID */
+	id: number
 	/**媒体类型 */
 	type: string
 	/**媒体地址 */
