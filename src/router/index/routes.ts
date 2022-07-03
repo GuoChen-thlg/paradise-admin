@@ -604,4 +604,25 @@ export const routes: Array<RouteRecordRaw> = [
 			tabSwitch: true,
 		},
 	},
+	{
+		path: '/3d',
+		name: '3D',
+		component: () =>
+			import(
+				/* webpackChunkName: "3d" */ '@/views/index/three/index.vue'
+			),
+		children:[
+
+		],
+		meta: {
+			showAside: false,
+			showHeader: false,
+			showFooter: false,
+			showTabNav: false,
+			authority: [],
+			title: '3d deom',
+			verifyLogin: true,
+			tabSwitch: true,
+		},
+	},
 ]
