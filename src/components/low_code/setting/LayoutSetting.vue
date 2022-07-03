@@ -37,21 +37,21 @@
 
 				<margin-model
 					:margin-top="marginTop"
-					@update:margin-top="val => (marginTop = val)"
+					@update:margin-top="(val:string) => (marginTop = val)"
 					:margin-right="marginRight"
-					@update:margin-right="val => (marginRight = val)"
+					@update:margin-right="(val:string) => (marginRight = val)"
 					:margin-bottom="marginBottom"
-					@update:margin-bottom="val => (marginBottom = val)"
+					@update:margin-bottom="(val:string) => (marginBottom = val)"
 					:margin-left="marginLeft"
-					@update:margin-left="val => (marginLeft = val)"
+					@update:margin-left="(val:string) => (marginLeft = val)"
 					:padding-top="paddingTop"
-					@update:padding-top="val => (paddingTop = val)"
+					@update:padding-top="(val:string) => (paddingTop = val)"
 					:padding-right="paddingRight"
-					@update:padding-right="val => (paddingRight = val)"
+					@update:padding-right="(val:string) => (paddingRight = val)"
 					:padding-bottom="paddingBottom"
-					@update:padding-bottom="val => (paddingBottom = val)"
+					@update:padding-bottom="(val:string) => (paddingBottom = val)"
 					:padding-left="paddingLeft"
-					@update:padding-left="val => (paddingLeft = val)"
+					@update:padding-left="(val:string) => (paddingLeft = val)"
 				></margin-model>
 				<el-form-item
 					v-show="handleIsShow(width)"
@@ -142,7 +142,24 @@
 				}
 				return {}
 			})
-
+			type styleKey =
+				| 'display'
+				| 'width'
+				| 'height'
+				| 'opacity'
+				| 'position'
+				| 'top'
+				| 'right'
+				| 'bottom'
+				| 'left'
+				| 'marginTop'
+				| 'marginRight'
+				| 'marginBottom'
+				| 'marginLeft'
+				| 'paddingTop'
+				| 'paddingRight'
+				| 'paddingBottom'
+				| 'paddingLeft'
 			// 通过计算属性获得组件的样式信息
 			const [
 				display,
@@ -172,26 +189,25 @@
 				'right',
 				'bottom',
 				'left',
-				'margin-top',
-				'margin-right',
-				'margin-bottom',
-				'margin-left',
-				'padding-top',
-				'padding-right',
-				'padding-bottom',
-				'padding-left',
+				'marginTop',
+				'marginRight',
+				'marginBottom',
+				'marginLeft',
+				'paddingTop',
+				'paddingRight',
+				'paddingBottom',
+				'paddingLeft',
 			].map(key => {
 				return computed<string>({
 					get() {
 						if (regMargin.test(key)) {
 							return (
-								unref(componentStyle)[key]?.replace(
-									regCssUnits,
-									''
-								) || ''
+								`${
+									unref(componentStyle)[key as styleKey]
+								}`.replace(regCssUnits, '') || ''
 							)
 						}
-						return componentStyle.value[key]
+						return `${componentStyle.value[key as styleKey]}`
 					},
 					set(val) {
 						if (regMargin.test(key) && /^\d+$/.test(val)) {

@@ -11,11 +11,11 @@ import { jsonClone, randomId } from '@/utils/util'
 import { parseToLink } from '@/utils/util'
 import comBase from '@/components/modules/base/Base.vue'
 import { IBase, BaseOption } from '@type/modules/base'
-import { CSSProperties } from 'vue'
+import type * as CSS from 'csstype';
 
 
 // 默认样式
-const defaultStyle = {
+const defaultStyle: CSS.Properties = {
 	display: 'block',
 	width: '3.75rem',
 	height: 'rem',
@@ -25,14 +25,14 @@ const defaultStyle = {
 	right: '',
 	bottom: '',
 	left: '',
-	'margin-top': '',
-	'margin-left': '',
-	'margin-right': '',
-	'margin-bottom': '',
-	'padding-top': '',
-	'padding-right': '',
-	'padding-bottom': '',
-	'padding-left': '',
+	marginTop: '',
+	marginLeft: '',
+	marginRight: '',
+	marginBottom: '',
+	paddingTop: '',
+	paddingRight: '',
+	paddingBottom: '',
+	paddingLeft: '',
 }
 // 组件版本号
 const VERSION = '1.0.0'
@@ -43,7 +43,7 @@ export class Base {
 			version = ''
 			name = ''
 			componentKey = ''
-			style: CSSProperties = jsonClone(defaultStyle)
+			style: CSS.Properties = jsonClone(defaultStyle)
 			props = {}
 			animations: IBase['animations'] = []
 			actions: IBase['actions'] = []
