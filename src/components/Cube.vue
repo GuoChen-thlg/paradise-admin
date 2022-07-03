@@ -16,7 +16,7 @@
 	</ul>
 </template>
 <script lang="ts">
-	import { defineComponent, reactive } from 'vue'
+	import { CSSProperties, defineComponent, reactive } from 'vue'
 	import { createImage } from '@/utils/default/image'
 	export default defineComponent({
 		name: 'Cube',
@@ -48,7 +48,7 @@
 			},
 		},
 		setup(props) {
-			const style = reactive<any>({
+			const style = reactive<CSSProperties>({
 				'--theLen': props.theLen,
 				'--offset': props.offset,
 				'--angle': props.angle,

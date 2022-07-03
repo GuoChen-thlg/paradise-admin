@@ -3,9 +3,9 @@
     <h1>difu</h1>
     <div>
       <cube class="cube-ul" offset="100px" :spread="true" :rotate="true">
-        <cube the-len="100px" offset="30px" :spread="true" :rotate="true">
-          <cube the-len="50px" offset="20px" :spread="true" :rotate="true"></cube>
-        </cube>
+        <!-- <cube  the-len="100px" offset="30px" :spread="true" :rotate="false">
+          <cube the-len="50px" offset="20px" :spread="true" :rotate="false"></cube>
+        </cube> -->
       </cube>
     </div>
   </el-main>

@@ -11,7 +11,8 @@ import { jsonClone, randomId } from '@/utils/util'
 import { parseToLink } from '@/utils/util'
 import comBase from '@/components/modules/base/Base.vue'
 import { IBase, BaseOption } from '@type/modules/base'
-type StyleValue = /*unresolved*/ any
+import { CSSProperties } from 'vue'
+
 
 // 默认样式
 const defaultStyle = {
@@ -37,28 +38,33 @@ const defaultStyle = {
 const VERSION = '1.0.0'
 
 export class Base {
-	type = ''
-	id = ''
-	version = ''
-	name = ''
-	componentKey = ''
-	style: StyleValue = jsonClone(defaultStyle)
-	props = {}
-	animations: IBase['animations'] = []
-	actions: IBase['actions'] = []
-	events: IBase['events'] = {}
-	constructor(option?: BaseOption) {
-		this.type = option?.type || 'base'
-		this.id = option?.id || randomId()
-		this.style = Object.assign(jsonClone(defaultStyle), option?.style || {})
-		this.props = option?.props || {}
-		this.version = option?.version || VERSION
-		this.name = (option?.name || 'base').toLocaleLowerCase()
-		this.componentKey = parseToLink(option?.componentKey || comBase.name)
-		this.animations = jsonClone(option?.animations || [])
-		this.actions = jsonClone(option?.actions || [])
-		this.events = jsonClone(option?.events || {})
-	}
-}
+			type = ''
+			id = ''
+			version = ''
+			name = ''
+			componentKey = ''
+			style: CSSProperties = jsonClone(defaultStyle)
+			props = {}
+			animations: IBase['animations'] = []
+			actions: IBase['actions'] = []
+			events: IBase['events'] = {}
+			constructor(option?: BaseOption) {
+				this.type = option?.type || 'base'
+				this.id = option?.id || randomId()
+				this.style = Object.assign(
+					jsonClone(defaultStyle),
+					option?.style || {}
+				)
+				this.props = option?.props || {}
+				this.version = option?.version || VERSION
+				this.name = (option?.name || 'base').toLocaleLowerCase()
+				this.componentKey = parseToLink(
+					option?.componentKey || comBase.name
+				)
+				this.animations = jsonClone(option?.animations || [])
+				this.actions = jsonClone(option?.actions || [])
+				this.events = jsonClone(option?.events || {})
+			}
+		}
 
 export default Base
