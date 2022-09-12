@@ -68,7 +68,12 @@ async function dbInit() {
 				transaction: t,
 			})
 			const befMenus = treeToArray(menuTree, 'children')
-			const aftMenus = befMenus.sort((a, b) => a.id - b.id) as Menu[]
+			const aftMenus = (befMenus.sort((a, b) => {
+				return (
+					(((a as unknown) as any)?.id || 0) -
+					(((b as unknown) as any)?.id || 0)
+				)
+			}) as unknown) as Menu[]
 			const menus = await Menu.bulkCreate(aftMenus, { transaction: t })
 
 			const role_rootadmin = await Role.create(

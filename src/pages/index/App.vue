@@ -140,10 +140,10 @@
 			const store = useStore(key)
 			const hookEvent = useHookEvent()
 			const isShow = reactive({
-				showAside: true,
-				showHeader: true,
-				showFooter: true,
-				showTabNav: true,
+				showAside: false,
+				showHeader: false,
+				showFooter: false,
+				showTabNav: false,
 			})
 			/**侧边栏在移动端时 收缩展开*/
 			const drawer = ref(false)

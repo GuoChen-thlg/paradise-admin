@@ -32,18 +32,20 @@ export const closedInterval = (min: number, max: number): number =>
  * @param childrenKey
  * @returns
  */
-export function treeToArray<T, K extends keyof T>(
-	tree: T,
-	childrenKey: K
-): T[] {
+export function treeToArray<
+	T extends Record<string, any>,
+	K extends keyof T | string
+>(tree: T, childrenKey: K): T[] {
 	const arr: T[] = []
 	const a = (ls: T[]) => {
 		if (ls instanceof Array) {
 			ls.forEach(o => {
-				const c = (o[childrenKey] as unknown) as T[]
-				delete o[childrenKey]
-				arr.push(o)
-				a(c)
+				if (Object.prototype.hasOwnProperty.call(o, childrenKey)) {
+					const c = o[childrenKey]
+					delete o[childrenKey]
+					arr.push(o)
+					a(c)
+				}
 			})
 		}
 	}
