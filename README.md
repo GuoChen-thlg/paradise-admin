@@ -16,7 +16,7 @@ paradise-admin 是一个用于人员管理、 产品管理、 数据分析为一
 -   Koa
 -   typescript
 
-演示地址:[👉👉👉 戳这里](https://paradise-admin.thlg.ml/)
+演示地址:[👉👉👉 戳这里](https://paradise-admin.thlg.xyz/)
 
 ## TODO （已实现）
 

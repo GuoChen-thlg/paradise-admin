@@ -3,7 +3,7 @@ const f = () =>
 	cors({
 		origin: ctx => {
 			// if (ctx.app.env === 'production') {
-			// 	return 'https://paradise-admin.thlg.ml'
+			// 	return 'https://paradise-admin.thlg.xyz'
 			// }
 			return '*'
 		},
